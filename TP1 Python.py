@@ -11,14 +11,19 @@
 
 ##############################################################################
 
+# función CLEAR para limpiar pantalla
+
+import os
+clear = lambda: os.system('cls')
 
 # en_construccion(), opciones_menu(), opciones_admin(), opciones_terciario()
 # Contienen casi todas las impresiones necesarias de los distintos menús.
+
 def en_construccion():
     print( "Esta funcionalidad está en construcción.")
 
 def opciones_menu():
-    print("\n\n----- MENU PRINCIPAL -----")
+    print("----- MENU PRINCIPAL -----")
     print("Elija una opción (números enteros del 1 al 9):")
     print("\t1 - ADMINISTRACIONES")
     print("\t2 - ENTREGA DE CUPOS")
@@ -31,7 +36,7 @@ def opciones_menu():
     print("\t9 - FIN DEL PROGRAMA")
 
 def opciones_admin():
-    print("\n\n----- MENU ADMINISTRACIÓN -----")
+    print("----- MENU ADMINISTRACIÓN -----")
     print("Opciones de A a G y V únicamente:")
     print("\tA - TITULARES")
     print("\tB - PRODUCTO")
@@ -43,7 +48,7 @@ def opciones_admin():
     print("\tV - VOLVER AL MENU PRINCIPAL")
 
 def opciones_terciario():
-    print("\n\n----- MENU TITULARES -----")
+    print("----- MENU TITULARES -----")
     print("\tA. ALTA")
     print("\tB. BAJA")
     print("\tC. CONSULTA")
@@ -55,6 +60,7 @@ def opciones_terciario():
 # opcion_terciario: Char (un caracter)
 def menu_terciario():
 
+    clear()
     opciones_terciario()
     opcion_terciario = "A"
     while opcion_terciario != "V":
@@ -79,6 +85,7 @@ def menu_terciario():
 # opcion_admin: Char
 def administracion():
     
+    clear()
     opciones_admin()
     opcion_admin = "A"
     while opcion_admin != "V":
@@ -126,6 +133,7 @@ recepcionhecha = False
 # PATENTEMAYOR, PATENTEMENOR, decision: String (Cadena de caracteres)
 # PRODUCTO: Char (un caracter)
 def recepcion():
+    clear()
     global total_camiones, total_camiones_maiz, total_camiones_soja, total_neto_maiz, total_neto_soja, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, PATENTEMAYOR, PATENTEMENOR, recepcionhecha
 
     # Inicialización de variables.
@@ -196,6 +204,7 @@ def recepcion():
 # promedio_neto_soja, promedio_neto_maiz, total_neto_maiz, total_neto_soja, menor_maiz, mayor_soja: Float (Real) 
 # PATENTEMAYOR, PATENTEMENOR, decisionrep: String
 def reportes():
+    clear()
     global total_camiones, total_camiones_maiz, total_camiones_soja, total_neto_maiz, total_neto_soja, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, PATENTEMAYOR, PATENTEMENOR
     print("\nCantidad total de camiones que llegaron: ",  total_camiones)				
     print("Cantidad total de camiones de soja: ",  total_camiones_soja)			
@@ -221,6 +230,7 @@ def reportes():
 # opcion: Char (un caracter)
 def main():
 
+    clear()
     global recepcionhecha
 
     opcion = "1"
@@ -261,6 +271,7 @@ def main():
 
         elif opcion == "8": # Reportes
             if recepcionhecha != True: # Verificación
+                clear()
                 print("Para realizar los reportes se necesita la recepción de los camiones, por favor seleccione la opción 3: ")
             else:
                 opcion = "9"
