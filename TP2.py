@@ -88,22 +88,35 @@ def menu_terciario():
 # P: productos
 # opcion_terciario: Char (un caracter)
 
+        
 def cargarprod(P):
-
+    Pprimero = ""
+    Pmedio = ""
     for i in range(0,3):
-        P[i]= input(f"Ingresar el producto número {i+1}. (Trigo, Soja, Maíz, Girasol o Cebada): ").upper()
 
         # Verificación de que el producto no se encuentre repetido o ya haya otro producto allí
-        j = 1
-        while (P[j] != P[i] and j < 2):
-            j += 1
-        while P[j] == P[i]:
+
+        P[i]= input(f"Ingresar el producto número {i+1}. (Trigo, Soja, Maíz, Girasol o Cebada): ").upper()
+        
+        while P[i] == Pprimero or P[i] == Pmedio:
             P[i] = input(f"Producto ya ingresado. Ingrese nuevamente: ").upper()
+
+        Pprimero = P[0]
+        Pmedio = P[1]
+
+        # guardo los valores en las variables a lo gitanazo y pregunto si ya están ahí
+
+
+        # j = 1
+        # while (P[j] != P[i] and j < 2):
+        #     j += 1
+        # while P[j] == P[i]:
+        #     P[i] = input(f"Producto ya ingresado. Ingrese nuevamente: ").upper()
 
         # Verificacion de entrada de datos
         # while P[i] != "TRIGO" or P[i] != "SOJA" or P[i] != "MAIZ" or P[i] != "GIRASOL" or P[i] != "CEBADA":
         #     P[i] = input("Opción incorrecta. Ingrese nuevamente: ").upper()
-
+        
 
 
 def eliminarP(P, producto):
