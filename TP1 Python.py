@@ -11,6 +11,10 @@
 
 ##############################################################################
 
+# agrego este comentario pedorro para ver si funcionan los git push
+print("hola estoy probando el git commit y el git push")
+
+
 # función CLEAR para limpiar pantalla
 
 import os
