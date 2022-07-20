@@ -140,10 +140,20 @@ def recepcion():
     clear()
     global total_camiones, total_camiones_maiz, total_camiones_soja, total_neto_maiz, total_neto_soja, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, PATENTEMAYOR, PATENTEMENOR, recepcionhecha
 
+    if recepcionhecha == True:
+        print("Ya se ha realizado una recepción de camiones.")
+        respuestarep = input("¿Limpiar los datos e ingresar una nueva recepción? Ingrese SI o NO: ").upper()
+    
+        while respuestarep != "NO" and respuestarep != "SI": # Validación del sí
+            respuestarep = input("Error. Ingresar una respuesta correcta: ").upper()
+
+        if respuestarep == "NO":
+            main()
+
     # Inicialización de variables.
     total_camiones = 0
-    total_camiones_soja = 1
-    total_camiones_maiz = 1
+    total_camiones_soja = 0
+    total_camiones_maiz = 0
     total_neto_soja = 0
     total_neto_maiz = 0
     promedio_neto_maiz = 0
@@ -152,14 +162,19 @@ def recepcion():
     mayor_soja = 0
     PATENTEMAYOR = ""
     PATENTEMENOR = ""
+    camion = 0
 
-    camiones = int(input("\nIngresar cantidad de camiones: "))
+    camiones = input("\n¿Desea comenzar a ingresar los camiones? Ingrese SI o NO: ").upper()
 
-    while camiones < 1: # Validación de datos
-        camiones = int(input("Error. Ingresar un camión o más: "))
+    while camiones != "NO" and camiones != "SI": # Validación del sí
+        camiones = input("Error. Ingresar una respuesta correcta: ").upper()
 
-    for camion in range(1, camiones+1):
+    if camiones == "NO":
+        main()
 
+    while camiones != "NO":
+        
+        camion+= 1
         print(f"\nDatos del camión N{camion}")
 
         # Ingreso de datos, cálculo de peso neto y contador de camiones
@@ -187,9 +202,21 @@ def recepcion():
                 menor_maiz = PESO_NETO
                 PATENTEMENOR = PATENTE
 
+        camiones = input("\n¿Desea ingresar otro camión? Ingrese SI o NO: ").upper()
+
+        while camiones != "NO" and camiones != "SI": # Validación del sí
+            camiones = input("Error. Ingresar una respuesta correcta: ").upper()
+
     # Cálculo de promedios
-    promedio_neto_maiz = total_neto_maiz / total_camiones_maiz 
-    promedio_neto_soja = total_neto_soja / total_camiones_soja
+    if total_camiones_maiz == 0:
+        promedio_neto_maiz = 0
+    else:
+        promedio_neto_maiz = total_neto_maiz / total_camiones_maiz 
+
+    if total_camiones_soja == 0:
+        promedio_neto_maiz = 0
+    else:
+        promedio_neto_soja = total_neto_soja / total_camiones_soja
 
     recepcionhecha = True # Se valida la verificación
 
