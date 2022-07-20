@@ -79,15 +79,6 @@ def menu_terciario():
         else: # Volver al menú principal
             opcion_terciario = "V"
             administracion()
-
-
-# menu_productos():
-# TYPE
-# productos = array [1..3] de string
-# VAR
-# P: productos
-# opcion_terciario: Char (un caracter)
-
         
 def cargarprod(P):
     Pprimero = ""
@@ -98,6 +89,9 @@ def cargarprod(P):
 
         P[i]= input(f"Ingresar el producto número {i+1}. (Trigo, Soja, Maíz, Girasol o Cebada): ").upper()
         
+        while P[i] != "TRIGO" and P[i] != "SOJA" and P[i] != "MAIZ" and P[i] != "GIRASOL" and P[i] != "CEBADA":
+            P[i] = input(f"No es un producto válido. Ingrese nuevamente: ").upper()
+        
         while P[i] == Pprimero or P[i] == Pmedio:
             P[i] = input(f"Producto ya ingresado. Ingrese nuevamente: ").upper()
 
@@ -105,7 +99,6 @@ def cargarprod(P):
         Pmedio = P[1]
 
         # guardo los valores en las variables a lo gitanazo y pregunto si ya están ahí
-
 
         # j = 1
         # while (P[j] != P[i] and j < 2):
@@ -117,8 +110,6 @@ def cargarprod(P):
         # while P[i] != "TRIGO" or P[i] != "SOJA" or P[i] != "MAIZ" or P[i] != "GIRASOL" or P[i] != "CEBADA":
         #     P[i] = input("Opción incorrecta. Ingrese nuevamente: ").upper()
         
-
-
 def eliminarP(P, producto):
     j = 0
     while (P[j] != producto and j <3):
@@ -149,6 +140,13 @@ def modificacionproducto(P):
     producto = input("Ingresar el nombre del producto a modificar: ")
     nuevoproducto = input("Ingresar el nuevo producto: ")
     modificarP(P, producto, nuevoproducto)
+
+# menu_productos():
+# TYPE
+# productos = array [1..3] de string
+# VAR
+# P: productos
+# opcion_terciario: Char (un caracter)
 
 def menu_productos():
 
