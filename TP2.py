@@ -326,17 +326,14 @@ def recepcion():
 
         # Ingreso de datos, cálculo de peso neto y contador de camiones
         PATENTE = input("Ingresar número de patente ")
-        while len(PATENTE) < 6 or len(PATENTE) > 7: # Comprobamos la longitud de la patente
-            PATENTE = str(input("Error con la longitud de la patente. Por favor ingresar de vuelta: "))
+        lugar = buscocupo(arrcupos, PATENTE)
 
-        if repeticionpat(arrcupos, PATENTE):
-            lugar = buscocupo(arrcupos, PATENTE)
-            if arrcupos[1][lugar] == "P":
-                arrcupos[1][lugar] = "E"
-                print(f'Se actualizó el cupo de la patente {PATENTE} a "En proceso"')
-            else:
-                print(f"El cupo de la patente {PATENTE} se encuentra en estado: {arrcupos[1][lugar]}")
-        else: print("Esta patente no tiene cupo.")
+        while len(PATENTE) < 6 or len(PATENTE) > 7 or repeticionpat(arrcupos, PATENTE) != True or arrcupos[1][lugar] != "P":
+            PATENTE = input("La patente no es válida, ingresar otra: ")
+            lugar = buscocupo(arrcupos, PATENTE)            
+
+        arrcupos[1][lugar] = "E"
+        print(f'Se actualizó el cupo de la patente {PATENTE} a "En proceso"')
 
         PRODUCTO = input("Ingresar tipo de producto (M para maíz y S para soja.): ").upper()
         while PRODUCTO!="S" and PRODUCTO!="M":
