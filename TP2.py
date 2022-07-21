@@ -22,6 +22,12 @@ clear = lambda: os.system('cls')
 def en_construccion():
     print( "Esta funcionalidad está en construcción.")
 
+def inicializoarrays():
+    global P, arrcupos, estadocupos
+    P = ["","",""]
+    arrcupos = [""] * 8
+    estadocupos = [""] * 8
+
 def opciones_menu():
     print("----- MENU PRINCIPAL -----")
     print("Elija una opción (números enteros del 1 al 9):")
@@ -148,7 +154,7 @@ def modificacionproducto(P):
 
 def menu_productos():
 
-    P = ["","",""]
+    global P
     clear()
     opciones_terciario()
     opcion_terciario = "A"
@@ -169,19 +175,25 @@ def menu_productos():
             opcion_terciario = "V"
             administracion()
 
+
+def repeticionpat(array, patente):
+
+    for i in range(0,8):
+        if array[i] == patente:
+            return True
+
 # cupos()
 # TYPE
 #
 # VAR
 #
 
+ncupos = 0
+
 def cupos():
 
+    global ncupos
     clear()
-    arrcupos = [""] * 8
-    estadocupos = [""] * 8
-    ncupos = 0
-    ncuposog = 0
     print("----- MENÚ DE CUPOS -----")
     decisioncup = input("¿Desea ingresar un cupo? Ingrese SI o NO: ").upper()
     while decisioncup != "SI" and decisioncup != "NO":  # Validación de datos
@@ -192,27 +204,24 @@ def cupos():
             print("Se ha alcanzado el límite de cupos.")
             decisioncup = "NO"
 
-        for i in range(ncuposog,8):
+        nuevapatente = str(input("Ingresar la patente del camión: "))
+        while len(nuevapatente) < 6 or len(nuevapatente) > 7: # Comprobamos la longitud de la patente
+            nuevapatente = str(input("Error con la longitud de la patente. Por favor ingresar de vuelta: "))
+        while repeticionpat(arrcupos, nuevapatente): # Buscamos si la patente existe en el array
+            nuevapatente = str(input("La patente ya tiene un cupo asignado, especificar otra: "))
+        arrcupos[ncupos] = nuevapatente # Finalmente se asigna
 
-            # Falta validar que la patente del camión no se encuentre en el array
-            nuevapatente = str(input("Ingresar la patente del camión: "))
-            while len(nuevapatente) < 6 or len(nuevapatente) > 7:
-                nuevapatente = str(input("Error con la longitud de la patente. Por favor ingresar de vuelta: "))
-            
-            arrcupos[i] = nuevapatente
+        nuevoestado = str(input("Ingresar el estado de la patente: ")).upper()
+        while nuevoestado != "P" and nuevoestado != "E" and nuevoestado != "C": # Lo mismo acá...
+            nuevoestado = str(input("Estado erróneo. Ingresar un estado correcto: ")).upper()
+        estadocupos[ncupos] = nuevoestado # Asignación del estado
 
-            nuevoestado = str(input("Ingresar el estado de la patente: ")).upper()
-            while nuevoestado != "P" and nuevoestado != "E" and nuevoestado != "C":
-                nuevoestado = str(input("Estado erróneo. Ingresar un estado correcto: ")).upper()
-
-            # Se ingresa la patente y el estado en dos listas distintas (ojalá esto esté bien)
-            estadocupos[i] = nuevoestado
-            ncupos =+ 1
-        print("Se han ingresado todos los cupos.")
+        ncupos += 1
+        print(f"Se ingresó Cupo Nº {ncupos} con patente {nuevapatente}")
+    print("Se han ingresado todos los cupos.")
     
     print(arrcupos)
     print(estadocupos)
-    ncuposog = ncupos
 
     # Esto vuelve al main() directamente. ¿Me falta algo más?
 
@@ -255,7 +264,6 @@ def administracion():
             menu_terciario()
         else:
             opcion_admin = "V"
-            main()
 
 # Verificación de si se hizo la recepción de los datos de los N camiones. 
 # La variable recepcionhecha (Booleano) funciona como verificación. En caso de que esté en False, significa que 
@@ -280,7 +288,7 @@ def recepcion():
             respuestarep = input("Error. Ingresar una respuesta correcta: ").upper()
 
         if respuestarep == "NO":
-            main()
+            reportes() # esto genera un gran problemaaaaaaaaaaa a a a a aa 
 
     # Inicialización de variables.
     total_camiones = 0
@@ -300,9 +308,6 @@ def recepcion():
 
     while camiones != "NO" and camiones != "SI": # Validación del sí
         camiones = input("Error. Ingresar una respuesta correcta: ").upper()
-
-    if camiones == "NO":
-        main()
 
     while camiones != "NO":
         
@@ -358,8 +363,6 @@ def recepcion():
         decision = input("Ingrese una opción correcta: ").upper() 
     if decision == "SI":
         reportes()
-    elif decision == "NO":
-        main()
 
 # procedimiento reportes()
 # Variables:
@@ -383,9 +386,7 @@ def reportes():
     decisionrep = input("\n¿Desea volver al menú principal? Ingrese SI o NO: ").upper()
     while decisionrep != "SI" and decisionrep != "NO":  
         decisionrep = input("Ingrese una opción correcta: ").upper()
-    if decisionrep == "SI":
-        main()
-    elif decisionrep == "NO":
+    if decisionrep == "NO":
         print("Fin del programa.")
 
 # main() -> Programa principal
@@ -394,8 +395,9 @@ def reportes():
 def main():
 
     clear()
+    inicializoarrays()
     global recepcionhecha
-
+    global ncupos
     opcion = "1"
 
     while opcion != "9":
@@ -410,14 +412,12 @@ def main():
 
     # Menú de opciones
         if opcion == "1": # Administración
-            opcion = "9"
             administracion() # Se ejecuta el módulo administración.
             
         elif opcion == "2": # Entrega de cupos
             cupos() # JA
 
         elif opcion == "3": # Recepción
-            opcion = "9"
             recepcion() 
 
         elif opcion == "4": # Registrar calidad
@@ -437,7 +437,6 @@ def main():
                 clear()
                 print("Para realizar los reportes se necesita la recepción de los camiones, por favor seleccione la opción 3: ")
             else:
-                opcion = "9"
                 reportes() 
 
         else: # Fin del programa
