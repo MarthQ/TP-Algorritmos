@@ -128,13 +128,13 @@ def eliminarP(P, producto):
 	    print("El Producto no se encontró.")  
 
 def bajaprod(P):
-    print(P)
+    print(f"Producto 1: {P[0]}\nProducto 2: {P[1]}\nProducto 3: {P[2]}")
     producto = input("Ingresar el nombre del producto a eliminar: ").upper()
     eliminarP(P, producto)
 
 def modificarP(P, producto, nuevoproducto):
     j = 0
-    while (P[j] != producto and j <3):
+    while (P[j] != producto and j <2):
         j += 1
     if P[j]==producto:
         P[j] = nuevoproducto
@@ -143,7 +143,7 @@ def modificarP(P, producto, nuevoproducto):
 	    print("El Producto no se encontró.")
 
 def modificacionproducto(P):
-    print(P[0], P[1], P[2])
+    print(f"Producto 1: {P[0]}\nProducto 2: {P[1]}\nProducto 3: {P[2]}")
 
     producto = input("Ingresar el nombre del producto a modificar: ").upper()
     while producto != "TRIGO" and producto != "SOJA" and producto != "MAIZ" and producto != "GIRASOL" and producto != "CEBADA":
@@ -260,7 +260,7 @@ def administracion():
 
         # Validación de datos
         while opcion_admin == "" or (opcion_admin > "G" and opcion_admin < "V") or opcion_admin > "V":
-            opcion_admin = input("Opción incorrecta. Ingrese nuevamente: ")
+            opcion_admin = input("Opción incorrecta. Ingrese nuevamente: ").upper()
  
         if opcion_admin == "A": # Titulares
             opcion_admin = "V"
