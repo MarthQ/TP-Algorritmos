@@ -200,10 +200,7 @@ def cupos():
         decisioncup = input("Ingrese una opción correcta: ").upper()
 
     while decisioncup == "SI" and ncupos < 8:
-        if ncupos >= 8:
-            print("Se ha alcanzado el límite de cupos.")
-            decisioncup = "NO"
-
+        clear()
         nuevapatente = str(input("Ingresar la patente del camión: "))
         while len(nuevapatente) < 6 or len(nuevapatente) > 7: # Comprobamos la longitud de la patente
             nuevapatente = str(input("Error con la longitud de la patente. Por favor ingresar de vuelta: "))
@@ -218,12 +215,14 @@ def cupos():
 
         ncupos += 1
         print(f"Se ingresó Cupo Nº {ncupos} con patente {nuevapatente}")
-    print("Se han ingresado todos los cupos.")
+        decisioncup = input("¿Desea ingresar un nuevo cupo? Ingrese SI o NO: ").upper()
+        while decisioncup != "SI" and decisioncup != "NO":  # Validación de datos
+            decisioncup = input("Ingrese una opción correcta: ").upper()
     
-    print(arrcupos)
-    print(estadocupos)
+    if ncupos >= 8:
+        print("Se ha alcanzado el límite de cupos.")
 
-    # Esto vuelve al main() directamente. ¿Me falta algo más?
+    print("- Cupos ingresados correctamente -")
 
 # administracion()
 # Variables:
