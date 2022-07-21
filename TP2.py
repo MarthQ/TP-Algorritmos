@@ -98,7 +98,7 @@ def menu_terciario():
         else: # Volver al menú principal
             opcion_terciario = "V"
             administracion()
-        
+
 def cargarprod(P):
     Pprimero = ""
     Pmedio = ""
@@ -109,10 +109,10 @@ def cargarprod(P):
         P[i]= input(f"Ingresar el producto número {i+1}. (Trigo, Soja, Maíz, Girasol o Cebada): ").upper()
         
         while P[i] != "TRIGO" and P[i] != "SOJA" and P[i] != "MAIZ" and P[i] != "GIRASOL" and P[i] != "CEBADA":
-            P[i] = input(f"No es un producto válido. Ingrese nuevamente: ").upper()
+            P[i] = input("No es un producto válido. Ingrese nuevamente: ").upper()
         
         while P[i] == Pprimero or P[i] == Pmedio:
-            P[i] = input(f"Producto ya ingresado. Ingrese nuevamente: ").upper()
+            P[i] = input("Producto ya ingresado. Ingrese nuevamente: ").upper()
 
         Pprimero = P[0]
         Pmedio = P[1] # guardo los valores en las variables a lo gitanazo y pregunto si ya están ahí
@@ -143,9 +143,19 @@ def modificarP(P, producto, nuevoproducto):
 	    print("El Producto no se encontró.")
 
 def modificacionproducto(P):
-    print(P)
+    print(P[0], P[1], P[2])
+
     producto = input("Ingresar el nombre del producto a modificar: ").upper()
+    while producto != "TRIGO" and producto != "SOJA" and producto != "MAIZ" and producto != "GIRASOL" and producto != "CEBADA":
+        producto = input(f"No es un producto válido. Ingrese nuevamente: ").upper()
+
     nuevoproducto = input("Ingresar el nuevo producto: ").upper()
+    while nuevoproducto != "TRIGO" and nuevoproducto != "SOJA" and nuevoproducto != "MAIZ" and nuevoproducto != "GIRASOL" and nuevoproducto != "CEBADA":
+           nuevoproducto = input(f"No es un producto válido. Ingrese nuevamente: ").upper()
+
+    while nuevoproducto == P[0] or nuevoproducto == P[1] or nuevoproducto == P[2]:
+        nuevoproducto = input("Producto ya ingresado. Ingrese nuevamente: ").upper()
+
     modificarP(P, producto, nuevoproducto)
 
 # menu_productos():
