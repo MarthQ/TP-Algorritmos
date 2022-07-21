@@ -55,7 +55,6 @@ def opciones_terciario():
     print("\tM. MODIFICACION")
     print("\tV. VOLVER AL MENÚ ANTERIOR")
 
-
 # menu_terciario():
 # opcion_terciario: Char (un caracter)
 def menu_terciario():
@@ -97,7 +96,6 @@ def cargarprod(P):
 
         Pprimero = P[0]
         Pmedio = P[1]
-
         # guardo los valores en las variables a lo gitanazo y pregunto si ya están ahí
 
         # j = 1
@@ -170,6 +168,53 @@ def menu_productos():
         else: # Volver al menú principal
             opcion_terciario = "V"
             administracion()
+
+# cupos()
+# TYPE
+#
+# VAR
+#
+
+def cupos():
+
+    clear()
+    arrcupos = [""] * 8
+    estadocupos = [""] * 8
+    ncupos = 0
+    ncuposog = 0
+    print("----- MENÚ DE CUPOS -----")
+    decisioncup = input("¿Desea ingresar un cupo? Ingrese SI o NO: ").upper()
+    while decisioncup != "SI" and decisioncup != "NO":  # Validación de datos
+        decisioncup = input("Ingrese una opción correcta: ").upper()
+
+    while decisioncup == "SI" and ncupos < 8:
+        if ncupos >= 8:
+            print("Se ha alcanzado el límite de cupos.")
+            decisioncup = "NO"
+
+        for i in range(ncuposog,8):
+
+            # Falta validar que la patente del camión no se encuentre en el array
+            nuevapatente = str(input("Ingresar la patente del camión: "))
+            while len(nuevapatente) < 6 or len(nuevapatente) > 7:
+                nuevapatente = str(input("Error con la longitud de la patente. Por favor ingresar de vuelta: "))
+            
+            arrcupos[i] = nuevapatente
+
+            nuevoestado = str(input("Ingresar el estado de la patente: ")).upper()
+            while nuevoestado != "P" and nuevoestado != "E" and nuevoestado != "C":
+                nuevoestado = str(input("Estado erróneo. Ingresar un estado correcto: ")).upper()
+
+            # Se ingresa la patente y el estado en dos listas distintas (ojalá esto esté bien)
+            estadocupos[i] = nuevoestado
+            ncupos =+ 1
+        print("Se han ingresado todos los cupos.")
+    
+    print(arrcupos)
+    print(estadocupos)
+    ncuposog = ncupos
+
+    # Esto vuelve al main() directamente. ¿Me falta algo más?
 
 # administracion()
 # Variables:
@@ -310,7 +355,7 @@ def recepcion():
     # Opción de mostrar los reportes directamente
     decision = input("\n¿Desea mostrar los reportes? Ingrese SI o NO: \n").upper()
     while decision != "SI" and decision != "NO":  # Validación de datos
-        decision = input("Ingrese una opción correcta. ") 
+        decision = input("Ingrese una opción correcta: ").upper() 
     if decision == "SI":
         reportes()
     elif decision == "NO":
@@ -337,7 +382,7 @@ def reportes():
     # Opción de regreso al menú principal (main())
     decisionrep = input("\n¿Desea volver al menú principal? Ingrese SI o NO: ").upper()
     while decisionrep != "SI" and decisionrep != "NO":  
-        decisionrep = input("Ingrese una opción correcta. ") 
+        decisionrep = input("Ingrese una opción correcta: ").upper()
     if decisionrep == "SI":
         main()
     elif decisionrep == "NO":
@@ -369,7 +414,7 @@ def main():
             administracion() # Se ejecuta el módulo administración.
             
         elif opcion == "2": # Entrega de cupos
-            en_construccion() # No desarrollado aún.
+            cupos() # JA
 
         elif opcion == "3": # Recepción
             opcion = "9"
