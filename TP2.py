@@ -23,9 +23,10 @@ def en_construccion():
     print( "Esta funcionalidad está en construcción.")
 
 def inicializoarrays():
-    global P, arrcupos
+    global P, arrcupos, arrpatentes, arrpesobru, arrtara
     P = [""] * 3
-    arrcupos = [[""] * 8,[""] * 8]
+    arrcupos = [""] * 8
+    arrpatentes = [""] * 8
 
 def inicializodatoscam():
     global total_camiones, total_camiones_maiz, total_camiones_soja, total_neto_maiz, total_neto_soja, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, PATENTEMAYOR, PATENTEMENOR, recepcionhecha, camion
@@ -44,7 +45,7 @@ def inicializodatoscam():
 
 def opciones_menu():
     print("----- MENU PRINCIPAL -----")
-    print("Elija una opción (números enteros del 1 al 9):")
+    print("Elija una opción (números enteros del 0 al 8):")
     print("\t1 - ADMINISTRACIONES")
     print("\t2 - ENTREGA DE CUPOS")
     print("\t3 - RECEPCION")
@@ -53,7 +54,7 @@ def opciones_menu():
     print("\t6 - REGISTRAR DESCARGA")
     print("\t7 - REGISTRAR TARA")
     print("\t8 - REPORTES")
-    print("\t9 - FIN DEL PROGRAMA")
+    print("\t0 - FIN DEL PROGRAMA")
 
 def opciones_admin():
     print("----- MENU ADMINISTRACIÓN -----")
@@ -106,7 +107,7 @@ def cargarprod(P):
 
         # Verificación de que el producto no se encuentre repetido o ya haya otro producto allí
 
-        P[i]= input(f"Ingresar el producto número {i+1}. (Trigo, Soja, Maíz, Girasol o Cebada): ").upper()
+        P[i]= input(f"Ingresar el producto número {i+1}. (Maíz, Soja, Trigo, Girasol o Cebada): ").upper()
         
         while P[i] != "TRIGO" and P[i] != "SOJA" and P[i] != "MAIZ" and P[i] != "GIRASOL" and P[i] != "CEBADA":
             P[i] = input("No es un producto válido. Ingrese nuevamente: ").upper()
@@ -192,13 +193,13 @@ def menu_productos():
 def repeticionpat(array, patente):
 
     for i in range(0,8):
-        if array[0][i] == patente:
+        if array[i] == patente:
             return True
 
 def buscocupo(array, patente):
     
     for i in range(0,8):
-        if array[0][i] == patente:
+        if array[i] == patente:
             return i
 
 # cupos()
@@ -220,18 +221,18 @@ def cupos():
 
     while decisioncup == "SI" and ncupos < 8:
         clear()
-        nuevapatente = str(input("Ingresar la patente del camión: "))
+        nuevapatente = input("Ingresar la patente del camión: ")
         while len(nuevapatente) < 6 or len(nuevapatente) > 7: # Comprobamos la longitud de la patente
-            nuevapatente = str(input("Error con la longitud de la patente. Por favor ingresar de vuelta: "))
-        while repeticionpat(arrcupos, nuevapatente): # Buscamos si la patente existe en el array
-            nuevapatente = str(input("La patente ya tiene un cupo asignado, especificar otra: "))
-        arrcupos[0][ncupos] = nuevapatente # Finalmente se asigna
+            nuevapatente = input("Error con la longitud de la patente. Por favor ingresar de vuelta: ").upper()
+        while repeticionpat(arrpatentes, nuevapatente): # Buscamos si la patente existe en el array
+            nuevapatente = input("La patente ya tiene un cupo asignado, especificar otra: ").upper()
+        arrpatentes[ncupos] = nuevapatente # Finalmente se asigna
 
         print("Posibles estados: P - Pendiente, E - En proceso, C - Cumplido")
-        nuevoestado = str(input("Ingresar el estado de la patente: ")).upper()
+        nuevoestado = input("Ingresar el estado de la patente: ").upper()
         while nuevoestado != "P" and nuevoestado != "E" and nuevoestado != "C": # Lo mismo acá...
-            nuevoestado = str(input("Estado erróneo. Ingresar un estado correcto: ")).upper()
-        arrcupos[1][ncupos] = nuevoestado # Asignación del estado
+            nuevoestado = input("Estado erróneo. Ingresar un estado correcto: ").upper()
+        arrcupos[ncupos] = nuevoestado # Asignación del estado
 
         ncupos += 1
         print(f"Se ingresó Cupo Nº {ncupos} con patente {nuevapatente}")
@@ -286,6 +287,24 @@ def administracion():
         else:
             opcion_admin = "V"
 
+
+# regpesobruto()
+# TYPE
+#
+# VAR
+#
+def regpesobruto():
+    clear()
+    patentereg = input("Ingresar patente a registrar: ")
+
+
+
+
+def tebuscoaca(P, producto):
+    for i in range(0, 3):
+        if P[i] == producto:
+            return True
+
 # procedimiento recepcion()
 # Variables:
 # total_camiones, total_camiones_soja, total_camiones_maiz, camiones: Enteros (Integer)
@@ -321,44 +340,73 @@ def recepcion():
 
     while camiones != "NO":
         
-        camion+= 1
-        print(f"\nDatos del camión N{camion}")
+        print(f"\nDatos del camión")
 
         # Ingreso de datos, cálculo de peso neto y contador de camiones
-        PATENTE = input("Ingresar número de patente ")
-        lugar = buscocupo(arrcupos, PATENTE)
+        PATENTE = input("Ingresar número de patente ").upper()
 
-        while len(PATENTE) < 6 or len(PATENTE) > 7 or repeticionpat(arrcupos, PATENTE) != True or arrcupos[1][lugar] != "P":
-            PATENTE = input("La patente no es válida, ingresar otra: ")
-            lugar = buscocupo(arrcupos, PATENTE)            
+        while len(PATENTE) < 6 or len(PATENTE) > 7:
+            PATENTE = input("La patente no es válida, ingresar de vuelta: ").upper()
 
-        arrcupos[1][lugar] = "E"
-        print(f'Se actualizó el cupo de la patente {PATENTE} a "En proceso"')
+        lugar = 0
+        while lugar < 8 and arrpatentes[lugar] != PATENTE:
+            lugar += 1
 
-        PRODUCTO = input("Ingresar tipo de producto (M para maíz y S para soja.): ").upper()
-        while PRODUCTO!="S" and PRODUCTO!="M":
-            PRODUCTO=input("Ingrese una opcion valida:").upper()                
-        PESO_BRUTO = float(input("Ingresar peso bruto "))
-        TARA = float(input("Ingresar tara "))
-        while TARA > PESO_BRUTO:
-            TARA = float(input("La tara no puede ser mayor al Peso Bruto. Ingresar de vuelta: "))
-        PESO_NETO = PESO_BRUTO - TARA
-        print("\nEl peso neto es ", PESO_NETO)
-        total_camiones += 1
+        if lugar == 8:
+            print("La patente no se encuentra registrada.")
+
+        else:
+            if arrcupos[lugar] == "P":
+                arrcupos[lugar] = "E"
+                print(f'Se actualizó el cupo de la patente {PATENTE} a "En proceso"')
+                print("Ingresar tipo de producto (Maíz, Soja, Trigo, Girasol, Cebada)")
+                PRODUCTO = input("- ").upper()
+                while tebuscoaca(P, PRODUCTO) != True:
+                    PRODUCTO = input("No es un producto válido o no está dado de alta, ingresar de vuelta: ").upper()
+
+                if PRODUCTO == "MAIZ":
+                    print("encontradoo")
+
+                elif PRODUCTO == "SOJA":
+                    print("encontradoo")
+                
+                elif PRODUCTO == "TRIGO":
+                    print("encontradoo")
+
+                elif PRODUCTO == "GIRASOL":
+                    print("encontradoo")
+
+                elif PRODUCTO == "CEBADA":
+                    print("encontradoo")
+
+            else:
+                print("El cupo no es válido.")
+
+
+        # PRODUCTO = input("Ingresar tipo de producto (M para maíz y S para soja.): ").upper()
+        # while PRODUCTO!="S" and PRODUCTO!="M":
+        #     PRODUCTO=input("Ingrese una opcion valida:").upper()                
+        # PESO_BRUTO = float(input("Ingresar peso bruto "))
+        # TARA = float(input("Ingresar tara "))
+        # while TARA > PESO_BRUTO:
+        #     TARA = float(input("La tara no puede ser mayor al Peso Bruto. Ingresar de vuelta: "))
+        # PESO_NETO = PESO_BRUTO - TARA
+        # print("\nEl peso neto es ", PESO_NETO)
+        # total_camiones += 1
 
         # Cálculos por tipo de producto (Maíz o Soja)
-        if PRODUCTO == "S":
-            total_camiones_soja += 1
-            total_neto_soja = total_neto_soja + PESO_NETO
-            if PESO_NETO > mayor_soja:
-                mayor_soja = PESO_NETO
-                PATENTEMAYOR = PATENTE
-        elif PRODUCTO == "M":
-            total_camiones_maiz += 1
-            total_neto_maiz = total_neto_maiz + PESO_NETO
-            if PESO_NETO < menor_maiz:
-                menor_maiz = PESO_NETO
-                PATENTEMENOR = PATENTE
+        # if PRODUCTO == "S":
+        #     total_camiones_soja += 1
+        #     total_neto_soja = total_neto_soja + PESO_NETO
+        #     if PESO_NETO > mayor_soja:
+        #         mayor_soja = PESO_NETO
+        #         PATENTEMAYOR = PATENTE
+        # elif PRODUCTO == "M":
+        #     total_camiones_maiz += 1
+        #     total_neto_maiz = total_neto_maiz + PESO_NETO
+        #     if PESO_NETO < menor_maiz:
+        #         menor_maiz = PESO_NETO
+        #         PATENTEMENOR = PATENTE
 
         camiones = input("\n¿Desea ingresar otro camión? Ingrese SI o NO: ").upper()
 
@@ -367,15 +415,15 @@ def recepcion():
     clear()
 
     # Cálculo de promedios
-    if total_camiones_maiz == 0:
-        promedio_neto_maiz = 0
-    else:
-        promedio_neto_maiz = total_neto_maiz / total_camiones_maiz 
+    # if total_camiones_maiz == 0:
+    #     promedio_neto_maiz = 0
+    # else:
+    #     promedio_neto_maiz = total_neto_maiz / total_camiones_maiz 
 
-    if total_camiones_soja == 0:
-        promedio_neto_maiz = 0
-    else:
-        promedio_neto_soja = total_neto_soja / total_camiones_soja
+    # if total_camiones_soja == 0:
+    #     promedio_neto_maiz = 0
+    # else:
+    #     promedio_neto_soja = total_neto_soja / total_camiones_soja
 
     recepcionhecha = True # Se valida la verificación
 
@@ -422,14 +470,14 @@ def main():
     global ncupos
     opcion = "1"
 
-    while opcion != "9":
+    while opcion != "0":
         opciones_menu()
         opcion = input("Opción: ")
 
     # Validación de datos
         while opcion == "" or len(opcion) > 1:
             opcion = input("Opción incorrecta. Ingresar nuevamente: ")
-        while int(opcion) < 0 or int(opcion) > 9:
+        while int(opcion) < 0 or int(opcion) > 8:
             opcion = input("Opción incorrecta. Ingresar nuevamente: ")
 
     # Menú de opciones
@@ -437,7 +485,7 @@ def main():
             administracion() # Se ejecuta el módulo administración.
             
         elif opcion == "2": # Entrega de cupos
-            cupos() # JA
+            cupos()
 
         elif opcion == "3": # Recepción
             recepcion() 
@@ -446,13 +494,13 @@ def main():
             en_construccion()
 
         elif opcion == "5": # Registrar peso bruto
-            en_construccion() # No desarrollado aún.
+            regpesobruto() # No desarrollado aún.
 
         elif opcion == "6": # Registrar descarga
-            en_construccion() # No desarrollado aún.
+            en_construccion() 
 
         elif opcion == "7": # Registrar tara
-            en_construccion() # No desarrollado aún.
+            en_construccion() 
 
         elif opcion == "8": # Reportes
             if recepcionhecha != True: # Verificación
