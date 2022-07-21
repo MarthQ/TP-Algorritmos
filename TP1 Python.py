@@ -26,6 +26,21 @@ clear = lambda: os.system('cls')
 def en_construccion():
     print( "Esta funcionalidad está en construcción.")
 
+def inicializodatoscam():
+    global total_camiones, total_camiones_maiz, total_camiones_soja, total_neto_maiz, total_neto_soja, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, PATENTEMAYOR, PATENTEMENOR, recepcionhecha, camion
+    total_camiones = 0
+    total_camiones_soja = 0
+    total_camiones_maiz = 0
+    total_neto_soja = 0
+    total_neto_maiz = 0
+    promedio_neto_maiz = 0
+    promedio_neto_soja = 0
+    menor_maiz = 1000000000
+    mayor_soja = 0
+    PATENTEMAYOR = ""
+    PATENTEMENOR = ""
+    camion = 0
+
 def opciones_menu():
     print("----- MENU PRINCIPAL -----")
     print("Elija una opción (números enteros del 1 al 9):")
@@ -138,39 +153,24 @@ recepcionhecha = False
 # PRODUCTO: Char (un caracter)
 def recepcion():
     clear()
-    global total_camiones, total_camiones_maiz, total_camiones_soja, total_neto_maiz, total_neto_soja, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, PATENTEMAYOR, PATENTEMENOR, recepcionhecha
+    global total_camiones, total_camiones_maiz, total_camiones_soja, total_neto_maiz, total_neto_soja, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, PATENTEMAYOR, PATENTEMENOR, recepcionhecha, camion
 
     if recepcionhecha == True:
         print("Ya se ha realizado una recepción de camiones.")
-        respuestarep = input("¿Limpiar los datos e ingresar una nueva recepción? Ingrese SI o NO: ").upper()
+        respuestarep = input("¿Desea ingresar una nueva recepción? Ingrese SI o NO: ").upper()
     
         while respuestarep != "NO" and respuestarep != "SI": # Validación del sí
             respuestarep = input("Error. Ingresar una respuesta correcta: ").upper()
 
-        if respuestarep == "NO":
-            main()
+        if respuestarep == "SI":
 
-    # Inicialización de variables.
-    total_camiones = 0
-    total_camiones_soja = 0
-    total_camiones_maiz = 0
-    total_neto_soja = 0
-    total_neto_maiz = 0
-    promedio_neto_maiz = 0
-    promedio_neto_soja = 0
-    menor_maiz = 1000000000
-    mayor_soja = 0
-    PATENTEMAYOR = ""
-    PATENTEMENOR = ""
-    camion = 0
+        # Inicialización de variables.
+            inicializodatoscam()
 
-    camiones = input("\n¿Desea comenzar a ingresar los camiones? Ingrese SI o NO: ").upper()
+    camiones = input("\n¿Comenzar a ingresar los camiones? Ingrese SI o NO: ").upper()
 
     while camiones != "NO" and camiones != "SI": # Validación del sí
         camiones = input("Error. Ingresar una respuesta correcta: ").upper()
-
-    if camiones == "NO":
-        main()
 
     while camiones != "NO":
         
@@ -184,6 +184,8 @@ def recepcion():
             PRODUCTO=input("Ingrese una opcion valida:").upper()
         PESO_BRUTO = float(input("Ingresar peso bruto "))
         TARA = float(input("Ingresar tara "))
+        while TARA > PESO_BRUTO:
+            TARA = float(input("La tara no puede ser mayor al Peso Bruto. Ingresar de vuelta: "))
         PESO_NETO = PESO_BRUTO - TARA
         print("\nEl peso neto es ", PESO_NETO)
         total_camiones += 1
@@ -223,11 +225,11 @@ def recepcion():
     # Opción de mostrar los reportes directamente
     decision = input("\n¿Desea mostrar los reportes? Ingrese SI o NO: \n").upper()
     while decision != "SI" and decision != "NO":  # Validación de datos
-        decision = input("Ingrese una opción correcta. ") 
+        decision = input("Ingrese una opción correcta: ").upper() 
     if decision == "SI":
         reportes()
-    elif decision == "NO":
-        main()
+    else:
+        clear()
 
 # procedimiento reportes()
 # Variables:
@@ -261,6 +263,7 @@ def reportes():
 # opcion: Char (un caracter)
 def main():
 
+    inicializodatoscam
     clear()
     global recepcionhecha
 

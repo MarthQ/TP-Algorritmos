@@ -23,10 +23,9 @@ def en_construccion():
     print( "Esta funcionalidad está en construcción.")
 
 def inicializoarrays():
-    global P, arrcupos, estadocupos
-    P = ["","",""]
-    arrcupos = [""] * 8
-    estadocupos = [""] * 8
+    global P, arrcupos
+    P = [""] * 3
+    arrcupos = [[""] * 8,[""] * 8]
 
 def inicializodatoscam():
     global total_camiones, total_camiones_maiz, total_camiones_soja, total_neto_maiz, total_neto_soja, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, PATENTEMAYOR, PATENTEMENOR, recepcionhecha, camion
@@ -116,18 +115,7 @@ def cargarprod(P):
             P[i] = input(f"Producto ya ingresado. Ingrese nuevamente: ").upper()
 
         Pprimero = P[0]
-        Pmedio = P[1]
-        # guardo los valores en las variables a lo gitanazo y pregunto si ya están ahí
-
-        # j = 1
-        # while (P[j] != P[i] and j < 2):
-        #     j += 1
-        # while P[j] == P[i]:
-        #     P[i] = input(f"Producto ya ingresado. Ingrese nuevamente: ").upper()
-
-        # Verificacion de entrada de datos
-        # while P[i] != "TRIGO" or P[i] != "SOJA" or P[i] != "MAIZ" or P[i] != "GIRASOL" or P[i] != "CEBADA":
-        #     P[i] = input("Opción incorrecta. Ingrese nuevamente: ").upper()
+        Pmedio = P[1] # guardo los valores en las variables a lo gitanazo y pregunto si ya están ahí
         
 def eliminarP(P, producto):
     j = 0
@@ -141,7 +129,7 @@ def eliminarP(P, producto):
 
 def bajaprod(P):
     print(P)
-    producto = input("Ingresar el nombre del producto a eliminar: ")
+    producto = input("Ingresar el nombre del producto a eliminar: ").upper()
     eliminarP(P, producto)
 
 def modificarP(P, producto, nuevoproducto):
@@ -156,8 +144,8 @@ def modificarP(P, producto, nuevoproducto):
 
 def modificacionproducto(P):
     print(P)
-    producto = input("Ingresar el nombre del producto a modificar: ")
-    nuevoproducto = input("Ingresar el nuevo producto: ")
+    producto = input("Ingresar el nombre del producto a modificar: ").upper()
+    nuevoproducto = input("Ingresar el nuevo producto: ").upper()
     modificarP(P, producto, nuevoproducto)
 
 # menu_productos():
@@ -194,8 +182,14 @@ def menu_productos():
 def repeticionpat(array, patente):
 
     for i in range(0,8):
-        if array[i] == patente:
+        if array[0][i] == patente:
             return True
+
+def buscocupo(array, patente):
+    
+    for i in range(0,8):
+        if array[0][i] == patente:
+            return i
 
 # cupos()
 # TYPE
@@ -221,12 +215,13 @@ def cupos():
             nuevapatente = str(input("Error con la longitud de la patente. Por favor ingresar de vuelta: "))
         while repeticionpat(arrcupos, nuevapatente): # Buscamos si la patente existe en el array
             nuevapatente = str(input("La patente ya tiene un cupo asignado, especificar otra: "))
-        arrcupos[ncupos] = nuevapatente # Finalmente se asigna
+        arrcupos[0][ncupos] = nuevapatente # Finalmente se asigna
 
+        print("Posibles estados: P - Pendiente, E - En proceso, C - Cumplido")
         nuevoestado = str(input("Ingresar el estado de la patente: ")).upper()
         while nuevoestado != "P" and nuevoestado != "E" and nuevoestado != "C": # Lo mismo acá...
             nuevoestado = str(input("Estado erróneo. Ingresar un estado correcto: ")).upper()
-        estadocupos[ncupos] = nuevoestado # Asignación del estado
+        arrcupos[1][ncupos] = nuevoestado # Asignación del estado
 
         ncupos += 1
         print(f"Se ingresó Cupo Nº {ncupos} con patente {nuevapatente}")
@@ -237,6 +232,7 @@ def cupos():
     if ncupos >= 8:
         print("Se ha alcanzado el límite de cupos.")
 
+    print(arrcupos)
     cuposctm = input("Cupos ingresados correctamente - Presione cualquier tecla para continuar")
     clear()
 
@@ -280,17 +276,18 @@ def administracion():
         else:
             opcion_admin = "V"
 
-# Verificación de si se hizo la recepción de los datos de los N camiones. 
-# La variable recepcionhecha (Booleano) funciona como verificación. En caso de que esté en False, significa que 
-# los camiones no fueron ingresados, y por tanto hacer una planilla de reportes sería imposible.
-recepcionhecha = False
-
 # procedimiento recepcion()
 # Variables:
 # total_camiones, total_camiones_soja, total_camiones_maiz, camiones: Enteros (Integer)
 # total_neto_soja, total_neto_maiz, promedio_neto_maiz, promedio_neto_soja, PESO_BRUTO, TARA, PESO_NETO: Real (Float)
 # PATENTEMAYOR, PATENTEMENOR, decision: String (Cadena de caracteres)
 # PRODUCTO: Char (un caracter)
+
+# Verificación de si se hizo la recepción de los datos de los N camiones. 
+# La variable recepcionhecha (Booleano) funciona como verificación. En caso de que esté en False, significa que 
+# los camiones no fueron ingresados, y por tanto hacer una planilla de reportes sería imposible.
+recepcionhecha = False
+
 def recepcion():
     clear()
     global total_camiones, total_camiones_maiz, total_camiones_soja, total_neto_maiz, total_neto_soja, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, PATENTEMAYOR, PATENTEMENOR, recepcionhecha, camion
@@ -319,11 +316,25 @@ def recepcion():
 
         # Ingreso de datos, cálculo de peso neto y contador de camiones
         PATENTE = input("Ingresar número de patente ")
+        while len(PATENTE) < 6 or len(PATENTE) > 7: # Comprobamos la longitud de la patente
+            PATENTE = str(input("Error con la longitud de la patente. Por favor ingresar de vuelta: "))
+
+        if repeticionpat(arrcupos, PATENTE):
+            lugar = buscocupo(arrcupos, PATENTE)
+            if arrcupos[1][lugar] == "P":
+                arrcupos[1][lugar] = "E"
+                print(f'Se actualizó el cupo de la patente {PATENTE} a "En proceso"')
+            else:
+                print(f"El cupo de la patente {PATENTE} se encuentra en estado: {arrcupos[1][lugar]}")
+        else: print("Esta patente no tiene cupo.")
+
         PRODUCTO = input("Ingresar tipo de producto (M para maíz y S para soja.): ").upper()
         while PRODUCTO!="S" and PRODUCTO!="M":
-            PRODUCTO=input("Ingrese una opcion valida:").upper()
+            PRODUCTO=input("Ingrese una opcion valida:").upper()                
         PESO_BRUTO = float(input("Ingresar peso bruto "))
         TARA = float(input("Ingresar tara "))
+        while TARA > PESO_BRUTO:
+            TARA = float(input("La tara no puede ser mayor al Peso Bruto. Ingresar de vuelta: "))
         PESO_NETO = PESO_BRUTO - TARA
         print("\nEl peso neto es ", PESO_NETO)
         total_camiones += 1
@@ -346,6 +357,7 @@ def recepcion():
 
         while camiones != "NO" and camiones != "SI": # Validación del sí
             camiones = input("Error. Ingresar una respuesta correcta: ").upper()
+    clear()
 
     # Cálculo de promedios
     if total_camiones_maiz == 0:
