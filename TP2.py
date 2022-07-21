@@ -28,6 +28,21 @@ def inicializoarrays():
     arrcupos = [""] * 8
     estadocupos = [""] * 8
 
+def inicializodatoscam():
+    global total_camiones, total_camiones_maiz, total_camiones_soja, total_neto_maiz, total_neto_soja, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, PATENTEMAYOR, PATENTEMENOR, recepcionhecha, camion
+    total_camiones = 0
+    total_camiones_soja = 0
+    total_camiones_maiz = 0
+    total_neto_soja = 0
+    total_neto_maiz = 0
+    promedio_neto_maiz = 0
+    promedio_neto_soja = 0
+    menor_maiz = 1000000000
+    mayor_soja = 0
+    PATENTEMAYOR = ""
+    PATENTEMENOR = ""
+    camion = 0
+
 def opciones_menu():
     print("----- MENU PRINCIPAL -----")
     print("Elija una opción (números enteros del 1 al 9):")
@@ -222,7 +237,8 @@ def cupos():
     if ncupos >= 8:
         print("Se ha alcanzado el límite de cupos.")
 
-    print("- Cupos ingresados correctamente -")
+    cuposctm = input("Cupos ingresados correctamente - Presione cualquier tecla para continuar")
+    clear()
 
 # administracion()
 # Variables:
@@ -277,33 +293,21 @@ recepcionhecha = False
 # PRODUCTO: Char (un caracter)
 def recepcion():
     clear()
-    global total_camiones, total_camiones_maiz, total_camiones_soja, total_neto_maiz, total_neto_soja, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, PATENTEMAYOR, PATENTEMENOR, recepcionhecha
+    global total_camiones, total_camiones_maiz, total_camiones_soja, total_neto_maiz, total_neto_soja, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, PATENTEMAYOR, PATENTEMENOR, recepcionhecha, camion
 
     if recepcionhecha == True:
         print("Ya se ha realizado una recepción de camiones.")
-        respuestarep = input("¿Limpiar los datos e ingresar una nueva recepción? Ingrese SI o NO: ").upper()
+        respuestarep = input("¿Desea ingresar una nueva recepción? Ingrese SI o NO: ").upper()
     
         while respuestarep != "NO" and respuestarep != "SI": # Validación del sí
             respuestarep = input("Error. Ingresar una respuesta correcta: ").upper()
 
-        if respuestarep == "NO":
-            reportes() # esto genera un gran problemaaaaaaaaaaa a a a a aa 
+        if respuestarep == "SI":
 
-    # Inicialización de variables.
-    total_camiones = 0
-    total_camiones_soja = 0
-    total_camiones_maiz = 0
-    total_neto_soja = 0
-    total_neto_maiz = 0
-    promedio_neto_maiz = 0
-    promedio_neto_soja = 0
-    menor_maiz = 1000000000
-    mayor_soja = 0
-    PATENTEMAYOR = ""
-    PATENTEMENOR = ""
-    camion = 0
+        # Inicialización de variables.
+            inicializodatoscam()
 
-    camiones = input("\n¿Desea comenzar a ingresar los camiones? Ingrese SI o NO: ").upper()
+    camiones = input("\n¿Comenzar a ingresar los camiones? Ingrese SI o NO: ").upper()
 
     while camiones != "NO" and camiones != "SI": # Validación del sí
         camiones = input("Error. Ingresar una respuesta correcta: ").upper()
@@ -362,6 +366,8 @@ def recepcion():
         decision = input("Ingrese una opción correcta: ").upper() 
     if decision == "SI":
         reportes()
+    else:
+        clear()
 
 # procedimiento reportes()
 # Variables:
@@ -382,11 +388,8 @@ def reportes():
     print("Patente del camión de maíz que menor cantidad de maíz descargó: ", PATENTEMENOR)
 
     # Opción de regreso al menú principal (main())
-    decisionrep = input("\n¿Desea volver al menú principal? Ingrese SI o NO: ").upper()
-    while decisionrep != "SI" and decisionrep != "NO":  
-        decisionrep = input("Ingrese una opción correcta: ").upper()
-    if decisionrep == "NO":
-        print("Fin del programa.")
+    reportesctm = input("\nPresione cualquier tecla para volver al menú principal: ")
+    clear()
 
 # main() -> Programa principal
 # Variables:
@@ -395,6 +398,7 @@ def main():
 
     clear()
     inicializoarrays()
+    inicializodatoscam()
     global recepcionhecha
     global ncupos
     opcion = "1"
