@@ -555,14 +555,16 @@ def recepcion():
 
     recepcionhecha = True # Se valida la verificación
 
+#############################################################################################
+# LO SAQUE PORQUE LA OTRA VEZ SE QUEJÓ LA PEREZ QUE NO TENIA QUE ESTAR ESTO AKDHSJKDHALK LPM
     # Opción de mostrar los reportes directamente
-    decision = input("\n¿Desea mostrar los reportes? Ingrese SI o NO: \n").upper()
-    while decision != "SI" and decision != "NO":  # Validación de datos
-        decision = input("Ingrese una opción correcta: ").upper() 
-    if decision == "SI":
-        reportes()
-    else:
-        clear()
+    # decision = input("\n¿Desea mostrar los reportes? Ingrese SI o NO: \n").upper()
+    # while decision != "SI" and decision != "NO":  # Validación de datos
+    #     decision = input("Ingrese una opción correcta: ").upper() 
+    # if decision == "SI":
+    #     reportes()
+    # else:
+    #     clear()
 
 # procedimiento reportes()
 # Variables:
