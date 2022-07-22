@@ -298,7 +298,7 @@ def administracion():
 #
 def regpesobruto():
     clear()
-    decisionregp = input("¿Registrar una nueva patente? Ingrese SI o NO: ").upper()
+    decisionregp = input("¿Registrar un nuevo peso bruto? Ingrese SI o NO: ").upper()
     while decisionregp != "NO" and decisionregp != "SI": # Validación del sí
         decisionregp = input("Error. Ingresar una respuesta correcta: ").upper()
     while decisionregp == "SI":
@@ -317,6 +317,8 @@ def regpesobruto():
             if arrcupos[x] == "E":
                 if arrpesobru[x] == 0:
                         pesobruto = int(input("Ingresar peso bruto: "))
+                        while pesobruto < 1:
+                            pesobruto = int(input("El peso no es válido, ingresar un valor mayor a 0."))
                         arrpesobru[x] = pesobruto
                 else:
                     print("Esta patente ya tiene asignado un peso bruto.")
@@ -324,13 +326,48 @@ def regpesobruto():
             else:
                 print("El cupo de esta patente no es válido para ingresar el peso bruto.")
     
-        decisionregp = input("¿Registrar una nueva patente? Ingrese SI o NO: ").upper()
+        decisionregp = input("¿Registrar un nuevo peso bruto? Ingrese SI o NO: ").upper()
         while decisionregp != "NO" and decisionregp != "SI": # Validación del sí
             decisionregp = input("Error. Ingresar una respuesta correcta: ").upper()
         clear()
 
 def regtara():
-    en_construccion()
+    clear()
+    decisionregt = input("¿Registrar una nueva tara? Ingrese SI o NO: ").upper()
+    while decisionregt != "NO" and decisionregt != "SI": # Validación del sí
+        decisionregt = input("Error. Ingresar una respuesta correcta: ").upper()
+    while decisionregt == "SI":
+        patentereg = input("Ingresar patente a registrar: ")
+        while len(patentereg) < 6 or len(patentereg) > 7:
+            patentereg = input("La patente no es válida, ingresar de vuelta: ").upper()
+        
+        x = 0
+        while x < 8 and arrpatentes[x] != patentereg:
+            x += 1
+
+        if x == 8:
+            print("La patente no se encuentra en el sistema.")
+
+        else:
+            if arrcupos[x] == "E":
+                if arrpesobru[x] != 0:
+                        if arrtara[x] != 0:
+                            print("Esta patente ya tiene una tara ingresada.")
+                        else:
+                            tara = int(input("Ingresar tara: "))
+                            while tara < 1:
+                                tara = int(input("La tara no es válida, ingresar un valor mayor a 0."))
+                            arrtara[x] = tara
+                else:
+                    print("Error - Para asignar la tara se requiere tener asignado un peso bruto.")
+                    
+            else:
+                print("El cupo de esta patente no es válido para ingresar la tara.")
+    
+        decisionregt = input("¿Registrar una nueva tara? Ingrese SI o NO: ").upper()
+        while decisionregt != "NO" and decisionregt != "SI": # Validación del sí
+            decisionregt = input("Error. Ingresar una respuesta correcta: ").upper()
+        clear()
 
 
 def tebuscoaca(P, producto):
