@@ -1,5 +1,5 @@
 ##############################################################################
-# Trabajo Práctico N°1 
+# Trabajo Práctico N°2 
 # Algoritmos y Estructura de Datos
 # Comisión 109 de Ingeniería en Sistemas de la Información
 
@@ -11,8 +11,8 @@
 
 ##############################################################################
 
+# Estética del programa
 # función CLEAR para limpiar pantalla
-
 import os
 clear = lambda: os.system('cls')
 
