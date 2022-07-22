@@ -27,7 +27,7 @@ clear = lambda: os.system('cls')
 # productosxp = array [0..7] of String
 # pesosnetos = array [0..7] of Integer
 def inicializoarrays():
-    global P, arrcupos, arrpatentes, arrpesobru, arrtara, productosxp, pesosnetos
+    global P, arrcupos, arrpatentes, arrpesobru, arrtara, productosxp, pesosnetos, mayores, menores, patentemay, patentemin
     P = [""] * 3
     arrcupos = [""] * 8
     arrpatentes = [""] * 8
@@ -35,6 +35,10 @@ def inicializoarrays():
     arrtara = [0] * 8
     productosxp = [""] * 8
     pesosnetos = [0] * 8
+    mayores = [0] * 5
+    menores = [99999999999] * 5
+    patentemay = [""] * 5
+    patentemin = [""] * 5
 
 # procedimiento inicializadodatoscam()
 # VAR:
@@ -44,7 +48,7 @@ def inicializoarrays():
 # promedio_neto_soja, promedio_neto_maiz: Float
 # recepcionhecha: Boolean
 def inicializodatoscam():
-    global total_camiones, total_camiones_maiz, total_camiones_soja, total_camiones_cebada, total_camiones_girasol, total_camiones_trigo, total_neto_maiz, total_neto_soja, total_neto_trigo, total_neto_girasol, total_neto_cebada, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, PATENTEMAYOR, PATENTEMENOR, recepcionhecha, camion
+    global total_camiones, total_camiones_maiz, total_camiones_soja, total_camiones_cebada, total_camiones_girasol, total_camiones_trigo, total_neto_maiz, total_neto_soja, total_neto_trigo, total_neto_girasol, total_neto_cebada, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, recepcionhecha, camion
     total_camiones = 0
     total_camiones_soja = 0
     total_camiones_maiz = 0
@@ -58,10 +62,6 @@ def inicializodatoscam():
     total_neto_cebada = 0
     promedio_neto_maiz = 0
     promedio_neto_soja = 0
-    menor_maiz = 1000000000
-    mayor_soja = 0
-    PATENTEMAYOR = ""
-    PATENTEMENOR = ""
     camion = 0
 
 # procedimientos en_construccion(), opciones_menu(), opciones_admin(), opciones_terciario()
@@ -426,14 +426,44 @@ def regtara():
                             pesosnetos[x] = pesoneto
                             if productosxp[x] == "MAIZ":
                                 total_neto_maiz += pesoneto
+                                if pesoneto > mayores[0]:
+                                    mayores[0] = pesoneto
+                                    patentemay[0] = arrpatentes[x]
+                                if pesoneto < menores[0]:
+                                    menores[0] = pesoneto
+                                    patentemin[0] = arrpatentes[x]
                             elif productosxp[x] == "SOJA":
                                 total_neto_soja += pesoneto
+                                if pesoneto > mayores[1]:
+                                    mayores[1] = pesoneto
+                                    patentemay[1] = arrpatentes[x]
+                                if pesoneto < menores[1]:
+                                    menores[1] = pesoneto
+                                    patentemin[1] = arrpatentes[x]
                             elif productosxp[x] == "TRIGO":
                                 total_neto_trigo += pesoneto
+                                if pesoneto > mayores[2]:
+                                    mayores[2] = pesoneto
+                                    patentemay[2] = arrpatentes[x]
+                                if pesoneto < menores[2]:
+                                    menores[2] = pesoneto
+                                    patentemin[2] = arrpatentes[x]
                             elif productosxp[x] == "GIRASOL":
                                 total_neto_girasol += pesoneto
+                                if pesoneto > mayores[3]:
+                                    mayores[3] = pesoneto
+                                    patentemay[3] = arrpatentes[x]
+                                if pesoneto < menores[3]:
+                                    menores[3] = pesoneto
+                                    patentemin[3] = arrpatentes[x]
                             elif productosxp[x] == "CEBADA":
                                 total_neto_cebada += pesoneto
+                                if pesoneto > mayores[4]:
+                                    mayores[4] = pesoneto
+                                    patentemay[4] = arrpatentes[x]
+                                if pesoneto < menores[4]:
+                                    menores[4] = pesoneto
+                                    patentemin[4] = arrpatentes[x]
                         print(f"Asignada la tara de {tara} kg del camión {patentereg}, con producto {productosxp[x]}.")
                         print(productosxp, pesosnetos)
                 else:
@@ -636,8 +666,22 @@ def reportes():
         print("Promedio del peso neto de cebada por camión: ",  total_neto_cebada / total_camiones_cebada)
     else:
         print("No hay un promedio de cebada para mostrar.")   
-    print("Patente del camión de maíz que mayor cantidad de soja descargó: ", PATENTEMAYOR)
-    print("Patente del camión de maíz que menor cantidad de maíz descargó: ", PATENTEMENOR)
+    print("Patente del camión de maíz que mayor cantidad de maiz descargó: ", patentemay[0])
+    print("Patente del camión de maíz que menor cantidad de maíz descargó: ", patentemin[0])
+
+    print("Patente del camión de maíz que mayor cantidad de soja descargó: ", patentemay[1])
+    print("Patente del camión de maíz que menor cantidad de soja descargó: ", patentemin[1])
+
+    print("Patente del camión de maíz que mayor cantidad de trigo descargó: ", patentemay[2])
+    print("Patente del camión de maíz que menor cantidad de trigo descargó: ", patentemin[2])
+
+    print("Patente del camión de maíz que mayor cantidad de girasol descargó: ", patentemay[3])
+    print("Patente del camión de maíz que menor cantidad de girasol descargó: ", patentemin[3])
+
+    print("Patente del camión de maíz que mayor cantidad de cebada descargó: ", patentemay[4])
+    print("Patente del camión de maíz que menor cantidad de cebada descargó: ", patentemin[4])
+
+    # faltan los 3 arrays ordenados
 
     # Opción de regreso al menú principal (main())
     reportesctm = input("\nPresione cualquier tecla para volver al menú principal: ")
