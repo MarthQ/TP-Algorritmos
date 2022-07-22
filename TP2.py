@@ -27,12 +27,17 @@ def inicializoarrays():
     P = [""] * 3
     arrcupos = [""] * 8
     arrpatentes = [""] * 8
+    arrpesobru = [0] * 8
+    arrtara = [0] * 8
 
 def inicializodatoscam():
-    global total_camiones, total_camiones_maiz, total_camiones_soja, total_neto_maiz, total_neto_soja, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, PATENTEMAYOR, PATENTEMENOR, recepcionhecha, camion
+    global total_camiones, total_camiones_maiz, total_camiones_soja, total_camiones_cebada, total_camiones_girasol, total_camiones_trigo, total_neto_maiz, total_neto_soja, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, PATENTEMAYOR, PATENTEMENOR, recepcionhecha, camion
     total_camiones = 0
     total_camiones_soja = 0
     total_camiones_maiz = 0
+    total_camiones_trigo = 0
+    total_camiones_girasol = 0
+    total_camiones_cebada = 0
     total_neto_soja = 0
     total_neto_maiz = 0
     promedio_neto_maiz = 0
@@ -190,10 +195,10 @@ def menu_productos():
             administracion()
 
 
-def repeticionpat(array, patente):
+def repeticionpat(array, valor):
 
     for i in range(0,8):
-        if array[i] == patente:
+        if array[i] == valor:
             return True
 
 def buscocupo(array, patente):
@@ -243,7 +248,6 @@ def cupos():
     if ncupos >= 8:
         print("Se ha alcanzado el límite de cupos.")
 
-    print(arrcupos)
     cuposctm = input("Cupos ingresados correctamente - Presione cualquier tecla para continuar")
     clear()
 
@@ -287,7 +291,6 @@ def administracion():
         else:
             opcion_admin = "V"
 
-
 # regpesobruto()
 # TYPE
 #
@@ -295,9 +298,39 @@ def administracion():
 #
 def regpesobruto():
     clear()
-    patentereg = input("Ingresar patente a registrar: ")
+    decisionregp = input("¿Registrar una nueva patente? Ingrese SI o NO: ").upper()
+    while decisionregp != "NO" and decisionregp != "SI": # Validación del sí
+        decisionregp = input("Error. Ingresar una respuesta correcta: ").upper()
+    while decisionregp == "SI":
+        patentereg = input("Ingresar patente a registrar: ")
+        while len(patentereg) < 6 or len(patentereg) > 7:
+            patentereg = input("La patente no es válida, ingresar de vuelta: ").upper()
+        
+        x = 0
+        while x < 8 and arrpatentes[x] != patentereg:
+            x += 1
 
+        if x == 8:
+            print("La patente no se encuentra en el sistema.")
 
+        else:
+            if arrcupos[x] == "E":
+                if arrpesobru[x] == 0:
+                        pesobruto = int(input("Ingresar peso bruto: "))
+                        arrpesobru[x] = pesobruto
+                else:
+                    print("Esta patente ya tiene asignado un peso bruto.")
+                    
+            else:
+                print("El cupo de esta patente no es válido para ingresar el peso bruto.")
+    
+        decisionregp = input("¿Registrar una nueva patente? Ingrese SI o NO: ").upper()
+        while decisionregp != "NO" and decisionregp != "SI": # Validación del sí
+            decisionregp = input("Error. Ingresar una respuesta correcta: ").upper()
+        clear()
+
+def regtara():
+    en_construccion()
 
 
 def tebuscoaca(P, producto):
@@ -319,7 +352,7 @@ recepcionhecha = False
 
 def recepcion():
     clear()
-    global total_camiones, total_camiones_maiz, total_camiones_soja, total_neto_maiz, total_neto_soja, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, PATENTEMAYOR, PATENTEMENOR, recepcionhecha, camion
+    global total_camiones, total_camiones_maiz, total_camiones_soja, total_camiones_cebada, total_camiones_girasol, total_camiones_trigo, total_neto_maiz, total_neto_soja, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, PATENTEMAYOR, PATENTEMENOR, recepcionhecha, camion
 
     if recepcionhecha == True:
         print("Ya se ha realizado una recepción de camiones.")
@@ -341,8 +374,6 @@ def recepcion():
     while camiones != "NO":
         
         print(f"\nDatos del camión")
-
-        # Ingreso de datos, cálculo de peso neto y contador de camiones
         PATENTE = input("Ingresar número de patente ").upper()
 
         while len(PATENTE) < 6 or len(PATENTE) > 7:
@@ -365,22 +396,24 @@ def recepcion():
                     PRODUCTO = input("No es un producto válido o no está dado de alta, ingresar de vuelta: ").upper()
 
                 if PRODUCTO == "MAIZ":
-                    print("encontradoo")
-
+                    print(f"Cargado camión con patente {PATENTE} de {PRODUCTO}")
+                    total_camiones_maiz += 1
                 elif PRODUCTO == "SOJA":
-                    print("encontradoo")
-                
+                    print(f"Cargado camión con patente {PATENTE} de {PRODUCTO}")
+                    total_camiones_soja += 1
                 elif PRODUCTO == "TRIGO":
-                    print("encontradoo")
-
+                    print(f"Cargado camión con patente {PATENTE} de {PRODUCTO}")
+                    total_camiones_trigo += 1
                 elif PRODUCTO == "GIRASOL":
-                    print("encontradoo")
-
+                    print(f"Cargado camión con patente {PATENTE} de {PRODUCTO}")
+                    total_camiones_girasol += 1
                 elif PRODUCTO == "CEBADA":
-                    print("encontradoo")
-
+                    print(f"Cargado camión con patente {PATENTE} de {PRODUCTO}")
+                    total_camiones_cebada += 1
+                total_camiones += 1
             else:
-                print("El cupo no es válido.")
+                print("Este camión ya fue procesado.")
+
 
 
         # PRODUCTO = input("Ingresar tipo de producto (M para maíz y S para soja.): ").upper()
@@ -500,7 +533,7 @@ def main():
             en_construccion() 
 
         elif opcion == "7": # Registrar tara
-            en_construccion() 
+            regtara() 
 
         elif opcion == "8": # Reportes
             if recepcionhecha != True: # Verificación
