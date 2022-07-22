@@ -13,6 +13,7 @@
 
 # Estética del programa
 # función CLEAR para limpiar pantalla
+from itertools import product
 import os
 clear = lambda: os.system('cls')
 
@@ -23,13 +24,17 @@ clear = lambda: os.system('cls')
 # arrpatentes = array [0..7] of String
 # arrpesobru = array [0..7] of Integer
 # arrtara = array [0..7] of Integer
+# productosxp = array [0..7] of String
+# pesosnetos = array [0..7] of Integer
 def inicializoarrays():
-    global P, arrcupos, arrpatentes, arrpesobru, arrtara
+    global P, arrcupos, arrpatentes, arrpesobru, arrtara, productosxp, pesosnetos
     P = [""] * 3
     arrcupos = [""] * 8
     arrpatentes = [""] * 8
     arrpesobru = [0] * 8
     arrtara = [0] * 8
+    productosxp = [""] * 8
+    pesosnetos = [0] * 8
 
 # procedimiento inicializadodatoscam()
 # VAR:
@@ -39,8 +44,7 @@ def inicializoarrays():
 # promedio_neto_soja, promedio_neto_maiz: Float
 # recepcionhecha: Boolean
 def inicializodatoscam():
-    global total_camiones, total_camiones_maiz, total_camiones_soja, total_camiones_cebada, total_camiones_girasol, total_camiones_trigo, total_neto_maiz, total_neto_soja, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, PATENTEMAYOR, PATENTEMENOR, recepcionhecha, camion, contador
-    contador = 0
+    global total_camiones, total_camiones_maiz, total_camiones_soja, total_camiones_cebada, total_camiones_girasol, total_camiones_trigo, total_neto_maiz, total_neto_soja, total_neto_trigo, total_neto_girasol, total_neto_cebada, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, PATENTEMAYOR, PATENTEMENOR, recepcionhecha, camion
     total_camiones = 0
     total_camiones_soja = 0
     total_camiones_maiz = 0
@@ -49,6 +53,9 @@ def inicializodatoscam():
     total_camiones_cebada = 0
     total_neto_soja = 0
     total_neto_maiz = 0
+    total_neto_trigo = 0
+    total_neto_girasol = 0
+    total_neto_cebada = 0
     promedio_neto_maiz = 0
     promedio_neto_soja = 0
     menor_maiz = 1000000000
@@ -165,7 +172,7 @@ def bajaprod(P):
     # Si hay cupos otorgados, no se deben cambiar/eliminar los productos (para evitar que haya camiones sin productos dados de alta)
     while ncupos == 0: 
         print(f"Producto 1: {P[0]}\nProducto 2: {P[1]}\nProducto 3: {P[2]}")
-        producto = input("Ingresar el nombre del producto a eliminar: ").upper()
+        producto = input("Ingresar el nombre del producto a eliminar: ").upper() # BUCLE INFINITO PA
         eliminarP(P, producto)
     else:
         print("Cupos ya otorgados. No se pueden eliminar productos.")
@@ -344,6 +351,7 @@ def administracion():
 # arrcupos: arrcupos
 # arrpesobru: arrpesobru
 def regpesobruto():
+    global totalbrutomaiz, totalbrutosoja, totalbrutotrigo, totalbrutogirasol, totalbrutocebada
     clear()
     decisionregp = input("¿Registrar un nuevo peso bruto? Ingrese SI o NO: ").upper()
     while decisionregp != "NO" and decisionregp != "SI": # Validación del sí
@@ -367,6 +375,7 @@ def regpesobruto():
                         while pesobruto < 1:
                             pesobruto = int(input("El peso no es válido, ingresar un valor mayor a 0."))
                         arrpesobru[x] = pesobruto
+                        print(f"Asignado el peso bruto de {pesobruto} kg del camión {patentereg}, con producto {productosxp[x]}.")
                 else:
                     print("Esta patente ya tiene asignado un peso bruto.")
                     
@@ -386,6 +395,7 @@ def regpesobruto():
 # arrcupos: arrcupos
 # arrpesobru: arrpesobru
 def regtara():
+    global total_neto_maiz, total_neto_soja, total_neto_trigo, total_neto_girasol, total_neto_cebada
     clear()
     decisionregt = input("¿Registrar una nueva tara? Ingrese SI o NO: ").upper()
     while decisionregt != "NO" and decisionregt != "SI": # Validación del sí
@@ -412,6 +422,20 @@ def regtara():
                             while tara < 1:
                                 tara = int(input("La tara no es válida, ingresar un valor mayor a 0."))
                             arrtara[x] = tara
+                            pesoneto = arrpesobru[x] - tara
+                            pesosnetos[x] = pesoneto
+                            if productosxp[x] == "MAIZ":
+                                total_neto_maiz += pesoneto
+                            elif productosxp[x] == "SOJA":
+                                total_neto_soja += pesoneto
+                            elif productosxp[x] == "TRIGO":
+                                total_neto_trigo += pesoneto
+                            elif productosxp[x] == "GIRASOL":
+                                total_neto_girasol += pesoneto
+                            elif productosxp[x] == "CEBADA":
+                                total_neto_cebada += pesoneto
+                        print(f"Asignada la tara de {tara} kg del camión {patentereg}, con producto {productosxp[x]}.")
+                        print(productosxp, pesosnetos)
                 else:
                     print("Error - Para asignar la tara se requiere tener asignado un peso bruto.")
                     
@@ -493,18 +517,23 @@ def recepcion():
                 if PRODUCTO == "MAIZ":
                     print(f"Cargado camión con patente {PATENTE} de {PRODUCTO}")
                     total_camiones_maiz += 1
+                    productosxp[lugar] = PRODUCTO
                 elif PRODUCTO == "SOJA":
                     print(f"Cargado camión con patente {PATENTE} de {PRODUCTO}")
                     total_camiones_soja += 1
+                    productosxp[lugar] = PRODUCTO
                 elif PRODUCTO == "TRIGO":
                     print(f"Cargado camión con patente {PATENTE} de {PRODUCTO}")
                     total_camiones_trigo += 1
+                    productosxp[lugar] = PRODUCTO
                 elif PRODUCTO == "GIRASOL":
                     print(f"Cargado camión con patente {PATENTE} de {PRODUCTO}")
                     total_camiones_girasol += 1
+                    productosxp[lugar] = PRODUCTO
                 elif PRODUCTO == "CEBADA":
                     print(f"Cargado camión con patente {PATENTE} de {PRODUCTO}")
                     total_camiones_cebada += 1
+                    productosxp[lugar] = PRODUCTO
                 total_camiones += 1
             else:
                 print("Este camión ya fue procesado.")
@@ -542,7 +571,7 @@ def recepcion():
             camiones = input("Error. Ingresar una respuesta correcta: ").upper()
     clear()
 
-    # Cálculo de promedios
+    # # Cálculo de promedios
     # if total_camiones_maiz == 0:
     #     promedio_neto_maiz = 0
     # else:
@@ -572,16 +601,42 @@ def recepcion():
 # promedio_neto_soja, promedio_neto_maiz, total_neto_maiz, total_neto_soja, menor_maiz, mayor_soja: Float (Real) 
 # PATENTEMAYOR, PATENTEMENOR, decisionrep: String
 def reportes():
+
     clear()
     global total_camiones, total_camiones_maiz, total_camiones_soja, total_neto_maiz, total_neto_soja, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, PATENTEMAYOR, PATENTEMENOR
-    print("\nCantidad total de camiones que llegaron: ",  total_camiones)				
-    print("Cantidad total de camiones de soja: ",  total_camiones_soja)			
-    print("Cantidad total de camiones de maíz: ",  total_camiones_maiz)			
+    print("\nCantidad de cupos otorgados: ",  ncupos)
+    print("Cantidad total de camiones que llegaron: ",  total_camiones)
+    print("Cantidad total de camiones de maíz: ",  total_camiones_maiz)				
+    print("Cantidad total de camiones de soja: ",  total_camiones_soja)
+    print("Cantidad total de camiones de trigo: ",  total_camiones_trigo)
+    print("Cantidad total de camiones de girasol: ",  total_camiones_girasol)
+    print("Cantidad total de camiones de cebada: ",  total_camiones_cebada)					
+    print("Peso neto total de maíz: ",  total_neto_maiz)
     print("Peso neto total de soja: ",  total_neto_soja)					
-    print("Peso neto total de maíz: ",  total_neto_maiz)					
-    print("Promedio del peso neto de soja por camión: ",  promedio_neto_soja)		
-    print("Promedio del peso neto de maíz por camión: ", promedio_neto_maiz)		
-    print("Patente del camión de soja que mayor cantidad de soja descargó: ", PATENTEMAYOR)		
+    print("Peso neto total de trigo: ",  total_neto_trigo)
+    print("Peso neto total de girasol: ",  total_neto_girasol)
+    print("Peso neto total de cebada: ",  total_neto_cebada)					
+    if total_camiones_maiz != 0:
+        print("Promedio del peso neto de maíz por camión: ",  total_neto_maiz / total_camiones_maiz)
+    else:
+        print("No hay un promedio de maíz para mostrar.")   		
+    if total_camiones_soja != 0:
+        print("Promedio del peso neto de soja por camión: ",  total_neto_soja / total_camiones_soja)
+    else:
+        print("No hay un promedio de soja para mostrar.")   
+    if total_camiones_trigo != 0:
+        print("Promedio del peso neto de trigo por camión: ",  total_neto_trigo / total_camiones_trigo)
+    else:
+        print("No hay un promedio de trigo para mostrar.")   
+    if total_camiones_girasol != 0:
+        print("Promedio del peso neto de girasol por camión: ",  total_neto_girasol / total_camiones_girasol)
+    else:
+        print("No hay un promedio de girasol para mostrar.")   
+    if total_camiones_cebada != 0:
+        print("Promedio del peso neto de cebada por camión: ",  total_neto_cebada / total_camiones_cebada)
+    else:
+        print("No hay un promedio de cebada para mostrar.")   
+    print("Patente del camión de maíz que mayor cantidad de soja descargó: ", PATENTEMAYOR)
     print("Patente del camión de maíz que menor cantidad de maíz descargó: ", PATENTEMENOR)
 
     # Opción de regreso al menú principal (main())
