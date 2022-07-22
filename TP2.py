@@ -16,12 +16,13 @@
 import os
 clear = lambda: os.system('cls')
 
-# en_construccion(), opciones_menu(), opciones_admin(), opciones_terciario()
-# Contienen casi todas las impresiones necesarias de los distintos menús.
-
-def en_construccion():
-    print( "Esta funcionalidad está en construcción.")
-
+# procedimiento inicializoarrays()
+# TYPE:
+# P = array [0..2] of String
+# arrcupos = array [0..7] of String
+# arrpatentes = array [0..7] of String
+# arrpesobru = array [0..7] of Integer
+# arrtara = array [0..7] of Integer
 def inicializoarrays():
     global P, arrcupos, arrpatentes, arrpesobru, arrtara
     P = [""] * 3
@@ -30,8 +31,16 @@ def inicializoarrays():
     arrpesobru = [0] * 8
     arrtara = [0] * 8
 
+# procedimiento inicializadodatoscam()
+# VAR:
+# total_camiones, total_camiones_maiz, total_camiones_soja, total_camiones_cebada, total_camiones_girasol, total_camiones_trigo, menor_maiz, mayor_soja,camion: Integer
+# PATENTEMAYOR, PATENTEMENOR: String
+# total_neto_maiz, total_neto_soja: Float
+# promedio_neto_soja, promedio_neto_maiz: Float
+# recepcionhecha: Boolean
 def inicializodatoscam():
-    global total_camiones, total_camiones_maiz, total_camiones_soja, total_camiones_cebada, total_camiones_girasol, total_camiones_trigo, total_neto_maiz, total_neto_soja, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, PATENTEMAYOR, PATENTEMENOR, recepcionhecha, camion
+    global total_camiones, total_camiones_maiz, total_camiones_soja, total_camiones_cebada, total_camiones_girasol, total_camiones_trigo, total_neto_maiz, total_neto_soja, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, PATENTEMAYOR, PATENTEMENOR, recepcionhecha, camion, contador
+    contador = 0
     total_camiones = 0
     total_camiones_soja = 0
     total_camiones_maiz = 0
@@ -47,6 +56,12 @@ def inicializodatoscam():
     PATENTEMAYOR = ""
     PATENTEMENOR = ""
     camion = 0
+
+# procedimientos en_construccion(), opciones_menu(), opciones_admin(), opciones_terciario()
+# Contienen casi todas las impresiones necesarias de los distintos menús.
+
+def en_construccion():
+    print( "Esta funcionalidad está en construcción.")
 
 def opciones_menu():
     print("----- MENU PRINCIPAL -----")
@@ -81,7 +96,7 @@ def opciones_terciario():
     print("\tM. MODIFICACION")
     print("\tV. VOLVER AL MENÚ ANTERIOR")
 
-# menu_terciario():
+# procedimiento menu_terciario()
 # opcion_terciario: Char (un caracter)
 def menu_terciario():
 
@@ -105,24 +120,34 @@ def menu_terciario():
             opcion_terciario = "V"
             administracion()
 
+# procedimiento cargarprod(var P: P)
+# VAR:
+# Pprimero, Pmedio: String
+# i: Integer
 def cargarprod(P):
-    Pprimero = ""
-    Pmedio = ""
-    for i in range(0,3):
+    while ncupos == 0:
+        Pprimero = ""
+        Pmedio = ""
+        for i in range(0,3):
 
-        # Verificación de que el producto no se encuentre repetido o ya haya otro producto allí
+            # Verificación de que el producto no se encuentre repetido o ya haya otro producto allí
 
-        P[i]= input(f"Ingresar el producto número {i+1}. (Maíz, Soja, Trigo, Girasol o Cebada): ").upper()
-        
-        while P[i] != "TRIGO" and P[i] != "SOJA" and P[i] != "MAIZ" and P[i] != "GIRASOL" and P[i] != "CEBADA":
-            P[i] = input("No es un producto válido. Ingrese nuevamente: ").upper()
-        
-        while P[i] == Pprimero or P[i] == Pmedio:
-            P[i] = input("Producto ya ingresado. Ingrese nuevamente: ").upper()
+            P[i]= input(f"Ingresar el producto número {i+1}. (Maíz, Soja, Trigo, Girasol o Cebada): ").upper()
+            
+            while P[i] != "TRIGO" and P[i] != "SOJA" and P[i] != "MAIZ" and P[i] != "GIRASOL" and P[i] != "CEBADA":
+                P[i] = input("No es un producto válido. Ingrese nuevamente: ").upper()
+            
+            while P[i] == Pprimero or P[i] == Pmedio:
+                P[i] = input("Producto ya ingresado. Ingrese nuevamente: ").upper()
 
-        Pprimero = P[0]
-        Pmedio = P[1] # guardo los valores en las variables a lo gitanazo y pregunto si ya están ahí
-        
+            Pprimero = P[0]
+            Pmedio = P[1] # guardo los valores en las variables a la fuerza y pregunto si ya están ahí
+    else:
+        print("Cupos ya otorgados.")
+
+# procedimiento eliminarP(var P: P; producto: String)
+# VAR
+# j, i: Integer
 def eliminarP(P, producto):
     j = 0
     while (P[j] != producto and j <3):
@@ -133,11 +158,21 @@ def eliminarP(P, producto):
     else:
 	    print("El Producto no se encontró.")  
 
+# procedimiento bajaprod(var P: P)
+# VAR
+# producto: String
 def bajaprod(P):
-    print(f"Producto 1: {P[0]}\nProducto 2: {P[1]}\nProducto 3: {P[2]}")
-    producto = input("Ingresar el nombre del producto a eliminar: ").upper()
-    eliminarP(P, producto)
+    # Si hay cupos otorgados, no se deben cambiar/eliminar los productos (para evitar que haya camiones sin productos dados de alta)
+    while ncupos == 0: 
+        print(f"Producto 1: {P[0]}\nProducto 2: {P[1]}\nProducto 3: {P[2]}")
+        producto = input("Ingresar el nombre del producto a eliminar: ").upper()
+        eliminarP(P, producto)
+    else:
+        print("Cupos ya otorgados. No se pueden eliminar productos.")
 
+# procedimiento modificarP(var P: P; producto: String, nuevoproducto: String)
+# VAR
+# j: Integer
 def modificarP(P, producto, nuevoproducto):
     j = 0
     while (P[j] != producto and j <2):
@@ -148,29 +183,36 @@ def modificarP(P, producto, nuevoproducto):
     else:
 	    print("El Producto no se encontró.")
 
+# procedimiento modificacionproducto(var P: P)
+# VAR
+# producto, nuevoproducto: String
 def modificacionproducto(P):
-    print(f"Producto 1: {P[0]}\nProducto 2: {P[1]}\nProducto 3: {P[2]}")
 
-    producto = input("Ingresar el nombre del producto a modificar: ").upper()
-    while producto != "TRIGO" and producto != "SOJA" and producto != "MAIZ" and producto != "GIRASOL" and producto != "CEBADA":
-        producto = input(f"No es un producto válido. Ingrese nuevamente: ").upper()
+    while ncupos == 0:
+        print(f"Producto 1: {P[0]}\nProducto 2: {P[1]}\nProducto 3: {P[2]}")
 
-    nuevoproducto = input("Ingresar el nuevo producto: ").upper()
-    while nuevoproducto != "TRIGO" and nuevoproducto != "SOJA" and nuevoproducto != "MAIZ" and nuevoproducto != "GIRASOL" and nuevoproducto != "CEBADA":
-           nuevoproducto = input(f"No es un producto válido. Ingrese nuevamente: ").upper()
+        producto = input("Ingresar el nombre del producto a modificar: ").upper()
+        # Verificación de que sea de los ingresados
+        while producto != "TRIGO" and producto != "SOJA" and producto != "MAIZ" and producto != "GIRASOL" and producto != "CEBADA":
+            producto = input(f"No es un producto válido. Ingrese nuevamente: ").upper()
 
-    while nuevoproducto == P[0] or nuevoproducto == P[1] or nuevoproducto == P[2]:
-        nuevoproducto = input("Producto ya ingresado. Ingrese nuevamente: ").upper()
+        nuevoproducto = input("Ingresar el nuevo producto: ").upper()
+        # Verificación de que sea correcto y no se vaya a repetir
+        while nuevoproducto != "TRIGO" and nuevoproducto != "SOJA" and nuevoproducto != "MAIZ" and nuevoproducto != "GIRASOL" and nuevoproducto != "CEBADA":
+            nuevoproducto = input(f"No es un producto válido. Ingrese nuevamente: ").upper()
+        while nuevoproducto == P[0] or nuevoproducto == P[1] or nuevoproducto == P[2]:
+            nuevoproducto = input("Producto ya ingresado. Ingrese nuevamente: ").upper()
 
-    modificarP(P, producto, nuevoproducto)
+        modificarP(P, producto, nuevoproducto)
+    else:
+        print("Cupos ya otorgados. No se pueden modificar los productos.")
 
-# menu_productos():
+# procedimiento menu_productos():
 # TYPE
-# productos = array [1..3] de string
+# productos = array [0..2] de string
 # VAR
 # P: productos
 # opcion_terciario: Char (un caracter)
-
 def menu_productos():
 
     global P
@@ -194,27 +236,30 @@ def menu_productos():
             opcion_terciario = "V"
             administracion()
 
-
+# function repeticionpat(array, valor): Boolean
+# array y valor pueden ser de cualquier tipo de dato a buscar en X type de array
+# Cumple la función de ser globalizadora, de búsqueda secuencial en un arreglo.
 def repeticionpat(array, valor):
-
     for i in range(0,8):
         if array[i] == valor:
             return True
 
+# function buscocupo(array, patente: String): Integer
+# VAR
+# i: Integer
 def buscocupo(array, patente):
-    
     for i in range(0,8):
         if array[i] == patente:
             return i
 
-# cupos()
-# TYPE
-#
+# procedimiento cupos()
 # VAR
-#
-
+# decisioncup, nuevapatente, cuposctm: String
+# arrpatentes: arrpatentes (Type Array declarado al inicio del programa)
+# arrcupos: arrcupos (Type Array declarado al inicio del programa)
+# ncupos: Integer
+# nuevoestado: Char
 ncupos = 0
-
 def cupos():
 
     global ncupos
@@ -251,7 +296,7 @@ def cupos():
     cuposctm = input("Cupos ingresados correctamente - Presione cualquier tecla para continuar")
     clear()
 
-# administracion()
+# procedimiento administracion()
 # Variables:
 # opcion_admin: Char
 def administracion():
@@ -291,11 +336,13 @@ def administracion():
         else:
             opcion_admin = "V"
 
-# regpesobruto()
-# TYPE
-#
+# procedimiento regpesobruto()
 # VAR
-#
+# x, pesobruto: integer
+# patentereg, decisionregp: String
+# arrpatentes: arrpatentes
+# arrcupos: arrcupos
+# arrpesobru: arrpesobru
 def regpesobruto():
     clear()
     decisionregp = input("¿Registrar un nuevo peso bruto? Ingrese SI o NO: ").upper()
@@ -331,6 +378,13 @@ def regpesobruto():
             decisionregp = input("Error. Ingresar una respuesta correcta: ").upper()
         clear()
 
+# procedimiento regtara
+# VAR
+# decisionregt, patentereg: String
+# x, tara: Integer
+# arrtara: arrtara
+# arrcupos: arrcupos
+# arrpesobru: arrpesobru
 def regtara():
     clear()
     decisionregt = input("¿Registrar una nueva tara? Ingrese SI o NO: ").upper()
@@ -369,7 +423,9 @@ def regtara():
             decisionregt = input("Error. Ingresar una respuesta correcta: ").upper()
         clear()
 
-
+# function tebuscoaca(P: arrproducto, producto): Boolean
+# VAR
+# i: Integer
 def tebuscoaca(P, producto):
     for i in range(0, 3):
         if P[i] == producto:
@@ -377,10 +433,12 @@ def tebuscoaca(P, producto):
 
 # procedimiento recepcion()
 # Variables:
-# total_camiones, total_camiones_soja, total_camiones_maiz, camiones: Enteros (Integer)
+# total_camiones, total_camiones_soja, total_camiones_maiz,total_camiones_cebada, total_camiones_trigo, total_camiones_girasol, lugar: Enteros (Integer)
 # total_neto_soja, total_neto_maiz, promedio_neto_maiz, promedio_neto_soja, PESO_BRUTO, TARA, PESO_NETO: Real (Float)
-# PATENTEMAYOR, PATENTEMENOR, decision: String (Cadena de caracteres)
+# PATENTEMAYOR, PATENTEMENOR, decision, camiones, PATENTE, respuestarep: String (Cadena de caracteres)
 # PRODUCTO: Char (un caracter)
+# arrcupos: arrcupos
+# arrpatentes: arrpatentes
 
 # Verificación de si se hizo la recepción de los datos de los N camiones. 
 # La variable recepcionhecha (Booleano) funciona como verificación. En caso de que esté en False, significa que 
@@ -429,8 +487,8 @@ def recepcion():
                 print(f'Se actualizó el cupo de la patente {PATENTE} a "En proceso"')
                 print("Ingresar tipo de producto (Maíz, Soja, Trigo, Girasol, Cebada)")
                 PRODUCTO = input("- ").upper()
-                while tebuscoaca(P, PRODUCTO) != True:
-                    PRODUCTO = input("No es un producto válido o no está dado de alta, ingresar de vuelta: ").upper()
+                while tebuscoaca(P, PRODUCTO) != True and PRODUCTO != "S":
+                    PRODUCTO = input("No es un producto válido o no está dado de alta, ingresar de vuelta (S\salir): ").upper()
 
                 if PRODUCTO == "MAIZ":
                     print(f"Cargado camión con patente {PATENTE} de {PRODUCTO}")
