@@ -125,7 +125,7 @@ def menu_terciario():
 # Pprimero, Pmedio: String
 # i: Integer
 def cargarprod(P):
-    while ncupos == 0:
+    if ncupos == 0:
         Pprimero = ""
         Pmedio = ""
         for i in range(0,3):
@@ -622,7 +622,7 @@ def main():
             en_construccion()
 
         elif opcion == "5": # Registrar peso bruto
-            regpesobruto() # No desarrollado aún.
+            regpesobruto() 
 
         elif opcion == "6": # Registrar descarga
             en_construccion() 
