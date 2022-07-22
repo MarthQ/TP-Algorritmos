@@ -636,16 +636,19 @@ def reportes():
     global total_camiones, total_camiones_maiz, total_camiones_soja, total_neto_maiz, total_neto_soja, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, PATENTEMAYOR, PATENTEMENOR
     print("\nCantidad de cupos otorgados: ",  ncupos)
     print("Cantidad total de camiones que llegaron: ",  total_camiones)
+    print("")
     print("Cantidad total de camiones de maíz: ",  total_camiones_maiz)				
     print("Cantidad total de camiones de soja: ",  total_camiones_soja)
     print("Cantidad total de camiones de trigo: ",  total_camiones_trigo)
     print("Cantidad total de camiones de girasol: ",  total_camiones_girasol)
-    print("Cantidad total de camiones de cebada: ",  total_camiones_cebada)					
+    print("Cantidad total de camiones de cebada: ",  total_camiones_cebada)	
+    print("")				
     print("Peso neto total de maíz: ",  total_neto_maiz)
     print("Peso neto total de soja: ",  total_neto_soja)					
     print("Peso neto total de trigo: ",  total_neto_trigo)
     print("Peso neto total de girasol: ",  total_neto_girasol)
-    print("Peso neto total de cebada: ",  total_neto_cebada)					
+    print("Peso neto total de cebada: ",  total_neto_cebada)
+    print("")					
     if total_camiones_maiz != 0:
         print("Promedio del peso neto de maíz por camión: ",  total_neto_maiz / total_camiones_maiz)
     else:
@@ -665,21 +668,22 @@ def reportes():
     if total_camiones_cebada != 0:
         print("Promedio del peso neto de cebada por camión: ",  total_neto_cebada / total_camiones_cebada)
     else:
-        print("No hay un promedio de cebada para mostrar.")   
+        print("No hay un promedio de cebada para mostrar.")
+    print("")
     print("Patente del camión de maíz que mayor cantidad de maiz descargó: ", patentemay[0])
     print("Patente del camión de maíz que menor cantidad de maíz descargó: ", patentemin[0])
-
-    print("Patente del camión de maíz que mayor cantidad de soja descargó: ", patentemay[1])
-    print("Patente del camión de maíz que menor cantidad de soja descargó: ", patentemin[1])
-
-    print("Patente del camión de maíz que mayor cantidad de trigo descargó: ", patentemay[2])
-    print("Patente del camión de maíz que menor cantidad de trigo descargó: ", patentemin[2])
-
-    print("Patente del camión de maíz que mayor cantidad de girasol descargó: ", patentemay[3])
-    print("Patente del camión de maíz que menor cantidad de girasol descargó: ", patentemin[3])
-
-    print("Patente del camión de maíz que mayor cantidad de cebada descargó: ", patentemay[4])
-    print("Patente del camión de maíz que menor cantidad de cebada descargó: ", patentemin[4])
+    print("")
+    print("Patente del camión de soja que mayor cantidad de soja descargó: ", patentemay[1])
+    print("Patente del camión de soja que menor cantidad de soja descargó: ", patentemin[1])
+    print("")
+    print("Patente del camión de trigo que mayor cantidad de trigo descargó: ", patentemay[2])
+    print("Patente del camión de trigo que menor cantidad de trigo descargó: ", patentemin[2])
+    print("")
+    print("Patente del camión de girasol que mayor cantidad de girasol descargó: ", patentemay[3])
+    print("Patente del camión de girasol que menor cantidad de girasol descargó: ", patentemin[3])
+    print("")
+    print("Patente del camión de cebada que mayor cantidad de cebada descargó: ", patentemay[4])
+    print("Patente del camión de cebada que menor cantidad de cebada descargó: ", patentemin[4])
 
     # faltan los 3 arrays ordenados
 
