@@ -299,18 +299,19 @@ def cupos():
         nuevapatente = input("Ingresar la patente del camión: ").upper()
         while len(nuevapatente) < 6 or len(nuevapatente) > 7: # Comprobamos la longitud de la patente
             nuevapatente = input("Error con la longitud de la patente. Por favor ingresar de vuelta: ").upper()
-        while repeticionpat(arrpatentes, nuevapatente): # Buscamos si la patente existe en el array
-            nuevapatente = input("La patente ya tiene un cupo asignado, especificar otra: ").upper()
-        arrpatentes[ncupos] = nuevapatente # Finalmente se asigna
+        if repeticionpat(arrpatentes, nuevapatente): # Buscamos si la patente existe en el array
+            print("La patente ya tiene un cupo asignado.")
+        else:
+            arrpatentes[ncupos] = nuevapatente # Finalmente se asigna
 
-        print("Posibles estados: P - Pendiente, E - En proceso, C - Cumplido")
-        nuevoestado = input("Ingresar el estado de la patente: ").upper()
-        while nuevoestado != "P" and nuevoestado != "E" and nuevoestado != "C": # Lo mismo acá...
-            nuevoestado = input("Estado erróneo. Ingresar un estado correcto: ").upper()
-        arrcupos[ncupos] = nuevoestado # Asignación del estado
+            print("Posibles estados: P - Pendiente, E - En proceso, C - Cumplido")
+            nuevoestado = input("Ingresar el estado de la patente: ").upper()
+            while nuevoestado != "P" and nuevoestado != "E" and nuevoestado != "C": # Lo mismo acá...
+                nuevoestado = input("Estado erróneo. Ingresar un estado correcto: ").upper()
+            arrcupos[ncupos] = nuevoestado # Asignación del estado
 
-        ncupos += 1
-        print(f"Se ingresó Cupo Nº {ncupos} con patente {nuevapatente}")
+            ncupos += 1
+            print(f"Se ingresó Cupo Nº {ncupos} con patente {nuevapatente}")
         decisioncup = input("¿Desea ingresar un nuevo cupo? Ingrese SI o NO: ").upper()
         while decisioncup != "SI" and decisioncup != "NO":  # Validación de datos
             decisioncup = input("Ingrese una opción correcta: ").upper()
