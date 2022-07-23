@@ -13,7 +13,6 @@
 
 # Estética del programa
 # función CLEAR para limpiar pantalla
-from itertools import product
 import os
 clear = lambda: os.system('cls')
 
