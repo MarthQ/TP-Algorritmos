@@ -296,7 +296,7 @@ def cupos():
 
     while decisioncup == "SI" and ncupos < 8:
         clear()
-        nuevapatente = input("Ingresar la patente del camión: ")
+        nuevapatente = input("Ingresar la patente del camión: ").upper()
         while len(nuevapatente) < 6 or len(nuevapatente) > 7: # Comprobamos la longitud de la patente
             nuevapatente = input("Error con la longitud de la patente. Por favor ingresar de vuelta: ").upper()
         while repeticionpat(arrpatentes, nuevapatente): # Buscamos si la patente existe en el array
@@ -375,7 +375,7 @@ def regpesobruto():
     while decisionregp != "NO" and decisionregp != "SI": # Validación del sí
         decisionregp = input("Error. Ingresar una respuesta correcta: ").upper()
     while decisionregp == "SI":
-        patentereg = input("Ingresar patente a registrar: ")
+        patentereg = input("Ingresar patente a registrar: ").upper()
         while len(patentereg) < 6 or len(patentereg) > 7:
             patentereg = input("La patente no es válida, ingresar de vuelta: ").upper()
         
@@ -419,7 +419,7 @@ def regtara():
     while decisionregt != "NO" and decisionregt != "SI": # Validación del sí
         decisionregt = input("Error. Ingresar una respuesta correcta: ").upper()
     while decisionregt == "SI":
-        patentereg = input("Ingresar patente a registrar: ")
+        patentereg = input("Ingresar patente a registrar: ").upper()
         while len(patentereg) < 6 or len(patentereg) > 7:
             patentereg = input("La patente no es válida, ingresar de vuelta: ").upper()
         
@@ -705,6 +705,23 @@ def reportes():
     print("")
     print("Patente del camión de cebada que mayor cantidad de cebada descargó: ", patentemay[4])
     print("Patente del camión de cebada que menor cantidad de cebada descargó: ", patentemin[4])
+
+    for t in range (0,8):
+                for v in range (t+1,8):
+                    if pesosnetos[t]<pesosnetos[v]:
+                        aux=pesosnetos[t]
+                        pesosnetos[t]=pesosnetos[v]
+                        pesosnetos[v]=aux
+                        aux2=arrpatentes[t]
+                        arrpatentes[t]=arrpatentes[v]
+                        arrpatentes[v]=aux2
+                        aux3=productosxp[t]
+                        productosxp[t]=productosxp[v]
+                        productosxp[v]=aux3
+    print("Listado de camiones ordenados por peso neto descendente:\n")
+    for j in range (0,8):
+        print(arrpatentes[j], productosxp[j], pesosnetos[j])
+
 
     # faltan los 3 arrays ordenados
 
