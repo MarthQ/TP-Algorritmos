@@ -95,8 +95,9 @@ def opciones_admin():
     print("\tG - PRODUCTO POR TITULAR")
     print("\tV - VOLVER AL MENU PRINCIPAL")
 
-def opciones_terciario():
-    print("----- MENU TITULARES -----")
+#procedimiento opciones_terciario(titulo: String)
+def opciones_terciario(titulo):
+    print(f"----- MENU {titulo} -----")
     print("\tA. ALTA")
     print("\tB. BAJA")
     print("\tC. CONSULTA")
@@ -108,7 +109,7 @@ def opciones_terciario():
 def menu_terciario():
 
     clear()
-    opciones_terciario()
+    opciones_terciario("TERCIARIO")
     opcion_terciario = "A"
     while opcion_terciario != "V":
         opcion_terciario = input("Opción: ").upper() # Convertir toda cadena ingresada en mayúscula.
@@ -135,20 +136,37 @@ def cargarprod(P):
     if ncupos == 0:
         Pprimero = ""
         Pmedio = ""
-        for i in range(0,3):
+        contp = 0
+        decisionprod = ""
+        producto = ""
+        while contp < 3 and producto != "S" and decisionprod != "NO":
 
             # Verificación de que el producto no se encuentre repetido o ya haya otro producto allí
-
-            P[i]= input(f"Ingresar el producto número {i+1}. (Maíz, Soja, Trigo, Girasol o Cebada): ").upper()
+            print(f"Ingresar el producto número {contp+1}. (Maíz, Soja, Trigo, Girasol o Cebada).")
+            print("\S para salir")
+            producto = input("- ").upper()
             
-            while P[i] != "TRIGO" and P[i] != "SOJA" and P[i] != "MAIZ" and P[i] != "GIRASOL" and P[i] != "CEBADA":
-                P[i] = input("No es un producto válido. Ingrese nuevamente: ").upper()
+            while producto != "TRIGO" and producto != "SOJA" and producto != "MAIZ" and producto != "GIRASOL" and producto != "CEBADA" and producto != "S":
+                producto = input("No es un producto válido. Ingrese nuevamente: ").upper()
             
-            while P[i] == Pprimero or P[i] == Pmedio:
-                P[i] = input("Producto ya ingresado. Ingrese nuevamente: ").upper()
-
+            while producto == Pprimero or producto == Pmedio:
+                producto = input("Producto ya ingresado. Ingrese nuevamente: ").upper() 
             Pprimero = P[0]
             Pmedio = P[1] # guardo los valores en las variables a la fuerza y pregunto si ya están ahí
+
+            if producto != "SI":
+                P[contp] = producto
+                contp += 1
+
+            if contp < 3:
+                decisionprod = input("¿Desea ingresar otro producto? Ingrese SI o NO: ").upper()
+                while decisionprod == "" or len(decisionprod) > 2: # Validación de datos
+                    decisionprod = input("Opción incorrecta. Ingrese nuevamente: ")
+                    
+            if contp == 3 or decisionprod == "NO":
+                print("Productos ingresados correctamente.")
+                print(f"Producto 1: {P[0]}\nProducto 2: {P[1]}\nProducto 3: {P[2]}")
+
     else:
         print("Cupos ya otorgados.")
 
@@ -170,7 +188,7 @@ def eliminarP(P, producto):
 # producto: String
 def bajaprod(P):
     # Si hay cupos otorgados, no se deben cambiar/eliminar los productos (para evitar que haya camiones sin productos dados de alta)
-    while ncupos == 0: 
+    if ncupos == 0: 
         print(f"Producto 1: {P[0]}\nProducto 2: {P[1]}\nProducto 3: {P[2]}")
         producto = input("Ingresar el nombre del producto a eliminar: ").upper() # BUCLE INFINITO PA
         eliminarP(P, producto)
@@ -195,7 +213,7 @@ def modificarP(P, producto, nuevoproducto):
 # producto, nuevoproducto: String
 def modificacionproducto(P):
 
-    while ncupos == 0:
+    if ncupos == 0:
         print(f"Producto 1: {P[0]}\nProducto 2: {P[1]}\nProducto 3: {P[2]}")
 
         producto = input("Ingresar el nombre del producto a modificar: ").upper()
@@ -224,7 +242,7 @@ def menu_productos():
 
     global P
     clear()
-    opciones_terciario()
+    opciones_terciario("PRODUCTOS")
     opcion_terciario = "A"
     while opcion_terciario != "V":
         opcion_terciario = input("Opción: ").upper() # Convertir toda cadena ingresada en mayúscula.
@@ -465,7 +483,10 @@ def regtara():
                                     menores[4] = pesoneto
                                     patentemin[4] = arrpatentes[x]
                         print(f"Asignada la tara de {tara} kg del camión {patentereg}, con producto {productosxp[x]}.")
-                        print(productosxp, pesosnetos)
+
+                        print("PRODUCTO\tPESO NETO")
+                        for j in range(0, 8):
+                            print(productosxp[j], "\t", pesosnetos[j])
                 else:
                     print("Error - Para asignar la tara se requiere tener asignado un peso bruto.")
                     
