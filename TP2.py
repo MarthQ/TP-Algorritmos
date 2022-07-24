@@ -284,14 +284,6 @@ def repeticionpat(array, valor):
         if array[i] == valor:
             return True
 
-# function buscocupo(array, patente: String): Integer
-# VAR
-# i: Integer
-def buscocupo(array, patente):
-    for i in range(0,8):
-        if array[i] == patente:
-            return i
-
 # procedimiento cupos()
 # VAR
 # decisioncup, nuevapatente, cuposctm: String
