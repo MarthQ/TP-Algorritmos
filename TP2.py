@@ -83,7 +83,7 @@ def inicializodatoscam():
 
 def en_construccion():
     clear()
-    print( "Esta funcionalidad está en construcción.")
+    print(ROJO + "Esta funcionalidad está en construcción." + BLANCO)
     
 
 def opciones_menu():
