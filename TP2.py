@@ -50,7 +50,7 @@ def inicializoarrays():
 # total_neto_maiz, total_neto_soja: Float
 # promedio_neto_soja, promedio_neto_maiz: Float
 def inicializodatoscam():
-    global total_camiones, total_camiones_maiz, total_camiones_soja, total_camiones_cebada, total_camiones_girasol, total_camiones_trigo, total_neto_maiz, total_neto_soja, total_neto_trigo, total_neto_girasol, total_neto_cebada, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, recepcionhecha, camion
+    global total_camiones, total_camiones_maiz, total_camiones_soja, total_camiones_cebada, total_camiones_girasol, total_camiones_trigo, total_neto_maiz, total_neto_soja, total_neto_trigo, total_neto_girasol, total_neto_cebada, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, recepcionhecha, camion, Pprimero, Pmedio, contp, decisionprod, producto
     total_camiones = 0
     total_camiones_soja = 0
     total_camiones_maiz = 0
@@ -65,6 +65,11 @@ def inicializodatoscam():
     promedio_neto_maiz = 0
     promedio_neto_soja = 0
     camion = 0
+    Pprimero = ""
+    Pmedio = ""
+    contp = 0
+    decisionprod = ""
+    producto = ""
 
 # procedimientos en_construccion(), opciones_menu(), opciones_admin(), opciones_terciario()
 # Contienen casi todas las impresiones necesarias de los distintos menús.
@@ -135,20 +140,16 @@ def menu_terciario():
 # Pprimero, Pmedio, producto, decisionprod: String
 # i, contp, ncupos: Integer
 def cargarprod(P):
+    global contp, Pmedio, Pprimero, decisionprod, producto
+    decisionprod = "SI"
     if ncupos == 0:
-        Pprimero = ""
-        Pmedio = ""
-        contp = 0
-        decisionprod = ""
-        producto = ""
-        while contp < 3 and producto != "S" and decisionprod != "NO":
+        while contp < 3 and decisionprod != "NO":
 
             # Verificación de que el producto no se encuentre repetido o ya haya otro producto allí
             print(f"Ingresar el producto número {contp+1}. (Maíz, Soja, Trigo, Girasol o Cebada).")
-            print("\S para salir")
             producto = input("- ").upper()
             
-            while producto != "TRIGO" and producto != "SOJA" and producto != "MAIZ" and producto != "GIRASOL" and producto != "CEBADA" and producto != "S":
+            while producto != "TRIGO" and producto != "SOJA" and producto != "MAIZ" and producto != "GIRASOL" and producto != "CEBADA":
                 producto = input("No es un producto válido. Ingrese nuevamente: ").upper()
             
             while producto == Pprimero or producto == Pmedio:
@@ -166,8 +167,10 @@ def cargarprod(P):
                     decisionprod = input("Opción incorrecta. Ingrese nuevamente: ")
                     
             if contp == 3 or decisionprod == "NO":
-                print("Productos ingresados correctamente.")
                 print(f"Producto 1: {P[0]}\nProducto 2: {P[1]}\nProducto 3: {P[2]}")
+                productosctm = input("Productos ingresados correctamente - Presione cualquier tecla para continuar ")
+                clear()
+                opciones_terciario("PRODUCTOS")
 
     else:
         print("Cupos ya otorgados.")
@@ -369,6 +372,7 @@ def administracion():
             menu_terciario()
         else:
             opcion_admin = "V"
+            clear()
 
 # procedimiento regpesobruto()
 # VAR
@@ -445,8 +449,8 @@ def regtara():
                             print("Esta patente ya tiene una tara ingresada.")
                         else:
                             tara = int(input("Ingresar tara: "))
-                            while tara < 1:
-                                tara = int(input("La tara no es válida, ingresar un valor mayor a 0."))
+                            while tara < 1 or tara > arrpesobru[x]:
+                                tara = int(input("La tara no es válida, volver a ingresar: "))
                             arrtara[x] = tara
                             pesoneto = arrpesobru[x] - tara
                             pesosnetos[x] = pesoneto
@@ -491,10 +495,6 @@ def regtara():
                                     menores[4] = pesoneto
                                     patentemin[4] = arrpatentes[x]
                         print(f"Asignada la tara de {tara} kg del camión {patentereg}, con producto {productosxp[x]}.")
-
-                        print("PRODUCTO\tPESO NETO")
-                        for j in range(0, 8):
-                            print(productosxp[j], "\t\t\t", pesosnetos[j])
                 else:
                     print("Error - Para asignar la tara se requiere tener asignado un peso bruto.")
                     
@@ -550,7 +550,7 @@ def recepcion():
         camiones = input("Error. Ingresar una respuesta correcta: ").upper()
 
     while camiones != "NO":
-        
+        clear()
         print(f"\nDatos del camión")
         PATENTE = input("Ingresar número de patente ").upper()
 
@@ -601,6 +601,7 @@ def recepcion():
                 print("Este camión ya fue procesado.")
 
         camiones = input("\n¿Desea ingresar otro camión? Ingrese SI o NO: ").upper()
+        
 
         while camiones != "NO" and camiones != "SI": # Validación del sí
             camiones = input("Error. Ingresar una respuesta correcta: ").upper()
@@ -656,7 +657,7 @@ def reportes():
         print("No hay un promedio de cebada para mostrar.")
     print("")
     print("Patente del camión de maíz que mayor cantidad de maiz descargó: ", patentemay[0])
-    print("Patente del camión de maíz que menor cantidad de maíz descargó: \n", patentemin[0])
+    print("Patente del camión de maíz que menor cantidad de maíz descargó: ", patentemin[0], "\n")
     #print("")
     print("Patente del camión de soja que mayor cantidad de soja descargó: ", patentemay[1])
     print("Patente del camión de soja que menor cantidad de soja descargó: ", patentemin[1], "\n")
@@ -683,9 +684,9 @@ def reportes():
                         productosxp[t]=productosxp[v]
                         productosxp[v]=aux3
     print("Listado de camiones ordenados por peso neto descendente:\n")
-    print("PATENTE\tPRODUCTO\tPESO NETO")
+    print("PATENTE\tPRODUCTO PESO NETO")
     for j in range (0,8):
-        print(arrpatentes[j], productosxp[j], pesosnetos[j])
+        print(arrpatentes[j], "\t", productosxp[j], "\t", pesosnetos[j])
 
     # Opción de regreso al menú principal (main())
     reportesctm = input("\nPresione cualquier tecla para volver al menú principal: ")
