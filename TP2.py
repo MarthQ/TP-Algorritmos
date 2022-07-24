@@ -16,6 +16,12 @@
 import os
 clear = lambda: os.system('cls')
 
+
+VERDE = '\033[92m'
+AMARILLO = '\033[93m'
+ROJO = '\033[91m'
+BLANCO = '\033[0m'
+
 # procedimiento inicializoarrays()
 # TYPE:
 # P = array [0..2] of String
@@ -79,7 +85,7 @@ def en_construccion():
     print( "Esta funcionalidad está en construcción.")
 
 def opciones_menu():
-    print("----- MENU PRINCIPAL -----")
+    print(VERDE + "----- MENU PRINCIPAL -----" + BLANCO)
     print("Elija una opción (números enteros del 0 al 8):")
     print("\t1 - ADMINISTRACIONES")
     print("\t2 - ENTREGA DE CUPOS")
@@ -92,7 +98,7 @@ def opciones_menu():
     print("\t0 - FIN DEL PROGRAMA")
 
 def opciones_admin():
-    print("----- MENU ADMINISTRACIÓN -----")
+    print(VERDE + "----- MENU ADMINISTRACIÓN -----" + BLANCO)
     print("Opciones de A a G y V únicamente:")
     print("\tA - TITULARES")
     print("\tB - PRODUCTO")
@@ -105,7 +111,7 @@ def opciones_admin():
 
 #procedimiento opciones_terciario(titulo: String)
 def opciones_terciario(titulo):
-    print(f"----- MENU {titulo} -----")
+    print(VERDE + f"----- MENU {titulo} -----" + BLANCO)
     print("\tA. ALTA")
     print("\tB. BAJA")
     print("\tC. CONSULTA")
@@ -300,7 +306,7 @@ def cupos():
 
     else:
         clear()
-        print("----- MENÚ DE CUPOS -----")
+        print(AMARILLO + "----- MENÚ DE CUPOS -----" + BLANCO)
         decisioncup = input("¿Desea ingresar un cupo? Ingrese SI o NO: ").upper()
         while decisioncup != "SI" and decisioncup != "NO":  # Validación de datos
             decisioncup = input("Ingrese una opción correcta: ").upper()
@@ -551,7 +557,7 @@ def recepcion():
 
     while camiones != "NO":
         clear()
-        print(f"\nDatos del camión")
+        print(ROJO + f"\nDatos del camión" + BLANCO)
         PATENTE = input("Ingresar número de patente ").upper()
 
         while len(PATENTE) < 6 or len(PATENTE) > 7:
