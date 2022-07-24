@@ -50,7 +50,7 @@ def inicializoarrays():
 # total_neto_maiz, total_neto_soja: Float
 # promedio_neto_soja, promedio_neto_maiz: Float
 def inicializodatoscam():
-    global total_camiones, total_camiones_maiz, total_camiones_soja, total_camiones_cebada, total_camiones_girasol, total_camiones_trigo, total_neto_maiz, total_neto_soja, total_neto_trigo, total_neto_girasol, total_neto_cebada, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, recepcionhecha, camion, Pprimero, Pmedio, contp, decisionprod, producto
+    global total_camiones, total_camiones_maiz, total_camiones_soja, total_camiones_cebada, total_camiones_girasol, total_camiones_trigo, total_neto_maiz, total_neto_soja, total_neto_trigo, total_neto_girasol, total_neto_cebada, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, recepcionhecha, camion, Pprimero, Pmedio, contp, decisionprod, producto, porlomenosuno
     total_camiones = 0
     total_camiones_soja = 0
     total_camiones_maiz = 0
@@ -70,6 +70,7 @@ def inicializodatoscam():
     contp = 0
     decisionprod = ""
     producto = ""
+    porlomenosuno = False
 
 # procedimientos en_construccion(), opciones_menu(), opciones_admin(), opciones_terciario()
 # Contienen casi todas las impresiones necesarias de los distintos menús.
@@ -140,11 +141,12 @@ def menu_terciario():
 # Pprimero, Pmedio, producto, decisionprod: String
 # i, contp, ncupos: Integer
 def cargarprod(P):
-    global contp, Pmedio, Pprimero, decisionprod, producto
+    global contp, Pmedio, Pprimero, decisionprod, producto, porlomenosuno
     decisionprod = "SI"
     if ncupos == 0:
         while contp < 3 and decisionprod != "NO":
 
+            porlomenosuno = True
             # Verificación de que el producto no se encuentre repetido o ya haya otro producto allí
             print(f"Ingresar el producto número {contp+1}. (Maíz, Soja, Trigo, Girasol o Cebada).")
             producto = input("- ").upper()
@@ -154,12 +156,14 @@ def cargarprod(P):
             
             while producto == Pprimero or producto == Pmedio:
                 producto = input("Producto ya ingresado. Ingrese nuevamente: ").upper() 
+                while producto != "TRIGO" and producto != "SOJA" and producto != "MAIZ" and producto != "GIRASOL" and producto != "CEBADA":
+                    producto = input("No es un producto válido. Ingrese nuevamente: ").upper()
+
+            P[contp] = producto
+            contp += 1
+
             Pprimero = P[0]
             Pmedio = P[1] # guardo los valores en las variables a la fuerza y pregunto si ya están ahí
-
-            if producto != "SI":
-                P[contp] = producto
-                contp += 1
 
             if contp < 3:
                 decisionprod = input("¿Desea ingresar otro producto? Ingrese SI o NO: ").upper()
@@ -297,41 +301,45 @@ def buscocupo(array, patente):
 # nuevoestado: Char
 ncupos = 0
 def cupos():
-
-    global ncupos
-    clear()
-    print("----- MENÚ DE CUPOS -----")
-    decisioncup = input("¿Desea ingresar un cupo? Ingrese SI o NO: ").upper()
-    while decisioncup != "SI" and decisioncup != "NO":  # Validación de datos
-        decisioncup = input("Ingrese una opción correcta: ").upper()
-
-    while decisioncup == "SI" and ncupos < 8:
+    global ncupos, porlomenosuno
+    if porlomenosuno != True:
+        bah = input("Se requiere dar de alta productos antes de ingresar cupos - Presione cualquier tecla para volver ")
         clear()
-        nuevapatente = input("Ingresar la patente del camión: ").upper()
-        while len(nuevapatente) < 6 or len(nuevapatente) > 7: # Comprobamos la longitud de la patente
-            nuevapatente = input("Error con la longitud de la patente. Por favor ingresar de vuelta: ").upper()
-        if repeticionpat(arrpatentes, nuevapatente): # Buscamos si la patente existe en el array
-            print("La patente ya tiene un cupo asignado.")
-        else:
-            arrpatentes[ncupos] = nuevapatente # Finalmente se asigna
 
-            print("Posibles estados: P - Pendiente, E - En proceso, C - Cumplido")
-            nuevoestado = input("Ingresar el estado de la patente: ").upper()
-            while nuevoestado != "P" and nuevoestado != "E" and nuevoestado != "C": # Lo mismo acá...
-                nuevoestado = input("Estado erróneo. Ingresar un estado correcto: ").upper()
-            arrcupos[ncupos] = nuevoestado # Asignación del estado
-
-            ncupos += 1
-            print(f"Se ingresó Cupo Nº {ncupos} con patente {nuevapatente}")
-        decisioncup = input("¿Desea ingresar un nuevo cupo? Ingrese SI o NO: ").upper()
+    else:
+        clear()
+        print("----- MENÚ DE CUPOS -----")
+        decisioncup = input("¿Desea ingresar un cupo? Ingrese SI o NO: ").upper()
         while decisioncup != "SI" and decisioncup != "NO":  # Validación de datos
             decisioncup = input("Ingrese una opción correcta: ").upper()
-    
-    if ncupos >= 8:
-        print("Se ha alcanzado el límite de cupos.")
 
-    cuposctm = input("Cupos ingresados correctamente - Presione cualquier tecla para continuar")
-    clear()
+        while decisioncup == "SI" and ncupos < 8:
+            clear()
+            nuevapatente = input("Ingresar la patente del camión: ").upper()
+            while len(nuevapatente) < 6 or len(nuevapatente) > 7: # Comprobamos la longitud de la patente
+                nuevapatente = input("Error con la longitud de la patente. Por favor ingresar de vuelta: ").upper()
+            if repeticionpat(arrpatentes, nuevapatente): # Buscamos si la patente existe en el array
+                print("La patente ya tiene un cupo asignado.")
+            else:
+                arrpatentes[ncupos] = nuevapatente # Finalmente se asigna
+
+                print("Posibles estados: P - Pendiente, E - En proceso, C - Cumplido")
+                nuevoestado = input("Ingresar el estado de la patente: ").upper()
+                while nuevoestado != "P" and nuevoestado != "E" and nuevoestado != "C": # Lo mismo acá...
+                    nuevoestado = input("Estado erróneo. Ingresar un estado correcto: ").upper()
+                arrcupos[ncupos] = nuevoestado # Asignación del estado
+
+                ncupos += 1
+                print(f"Se ingresó Cupo Nº {ncupos} con patente {nuevapatente}")
+            decisioncup = input("¿Desea ingresar un nuevo cupo? Ingrese SI o NO: ").upper()
+            while decisioncup != "SI" and decisioncup != "NO":  # Validación de datos
+                decisioncup = input("Ingrese una opción correcta: ").upper()
+        
+        if ncupos >= 8:
+            print("Se ha alcanzado el límite de cupos.")
+
+        cuposctm = input("Cupos ingresados correctamente - Presione cualquier tecla para continuar")
+        clear()
 
 # procedimiento administracion()
 # Variables:
