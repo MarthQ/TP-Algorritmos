@@ -82,7 +82,9 @@ def inicializodatoscam():
 # Contienen casi todas las impresiones necesarias de los distintos menús.
 
 def en_construccion():
+    clear()
     print( "Esta funcionalidad está en construcción.")
+    
 
 def opciones_menu():
     print(VERDE + "----- MENU PRINCIPAL -----" + BLANCO)
