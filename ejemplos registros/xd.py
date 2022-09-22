@@ -5,7 +5,7 @@ import os.path
 
 
 class cubano:
-    def init(self):
+    def __init__(self):
         self.name = " "
         self.dni = 0
 
