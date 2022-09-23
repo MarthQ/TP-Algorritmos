@@ -226,11 +226,11 @@ def cargarprod():
 
             if ALPRODUCTOS.seek(0,2) < 3 * elsai:
                 decisionprod = input("¿Desea ingresar otro producto? Ingrese SI o NO: ").upper()
-                while decisionprod == "" or len(decisionprod) > 2: # Validación de datos
-                    decisionprod = input("Opción incorrecta. Ingrese nuevamente: ")
+                while decisionprod != "NO" and decisionprod != "SI": # Validación de datos
+                    decisionprod = input("Opción incorrecta. Ingrese nuevamente: ").upper()
                     
             if ALPRODUCTOS.seek(0,2) == 3 * elsai or decisionprod == "NO":
-                print("Productos ingresados correctamente - Presione cualquier tecla para continuar ")
+                print("Productos ingresados correctamente")
                 os.system("pause")
                 clear()
                 opciones_terciario("PRODUCTOS")
@@ -248,7 +248,7 @@ def dameelsai():
 def tebuscoalla(producto):
     producto = producto.ljust(25, ' ')
     getsai = os.path.getsize(AFPRODUCTOS)
-    ALPRODUCTOS.seek(0,0)
+    ALPRODUCTOS.seek(0,0) 
     RLPRODUCTOS = csproducto()
     if getsai > 0:
         while ALPRODUCTOS.tell() < getsai and RLPRODUCTOS.nombreproducto != producto:
@@ -259,6 +259,23 @@ def tebuscoalla(producto):
             return False
     else:
         return False
+
+def tebuscopos(producto):
+    producto = producto.ljust(25, ' ')
+    getsai = os.path.getsize(AFPRODUCTOS)
+    ALPRODUCTOS.seek(0,0) 
+    RLPRODUCTOS = csproducto()
+    pos = 0
+    if getsai > 0:
+        while ALPRODUCTOS.tell() < getsai and RLPRODUCTOS.nombreproducto != producto:
+            pos = ALPRODUCTOS.tell()
+            RLPRODUCTOS = pickle.load(ALPRODUCTOS)
+        if RLPRODUCTOS.nombreproducto == producto:
+            return pos
+        else:
+            return -1
+    else:
+        return -1
 
 
 def consultaP():
@@ -275,32 +292,55 @@ def consultaP():
         RLPRODUCTOS = pickle.load(ALPRODUCTOS)
         print(RLPRODUCTOS.nombreproducto, RLPRODUCTOS.codproducto)
     os.system("pause")
-
+    clear()
+    opciones_terciario("PRODUCTOS")
 
 # procedimiento eliminarP(var P: P; producto: String)
 # VAR
 # j, i: Integer
 # producto: String
-def eliminarP(P, producto):
-    j = 0
-    while (P[j] != producto and j <3):
-        j += 1
-    if P[j]==producto:
-        P[j] = " "
+def eliminarP(producto):
+    if tebuscopos(producto) != -1:
+        pos = tebuscopos(producto)
+        print("este es el pos ", pos)
+        ALPRODUCTOS.seek(pos,0)
+        RLPRODUCTOS = pickle.load(ALPRODUCTOS)
+        RLPRODUCTOS.nombreproducto = ""
+        RLPRODUCTOS.codproducto = ""
+        ALPRODUCTOS.seek(pos,0)
+        formatearproducto(RLPRODUCTOS)
+        pickle.dump(RLPRODUCTOS, ALPRODUCTOS)
         print(f"El producto {producto} se eliminó correctamente.")
+        os.system("pause")
+        clear()
+        opciones_terciario("PRODUCTOS")
     else:
-	    print("El Producto no se encontró.")  
+        print("El Producto no se encontró.")
+        os.system("pause")
+        clear()
+        opciones_terciario("PRODUCTOS")
 
 # procedimiento bajaprod(var P: P)
 # VAR
 # producto: String
 # ncupos: Integer
-def bajaprod(P):
+def bajaprod():
     # Si hay cupos otorgados, no se deben cambiar/eliminar los productos (para evitar que haya camiones sin productos dados de alta)
     if ncupos == 0: 
-        print(f"Producto 1: {P[0]}\nProducto 2: {P[1]}\nProducto 3: {P[2]}")
-        producto = input("Ingresar el nombre del producto a eliminar: ").upper() # BUCLE INFINITO PA
-        eliminarP(P, producto)
+        getsai = os.path.getsize(AFPRODUCTOS)
+        RLPRODUCTOS = csproducto()
+        if getsai == 0:
+            print("No hay na' para mostra'")
+            
+        else:
+            ALPRODUCTOS.seek(0,0)
+            print("producto |       codigo producto")
+            print("---------------------------")
+            while ALPRODUCTOS.tell() < getsai:
+                RLPRODUCTOS = pickle.load(ALPRODUCTOS)
+                print(RLPRODUCTOS.nombreproducto, RLPRODUCTOS.codproducto)
+            producto = input("Ingresar el nombre del producto a eliminar: ").upper() # BUCLE INFINITO PA
+            eliminarP(producto)
     else:
         print("Cupos ya otorgados. No se pueden eliminar productos.")
 
@@ -309,13 +349,21 @@ def bajaprod(P):
 # j: Integer
 # producto, nuevoproducto: String
 # P: P
-def modificarP(P, producto, nuevoproducto):
-    j = 0
-    while (P[j] != producto and j <2):
-        j += 1
-    if P[j]==producto:
-        P[j] = nuevoproducto
+def modificarP(producto, nuevoproducto, nuevocod):
+    if tebuscopos(producto) != -1:
+        pos = tebuscopos(producto)
+        print("este es el pos ", pos)
+        ALPRODUCTOS.seek(pos,0)
+        RLPRODUCTOS = pickle.load(ALPRODUCTOS)
+        RLPRODUCTOS.nombreproducto = nuevoproducto
+        RLPRODUCTOS.codproducto = nuevocod
+        ALPRODUCTOS.seek(pos,0)
+        formatearproducto(RLPRODUCTOS)
+        pickle.dump(RLPRODUCTOS, ALPRODUCTOS)
         print(f"El producto {producto} ahora es {nuevoproducto}.")
+        os.system("pause")
+        clear()
+        opciones_terciario("PRODUCTOS")
     else:
 	    print("El Producto no se encontró.")
 
@@ -323,24 +371,38 @@ def modificarP(P, producto, nuevoproducto):
 # VAR
 # producto, nuevoproducto: String
 # ncupos: Integer
-def modificacionproducto(P):
+def modificacionproducto():
 
     if ncupos == 0:
-        print(f"Producto 1: {P[0]}\nProducto 2: {P[1]}\nProducto 3: {P[2]}")
+        getsai = os.path.getsize(AFPRODUCTOS)
+        RLPRODUCTOS = csproducto()
+        if getsai == 0:
+            print("No hay na' para mostra'")
+            
+        else:
+            ALPRODUCTOS.seek(0,0)
+            print("producto |       codigo producto")
+            print("---------------------------")
+            while ALPRODUCTOS.tell() < getsai:
+                RLPRODUCTOS = pickle.load(ALPRODUCTOS)
+                print(RLPRODUCTOS.nombreproducto, RLPRODUCTOS.codproducto)
+            producto = input("Ingresar el nombre del producto a modificar: ").upper()
 
-        producto = input("Ingresar el nombre del producto a modificar: ").upper()
-        # Verificación de que sea de los ingresados
-        while producto != "TRIGO" and producto != "SOJA" and producto != "MAIZ" and producto != "GIRASOL" and producto != "CEBADA":
-            producto = input(f"No es un producto válido. Ingrese nuevamente: ").upper()
+            # Verificación de que sea de los ingresados
+            while producto != "TRIGO" and producto != "SOJA" and producto != "MAIZ" and producto != "GIRASOL" and producto != "CEBADA":
+                producto = input(f"No es un producto válido. Ingrese nuevamente: ").upper()
 
-        nuevoproducto = input("Ingresar el nuevo producto: ").upper()
-        # Verificación de que sea correcto y no se vaya a repetir
-        while nuevoproducto != "TRIGO" and nuevoproducto != "SOJA" and nuevoproducto != "MAIZ" and nuevoproducto != "GIRASOL" and nuevoproducto != "CEBADA":
-            nuevoproducto = input(f"No es un producto válido. Ingrese nuevamente: ").upper()
-        while nuevoproducto == P[0] or nuevoproducto == P[1] or nuevoproducto == P[2]:
-            nuevoproducto = input("Producto ya ingresado. Ingrese nuevamente: ").upper()
+            nuevoproducto = input("Ingresar el nuevo producto: ").upper()
+            # Verificación de que sea correcto y no se vaya a repetir
+            while nuevoproducto != "TRIGO" and nuevoproducto != "SOJA" and nuevoproducto != "MAIZ" and nuevoproducto != "GIRASOL" and nuevoproducto != "CEBADA":
+                nuevoproducto = input(f"No es un producto válido. Ingrese nuevamente: ").upper()
+            while tebuscoalla(nuevoproducto) == True:
+                nuevoproducto = input("Producto ya ingresado. Ingrese nuevamente: ").upper()
+                while nuevoproducto != "TRIGO" and nuevoproducto != "SOJA" and nuevoproducto != "MAIZ" and nuevoproducto != "GIRASOL" and nuevoproducto != "CEBADA":
+                    nuevoproducto = input("No es un producto válido. Ingrese nuevamente: ").upper()
+            nuevocod = input("Ingrese el código del producto: ")
 
-        modificarP(P, producto, nuevoproducto)
+            modificarP(producto, nuevoproducto, nuevocod)
     else:
         print("Cupos ya otorgados. No se pueden modificar los productos.")
 
