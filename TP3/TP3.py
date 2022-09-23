@@ -140,6 +140,7 @@ def opciones_menu():
     print("\t6 - REGISTRAR DESCARGA")
     print("\t7 - REGISTRAR TARA")
     print("\t8 - REPORTES")
+    print("\t9 - LISTADO DE SILOS Y RECHAZOS")
     print("\t0 - FIN DEL PROGRAMA")
 
 def opciones_admin():
@@ -896,6 +897,9 @@ def main():
                 print("Para realizar los reportes se necesita la recepción de los camiones, por favor seleccione la opción 3: ")
             else:
                 reportes() 
+        
+        elif opcion == "9":
+            print("esto es el listado de silos y rechazos")
 
         else: # Fin del programa
             print("Fin del programa.")
