@@ -11,13 +11,14 @@
 
 ##############################################################################
 
-# Estética del programa
-# función CLEAR para limpiar pantalla
 import pickle
 import os
+
+# Estética del programa
+# función CLEAR para limpiar pantalla
 clear = lambda: os.system('cls')
 
-
+# variables de COLOR para los print() de consola
 VERDE = '\033[92m'
 AMARILLO = '\033[93m'
 ROJO = '\033[91m'
@@ -73,6 +74,8 @@ else:
 RLPRODUCTOS = csproducto()
 
 
+# soy vago y no quiero copiar el if para abrir los archivos después lo hacemos
+
 AFRUBROS = "C:\\fuck ultad\\TP Algorritmos\\TP3\\RUBROS.DAT"
 ALRUBROS = open(AFRUBROS, "w+b")
 RLRUBROS = csrubro()
@@ -87,7 +90,7 @@ RLSILOS = cssilo()
 
 def formatearproducto(RL):
     RL.codproducto = str(RL.codproducto)
-    RL.codproducto = RL.codproducto.ljust(2, ' ')     
+    RL.codproducto = RL.codproducto.ljust(10, ' ')     
     RL.nombreproducto = RL.nombreproducto.ljust(25, ' ')
 
 
@@ -184,10 +187,6 @@ def menu_terciario():
             opcion_terciario = "V"
             administracion()
 
-# procedimiento cargarprod(var P: P)
-# VAR:
-# Pprimero, Pmedio, producto, decisionprod: String
-# i, contp, ncupos: Integer
 def cargarprod():
     global contp, decisionprod, producto, porlomenosuno
     decisionprod = "SI"
@@ -238,7 +237,6 @@ def cargarprod():
     else:
         print("Cupos ya otorgados.")
 
-
 def dameelsai():
     ALPRODUCTOS.seek(0,0)
     RLPRODUCTOS = pickle.load(ALPRODUCTOS)
@@ -276,7 +274,6 @@ def tebuscopos(producto):
             return -1
     else:
         return -1
-
 
 def consultaP():
     getsai = os.path.getsize(AFPRODUCTOS)
@@ -344,11 +341,6 @@ def bajaprod():
     else:
         print("Cupos ya otorgados. No se pueden eliminar productos.")
 
-# procedimiento modificarP(var P: P; producto: String, nuevoproducto: String)
-# VAR
-# j: Integer
-# producto, nuevoproducto: String
-# P: P
 def modificarP(producto, nuevoproducto, nuevocod):
     if tebuscopos(producto) != -1:
         pos = tebuscopos(producto)
@@ -367,10 +359,6 @@ def modificarP(producto, nuevoproducto, nuevocod):
     else:
 	    print("El Producto no se encontró.")
 
-# procedimiento modificacionproducto(var P: P)
-# VAR
-# producto, nuevoproducto: String
-# ncupos: Integer
 def modificacionproducto():
 
     if ncupos == 0:
@@ -407,8 +395,6 @@ def modificacionproducto():
         print("Cupos ya otorgados. No se pueden modificar los productos.")
 
 # procedimiento menu_productos():
-# TYPE
-# productos = array [0..2] de string
 # VAR
 # P: productos
 # opcion_terciario: Char (un caracter)
@@ -433,6 +419,16 @@ def menu_productos():
         else: # Volver al menú principal
             opcion_terciario = "V"
             administracion()
+
+
+
+#------------------------------------------------------------------------------------------------------------------------------
+# A PARTIR DE ACÁ ES todo CÓDIGO VIEJO Y NO TOQUÉ NADA
+# DE HECHO BORRÉ LA DECLARACIÓN DE ARRAYS ASÍ QUE TIRA MUCHOS ERRORES XD
+#------------------------------------------------------------------------------------------------------------------------------
+
+
+
 
 # function repeticionpat(array, valor): Boolean
 # array y valor pueden ser de cualquier tipo de dato a buscar en X type de array
