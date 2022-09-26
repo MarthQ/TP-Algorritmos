@@ -191,14 +191,8 @@ def menu_terciario():
 def cargarprod():
     global contp, decisionprod, producto, porlomenosuno
     decisionprod = "SI"
-    t = os.path.getsize(AFPRODUCTOS)
-    if t > 0:
-        elsai = dameelsai()
-    else:
-        elsai = 1
-
     if ncupos == 0:
-        while ALPRODUCTOS.seek(0,2) < 3 * elsai and decisionprod != "NO":
+        while decisionprod != "NO":
 
             porlomenosuno = True
             # Verificación de que el producto no se encuentre repetido o ya haya otro producto allí
@@ -222,27 +216,17 @@ def cargarprod():
             pickle.dump(RLPRODUCTOS, ALPRODUCTOS)
             ALPRODUCTOS.flush()
 
-            elsai = dameelsai()
-
-            if ALPRODUCTOS.seek(0,2) < 3 * elsai:
-                decisionprod = input("¿Desea ingresar otro producto? Ingrese SI o NO: ").upper()
-                while decisionprod != "NO" and decisionprod != "SI": # Validación de datos
-                    decisionprod = input("Opción incorrecta. Ingrese nuevamente: ").upper()
-                    
-            if ALPRODUCTOS.seek(0,2) == 3 * elsai or decisionprod == "NO":
+            decisionprod = input("¿Desea ingresar otro producto? Ingrese SI o NO: ").upper()
+            while decisionprod != "NO" and decisionprod != "SI": # Validación de datos
+                decisionprod = input("Opción incorrecta. Ingrese nuevamente: ").upper()
+                
+            if decisionprod == "NO":
                 print("Productos ingresados correctamente")
                 os.system("pause")
                 clear()
                 opciones_terciario("PRODUCTOS")
-
     else:
         print("Cupos ya otorgados.")
-
-def dameelsai():
-    ALPRODUCTOS.seek(0,0)
-    RLPRODUCTOS = pickle.load(ALPRODUCTOS)
-    elsai = ALPRODUCTOS.tell()
-    return elsai
 
 def tebuscoalla(producto):
     producto = producto.ljust(25, ' ')
