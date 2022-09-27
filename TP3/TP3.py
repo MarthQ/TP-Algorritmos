@@ -77,7 +77,10 @@ RLPRODUCTOS = csproducto()
 # soy vago y no quiero copiar el if para abrir los archivos después lo hacemos
 
 AFRUBROS = "C:\\fuck ultad\\TP Algorritmos\\TP3\\RUBROS.DAT"
-ALRUBROS = open(AFRUBROS, "w+b")
+if os.path.exists(AFRUBROS) == True:
+    ALRUBROS = open(AFRUBROS, "r+b")
+else:
+    ALRUBROS = open(AFRUBROS, "w+b")
 RLRUBROS = csrubro()
 
 AFRUBROSXPRODUCTO = "C:\\fuck ultad\\TP Algorritmos\\TP3\\RUBROS-X-PRODUCTO.DAT"
@@ -93,6 +96,10 @@ def formatearproducto(RL):
     RL.codproducto = RL.codproducto.ljust(10, ' ')     
     RL.nombreproducto = RL.nombreproducto.ljust(25, ' ')
 
+def formatearrubro(RL):
+    RL.codigorubro = str(RL.codigorubro)
+    RL.codigorubro = RL.codigorubro.ljust(10, ' ') 
+    RL.nombrerubro = RL.nombrerubro.ljust(25, ' ')
 
 
 # procedimiento inicializadodatoscam()
@@ -405,6 +412,38 @@ def menu_productos():
             opcion_terciario = "V"
             administracion()
 
+def menu_rubros():
+    clear()
+    opciones_terciario("RUBROS")
+    opcion_terciario = "A"
+    while opcion_terciario != "V":
+        opcion_terciario = input("Opción: ").upper() # Convertir toda cadena ingresada en mayúscula.
+        while opcion_terciario == "" or len(opcion_terciario) > 1: # Validación de datos
+            opcion_terciario = input("Opción incorrecta. Ingrese nuevamente: ")
+        
+        if opcion_terciario == "A": # Alta
+            cargarubro()
+        elif opcion_terciario == "B": # Baja
+            en_construccion()
+        elif opcion_terciario == "C": # Consulta
+            en_construccion()
+        elif opcion_terciario == "M": # Modificacion
+            en_construccion()
+        else: # Volver al menú principal
+            opcion_terciario = "V"
+            administracion()
+
+def cargarubro():
+    cargamiento = "S"
+    while cargamiento == "S":
+        cod = int(input("Ingrese el código del rubro: "))
+        nombreR = input("Ingrese el nombre del rubro: ")
+
+        RLRUBROS = csrubro()
+
+        RLRUBROS.codigorubro = cod
+        RLRUBROS.nombrerubro = nombreR
+
 
 
 #------------------------------------------------------------------------------------------------------------------------------
@@ -491,13 +530,13 @@ def administracion():
  
         if opcion_admin == "A": # Titulares
             opcion_admin = "V"
-            menu_terciario()
+            en_construccion()
         elif opcion_admin == "B": # Producto
             opcion_admin = "V"
             menu_productos()
         elif opcion_admin == "C": # Rubros
             opcion_admin = "V"
-            menu_terciario()
+            menu_rubros()
         elif opcion_admin == "D": # Rubros por producto
             opcion_admin = "V"
             menu_terciario()
@@ -506,10 +545,10 @@ def administracion():
             menu_terciario()
         elif opcion_admin == "F": # Sucursales
             opcion_admin = "V"
-            menu_terciario()
+            en_construccion()
         elif opcion_admin == "G": # Producto por titular
             opcion_admin = "V"
-            menu_terciario()
+            en_construccion()
         else:
             opcion_admin = "V"
             clear()
