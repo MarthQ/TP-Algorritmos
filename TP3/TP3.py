@@ -58,7 +58,7 @@ class cssilo:
         self.codproducto = 0
         self.stock = 0
 
-AFOPERACIONES = os.getcwd() + "\\OPERACIONES.DAT"
+AFOPERACIONES = os.getcwd() + "TP3\\OPERACIONES.DAT"
 if os.path.exists(AFOPERACIONES) == True:
     ALOPERACIONES = open(AFOPERACIONES, "r+b")
 else:
@@ -66,7 +66,7 @@ else:
 
 RLOPERACIONES = csoperacion()
 
-AFPRODUCTOS = os.getcwd() + "\\PRODUCTOS.DAT"
+AFPRODUCTOS = os.getcwd() + "TP3\\PRODUCTOS.DAT"
 if os.path.exists(AFPRODUCTOS) == True:
     ALPRODUCTOS = open(AFPRODUCTOS, "r+b")
 else:
@@ -74,22 +74,25 @@ else:
 
 RLPRODUCTOS = csproducto()
 
-
-# soy vago y no quiero copiar el if para abrir los archivos después lo hacemos
-
-AFRUBROS = os.getcwd() + "\\RUBROS.DAT"
+AFRUBROS = os.getcwd() + "TP3\\RUBROS.DAT"
 if os.path.exists(AFRUBROS) == True:
     ALRUBROS = open(AFRUBROS, "r+b")
 else:
     ALRUBROS = open(AFRUBROS, "w+b")
 RLRUBROS = csrubro()
 
-AFRUBROSXPRODUCTO = os.getcwd() + "\\RUBROS-X-PRODUCTO.DAT"
-ALRUBROSXPRODUCTO = open(AFRUBROSXPRODUCTO, "w+b")
+AFRUBROSXPRODUCTO = os.getcwd() + "TP3\\RUBROS-X-PRODUCTO.DAT"
+if os.path.exists(AFRUBROSXPRODUCTO) == True:
+    ALRUBROSXPRODUCTO = open(AFRUBROSXPRODUCTO, "r+b")
+else:
+    ALRUBROSXPRODUCTO = open(AFRUBROSXPRODUCTO, "w+b")
 RLRUBROSXPRODUCTO = csrubroxproducto()
 
-AFSILOS = os.getcwd() + "\\SILOS.DAT"
-ALSILOS = open(AFSILOS, "w+b")
+AFSILOS = os.getcwd() + "TP3\\SILOS.DAT"
+if os.path.exists(AFSILOS) == True:
+    ALSILOS = open(AFSILOS, "r+b")
+else:
+    ALSILOS = open(AFSILOS, "w+b")
 RLSILOS = cssilo()
 
 def formatearproducto(RL):
@@ -256,7 +259,7 @@ def tebuscopos(producto):
     getsai = os.path.getsize(AFPRODUCTOS)
     ALPRODUCTOS.seek(0,0) 
     RLPRODUCTOS = csproducto()
-    pos = 0
+    pos = -1
     if getsai > 0:
         while ALPRODUCTOS.tell() < getsai and RLPRODUCTOS.nombreproducto != producto:
             pos = ALPRODUCTOS.tell()
@@ -292,11 +295,10 @@ def consultaP():
 def eliminarP(producto):
     if tebuscopos(producto) != -1:
         pos = tebuscopos(producto)
-        print("este es el pos ", pos)
         ALPRODUCTOS.seek(pos,0)
         RLPRODUCTOS = pickle.load(ALPRODUCTOS)
         RLPRODUCTOS.nombreproducto = ""
-        RLPRODUCTOS.codproducto = ""
+        RLPRODUCTOS.codproducto = 0
         ALPRODUCTOS.seek(pos,0)
         formatearproducto(RLPRODUCTOS)
         pickle.dump(RLPRODUCTOS, ALPRODUCTOS)
@@ -439,7 +441,6 @@ def cargarubro():
     while cargamiento == "S":
         nombreR = input("Ingrese el nombre del rubro: ")
         cod = int(input("Ingrese el código del rubro: "))
-        
 
         RLRUBROS = csrubro()
 
@@ -465,12 +466,9 @@ def cargarubro():
 # DE HECHO BORRÉ LA DECLARACIÓN DE ARRAYS ASÍ QUE TIRA MUCHOS ERRORES XD
 #------------------------------------------------------------------------------------------------------------------------------
 
-
 m=0
 pospat=0
 vrtemp= " "
-
-
 
 # function bucapatente(patente): char
 # Intento de funcion buscar- Nair
