@@ -94,7 +94,7 @@ RLSILOS = cssilo()
 
 def formatearproducto(RL):
     RL.codproducto = str(RL.codproducto)
-    RL.codproducto = RL.codproducto.ljust(10, ' ')     
+    RL.codproducto = RL.codproducto.ljust(10, ' ')
     RL.nombreproducto = RL.nombreproducto.ljust(25, ' ')
 
 def formatearrubro(RL):
@@ -437,14 +437,27 @@ def menu_rubros():
 def cargarubro():
     cargamiento = "S"
     while cargamiento == "S":
-        cod = int(input("Ingrese el código del rubro: "))
         nombreR = input("Ingrese el nombre del rubro: ")
+        cod = int(input("Ingrese el código del rubro: "))
+        
 
         RLRUBROS = csrubro()
 
         RLRUBROS.codigorubro = cod
         RLRUBROS.nombrerubro = nombreR
+        formatearrubro(RLRUBROS)
+        pickle.dump(RLRUBROS, ALRUBROS)
+        ALRUBROS.flush()
 
+        cargamiento = input("¿Desea ingresar otro rubro? Ingrese SI o NO ").upper()
+        while cargamiento != "NO" and cargamiento != "SI": # Validación de datos
+                cargamiento = input("Opción incorrecta. Ingrese nuevamente: ").upper()
+                
+        if cargamiento == "NO":
+            print("Rubros ingresados correctamente")
+            os.system("pause")
+            clear()
+            opciones_terciario("RUBROS")
 
 
 #------------------------------------------------------------------------------------------------------------------------------
@@ -453,7 +466,24 @@ def cargarubro():
 #------------------------------------------------------------------------------------------------------------------------------
 
 
+m=0
+pospat=0
+vrtemp= " "
 
+
+
+# function bucapatente(patente): char
+# Intento de funcion buscar- Nair
+
+def buscapatente(npat):
+    m= os.path.getsize(AFOPERACIONES)
+    ALOPERACIONES.seek(0)
+    while ALOPERACIONES.tell() < m:
+        pospat= ALOPERACIONES.tell()
+        vrtemp= pickle.load(ALOPERACIONES)
+        if vrtemp.patente == npat:
+            return 1
+    return -1
 
 # function repeticionpat(array, valor): Boolean
 # array y valor pueden ser de cualquier tipo de dato a buscar en X type de array
