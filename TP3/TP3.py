@@ -77,16 +77,11 @@ RLPRODUCTOS = csproducto()
 
 # soy vago y no quiero copiar el if para abrir los archivos después lo hacemos
 
-<<<<<<< HEAD
-AFRUBROS = "C:\\fuck ultad\\TP Algorritmos\\TP3\\RUBROS.DAT"
-if os.path.exists(AFRUBROS) == True:
-    ALRUBROS = open(AFRUBROS, "r+b")
-else:
-    ALRUBROS = open(AFRUBROS, "w+b")
-=======
 AFRUBROS = os.getcwd() + "\\RUBROS.DAT"
-ALRUBROS = open(AFRUBROS, "w+b")
->>>>>>> a8e9461f950c1bf2121abe88899c3c11755cf78a
+if os.path.exists(AFRUBROS) == True:
+    ALPRODUCTOS = open(AFRUBROS, "r+b")
+else:
+    ALPRODUCTOS = open(AFRUBROS, "w+b")
 RLRUBROS = csrubro()
 
 AFRUBROSXPRODUCTO = os.getcwd() + "\\RUBROS-X-PRODUCTO.DAT"
