@@ -79,9 +79,9 @@ RLPRODUCTOS = csproducto()
 
 AFRUBROS = os.getcwd() + "\\RUBROS.DAT"
 if os.path.exists(AFRUBROS) == True:
-    ALPRODUCTOS = open(AFRUBROS, "r+b")
+    ALRUBROS = open(AFRUBROS, "r+b")
 else:
-    ALPRODUCTOS = open(AFRUBROS, "w+b")
+    ALRUBROS = open(AFRUBROS, "w+b")
 RLRUBROS = csrubro()
 
 AFRUBROSXPRODUCTO = os.getcwd() + "\\RUBROS-X-PRODUCTO.DAT"
