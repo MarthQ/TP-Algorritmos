@@ -28,6 +28,7 @@ class csoperacion:
     def __init__(self):
         self.patente = "" # 7 caracteres
         self.codproducto = 0
+# ver uso de datetime para esto (tal vez es una paja y usamos el string tradicional, es un datazo este comentario)
         self.fechacupo = "dd/mm/yyyy" # es una FECHA AAAAAAAAAA
         self.estado = "" # char
         self.bruto = 0
@@ -57,7 +58,7 @@ class cssilo:
         self.codproducto = 0
         self.stock = 0
 
-AFOPERACIONES = "C:\\fuck ultad\\TP Algorritmos\\TP3\\OPERACIONES.DAT"
+AFOPERACIONES = os.getcwd() + "\\OPERACIONES.DAT"
 if os.path.exists(AFOPERACIONES) == True:
     ALOPERACIONES = open(AFOPERACIONES, "r+b")
 else:
@@ -65,7 +66,7 @@ else:
 
 RLOPERACIONES = csoperacion()
 
-AFPRODUCTOS = "C:\\fuck ultad\\TP Algorritmos\\TP3\\PRODUCTOS.DAT"
+AFPRODUCTOS = os.getcwd() + "\\PRODUCTOS.DAT"
 if os.path.exists(AFPRODUCTOS) == True:
     ALPRODUCTOS = open(AFPRODUCTOS, "r+b")
 else:
@@ -76,18 +77,23 @@ RLPRODUCTOS = csproducto()
 
 # soy vago y no quiero copiar el if para abrir los archivos después lo hacemos
 
+<<<<<<< HEAD
 AFRUBROS = "C:\\fuck ultad\\TP Algorritmos\\TP3\\RUBROS.DAT"
 if os.path.exists(AFRUBROS) == True:
     ALRUBROS = open(AFRUBROS, "r+b")
 else:
     ALRUBROS = open(AFRUBROS, "w+b")
+=======
+AFRUBROS = os.getcwd() + "\\RUBROS.DAT"
+ALRUBROS = open(AFRUBROS, "w+b")
+>>>>>>> a8e9461f950c1bf2121abe88899c3c11755cf78a
 RLRUBROS = csrubro()
 
-AFRUBROSXPRODUCTO = "C:\\fuck ultad\\TP Algorritmos\\TP3\\RUBROS-X-PRODUCTO.DAT"
+AFRUBROSXPRODUCTO = os.getcwd() + "\\RUBROS-X-PRODUCTO.DAT"
 ALRUBROSXPRODUCTO = open(AFRUBROSXPRODUCTO, "w+b")
 RLRUBROSXPRODUCTO = csrubroxproducto()
 
-AFSILOS = "C:\\fuck ultad\\TP Algorritmos\\TP3\\SILOS.DAT"
+AFSILOS = os.getcwd() + "\\SILOS.DAT"
 ALSILOS = open(AFSILOS, "w+b")
 RLSILOS = cssilo()
 
