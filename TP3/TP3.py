@@ -58,7 +58,7 @@ class cssilo:
         self.codproducto = 0
         self.stock = 0
 
-AFOPERACIONES = os.getcwd() + "TP3\\OPERACIONES.DAT"
+AFOPERACIONES = os.getcwd() + "\\TP3\\OPERACIONES.DAT"
 if os.path.exists(AFOPERACIONES) == True:
     ALOPERACIONES = open(AFOPERACIONES, "r+b")
 else:
@@ -66,7 +66,7 @@ else:
 
 RLOPERACIONES = csoperacion()
 
-AFPRODUCTOS = os.getcwd() + "TP3\\PRODUCTOS.DAT"
+AFPRODUCTOS = os.getcwd() + "\\TP3\\PRODUCTOS.DAT"
 if os.path.exists(AFPRODUCTOS) == True:
     ALPRODUCTOS = open(AFPRODUCTOS, "r+b")
 else:
@@ -74,21 +74,21 @@ else:
 
 RLPRODUCTOS = csproducto()
 
-AFRUBROS = os.getcwd() + "TP3\\RUBROS.DAT"
+AFRUBROS = os.getcwd() + "\\TP3\\RUBROS.DAT"
 if os.path.exists(AFRUBROS) == True:
     ALRUBROS = open(AFRUBROS, "r+b")
 else:
     ALRUBROS = open(AFRUBROS, "w+b")
 RLRUBROS = csrubro()
 
-AFRUBROSXPRODUCTO = os.getcwd() + "TP3\\RUBROS-X-PRODUCTO.DAT"
+AFRUBROSXPRODUCTO = os.getcwd() + "\\TP3\\RUBROS-X-PRODUCTO.DAT"
 if os.path.exists(AFRUBROSXPRODUCTO) == True:
     ALRUBROSXPRODUCTO = open(AFRUBROSXPRODUCTO, "r+b")
 else:
     ALRUBROSXPRODUCTO = open(AFRUBROSXPRODUCTO, "w+b")
 RLRUBROSXPRODUCTO = csrubroxproducto()
 
-AFSILOS = os.getcwd() + "TP3\\SILOS.DAT"
+AFSILOS = os.getcwd() + "\\TP3\\SILOS.DAT"
 if os.path.exists(AFSILOS) == True:
     ALSILOS = open(AFSILOS, "r+b")
 else:
@@ -105,6 +105,24 @@ def formatearrubro(RL):
     RL.codigorubro = RL.codigorubro.ljust(10, ' ') 
     RL.nombrerubro = RL.nombrerubro.ljust(25, ' ')
 
+def formatearRxP(RL):
+        RL.codigorubro = str(RL.codigorubro)
+        RL.codigorubro = RL.codigorubro.ljust(10, ' ')
+        RL.codigoproducto = str(RL.codigoproducto)
+        RL.codigoproducto = RL.codigoproducto.ljust(10, ' ')
+        RL.valormax = str(RL.valormax)
+        RL.valormax = RL.valormax.ljust(7, ' ')
+        RL.valormin = str(RL.valormin)
+        RL.valormin = RL.valormin.ljust(7, ' ')
+
+def formatearsilos(RL):
+        RL.codigosilo = str(RL.codigosilo)
+        RL.codigosilo = RL.codigosilo.ljust(10, ' ')
+        RL.nombresilo = RL.nombresilo.ljust(25, ' ')
+        RL.codproducto = str(RL.codproducto)
+        RL.codproducto = RL.codproducto.ljust(10, ' ')
+        RL.stock = str(RL.stock)
+        RL.stock = RL.stock.ljust(10, ' ')
 
 # procedimiento inicializadodatoscam()
 # VAR:
@@ -428,10 +446,13 @@ def menu_rubros():
             cargarubro()
         elif opcion_terciario == "B": # Baja
             en_construccion()
+            opciones_terciario("RUBROS")
         elif opcion_terciario == "C": # Consulta
             en_construccion()
+            opciones_terciario("RUBROS")
         elif opcion_terciario == "M": # Modificacion
             en_construccion()
+            opciones_terciario("RUBROS")
         else: # Volver al menú principal
             opcion_terciario = "V"
             administracion()
@@ -447,10 +468,11 @@ def cargarubro():
         RLRUBROS.codigorubro = cod
         RLRUBROS.nombrerubro = nombreR
         formatearrubro(RLRUBROS)
+        ALRUBROS.seek(0,2)
         pickle.dump(RLRUBROS, ALRUBROS)
         ALRUBROS.flush()
 
-        cargamiento = input("¿Desea ingresar otro rubro? Ingrese SI o NO ").upper()
+        cargamiento = input("¿Desea ingresar otro rubro? Ingrese SI o NO: ").upper()
         while cargamiento != "NO" and cargamiento != "SI": # Validación de datos
                 cargamiento = input("Opción incorrecta. Ingrese nuevamente: ").upper()
                 
@@ -459,6 +481,116 @@ def cargarubro():
             os.system("pause")
             clear()
             opciones_terciario("RUBROS")
+
+def menu_rubrosxproducto():
+    clear()
+    opciones_terciario("RUBROS POR PRODUCTO")
+    opcion_terciario = "A"
+    while opcion_terciario != "V":
+        opcion_terciario = input("Opción: ").upper() # Convertir toda cadena ingresada en mayúscula.
+        while opcion_terciario == "" or len(opcion_terciario) > 1: # Validación de datos
+            opcion_terciario = input("Opción incorrecta. Ingrese nuevamente: ")
+        
+        if opcion_terciario == "A": # Alta
+            cargaRxP()
+        elif opcion_terciario == "B": # Baja
+            en_construccion()
+            opciones_terciario("RUBROS POR PRODUCTO")
+        elif opcion_terciario == "C": # Consulta
+            en_construccion()
+            opciones_terciario("RUBROS POR PRODUCTO")
+        elif opcion_terciario == "M": # Modificacion
+            en_construccion()
+            opciones_terciario("RUBROS POR PRODUCTO")
+        else: # Volver al menú principal
+            opcion_terciario = "V"
+            administracion()
+
+def cargaRxP():
+    cargamiento = "S"
+    while cargamiento == "S":
+        codrub = int(input("Ingrese el código del rubro: "))
+        codprod = int(input("Ingrese el código del producto: "))
+        valormax = int(input("Ingrese el valor máximo admitido: "))
+        while valormax > 100:
+            valormax = int(input("Error - el valor máximo no puede ser mayor a 100. Volver a ingresar: "))
+        valormin = int(input("Ingrese el valor mínimo admitido: "))
+        while valormin < 0:
+            valormin = int(input("Error - el valor mínimo no puede ser menor a 0. Volver a ingresar: "))
+
+        RLRUBROSXPRODUCTO = csrubroxproducto()
+
+        RLRUBROSXPRODUCTO.codigorubro = codrub
+        RLRUBROSXPRODUCTO.codigoproducto = codprod
+        RLRUBROSXPRODUCTO.valormax = valormax
+        RLRUBROSXPRODUCTO.valormin = valormin
+        formatearRxP(RLRUBROSXPRODUCTO)
+        ALRUBROSXPRODUCTO.seek(0,2)
+        pickle.dump(RLRUBROSXPRODUCTO, ALRUBROSXPRODUCTO)
+        ALRUBROSXPRODUCTO.flush()
+
+        cargamiento = input("¿Desea ingresar otro rubro por producto? Ingrese SI o NO: ").upper()
+        while cargamiento != "NO" and cargamiento != "SI": # Validación de datos
+                cargamiento = input("Opción incorrecta. Ingrese nuevamente: ").upper()
+                
+        if cargamiento == "NO":
+            print("Rubros por productos ingresados correctamente")
+            os.system("pause")
+            clear()
+            opciones_terciario("RUBROS POR PRODUCTO")
+
+def menu_silos():
+    clear()
+    opciones_terciario("SILOS")
+    opcion_terciario = "A"
+    while opcion_terciario != "V":
+        opcion_terciario = input("Opción: ").upper() # Convertir toda cadena ingresada en mayúscula.
+        while opcion_terciario == "" or len(opcion_terciario) > 1: # Validación de datos
+            opcion_terciario = input("Opción incorrecta. Ingrese nuevamente: ")
+        
+        if opcion_terciario == "A": # Alta
+            cargasilos()
+        elif opcion_terciario == "B": # Baja
+            en_construccion()
+            opciones_terciario("SILOS")
+        elif opcion_terciario == "C": # Consulta
+            en_construccion()
+            opciones_terciario("SILOS")
+        elif opcion_terciario == "M": # Modificacion
+            en_construccion()
+            opciones_terciario("SILOS")
+        else: # Volver al menú principal
+            opcion_terciario = "V"
+            administracion()
+
+def cargasilos():
+    cargamiento = "S"
+    while cargamiento == "S":
+        codsil = int(input("Ingrese el código del silo: "))
+        codprod = int(input("Ingrese el código del producto: "))
+        nombreS = input("Ingrese el nombre del silo: ")
+        stockS = int(input("Ingrese el stock del silo: "))
+
+        RLSILOS = cssilo()
+
+        RLSILOS.codigosilo = codsil
+        RLSILOS.codproducto = codprod
+        RLSILOS.nombresilo = nombreS
+        RLSILOS.stock = stockS
+        formatearsilos(RLSILOS)
+        ALSILOS.seek(0,2)
+        pickle.dump(RLSILOS, ALSILOS)
+        ALSILOS.flush()
+
+        cargamiento = input("¿Desea ingresar otro silo? Ingrese SI o NO: ").upper()
+        while cargamiento != "NO" and cargamiento != "SI": # Validación de datos
+                cargamiento = input("Opción incorrecta. Ingrese nuevamente: ").upper()
+                
+        if cargamiento == "NO":
+            print("Silos ingresados correctamente")
+            os.system("pause")
+            clear()
+            opciones_terciario("SILOS")
 
 
 #------------------------------------------------------------------------------------------------------------------------------
@@ -568,10 +700,10 @@ def administracion():
             menu_rubros()
         elif opcion_admin == "D": # Rubros por producto
             opcion_admin = "V"
-            menu_terciario()
+            menu_rubrosxproducto()
         elif opcion_admin == "E": # Silos
             opcion_admin = "V"
-            menu_terciario()
+            menu_silos()
         elif opcion_admin == "F": # Sucursales
             opcion_admin = "V"
             en_construccion()
