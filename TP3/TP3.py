@@ -415,6 +415,7 @@ def modificacionproducto():
                 while nuevoproducto != "TRIGO" and nuevoproducto != "SOJA" and nuevoproducto != "MAIZ" and nuevoproducto != "GIRASOL" and nuevoproducto != "CEBADA":
                     nuevoproducto = input("No es un producto válido. Ingrese nuevamente: ").upper()
             nuevocod = input("Ingrese el código del producto: ")
+            nuevocod = int(verificacioncod(nuevocod))
 
             modificarP(producto, nuevoproducto, nuevocod)
     else:
@@ -603,10 +604,17 @@ def menu_silos():
 def cargasilos():
     cargamiento = "S"
     while cargamiento == "S":
-        codsil = int(input("Ingrese el código del silo: "))
-        codprod = int(input("Ingrese el código del producto: "))
+        codsil = input("Ingrese el código del silo: ")
+        codsil = int(verificacioncod(codsil))
+
+        codprod = input("Ingrese el código del producto: ")
+        codprod = int(verificacioncod(codprod))
+
         nombreS = input("Ingrese el nombre del silo: ")
-        stockS = int(input("Ingrese el stock del silo: "))
+        nombreS = int(verificacioncod(nombreS))
+
+        stockS = input("Ingrese el stock del silo: ")
+        stockS = int(verificacioncod(stockS))
 
         RLSILOS = cssilo()
 
@@ -635,19 +643,19 @@ def cargasilos():
 # DE HECHO BORRÉ LA DECLARACIÓN DE ARRAYS ASÍ QUE TIRA MUCHOS ERRORES XD
 #------------------------------------------------------------------------------------------------------------------------------
 
-m=0
-pospat=0
-vrtemp= " "
+m = 0
+pospat = 0
+vrtemp = " "
 
 # function bucapatente(patente): char
 # Intento de funcion buscar- Nair
 
 def buscapatente(npat):
-    m= os.path.getsize(AFOPERACIONES)
+    m = os.path.getsize(AFOPERACIONES)
     ALOPERACIONES.seek(0)
     while ALOPERACIONES.tell() < m:
-        pospat= ALOPERACIONES.tell()
-        vrtemp= pickle.load(ALOPERACIONES)
+        pospat = ALOPERACIONES.tell()
+        vrtemp = pickle.load(ALOPERACIONES)
         if vrtemp.patente == npat:
             return 1
     return -1
@@ -1069,6 +1077,13 @@ def reportes():
     reportesctm = input("\nPresione cualquier tecla para volver al menú principal: ")
     clear()
 
+def cerrarArchivos():
+    ALOPERACIONES.close()
+    ALPRODUCTOS.close()
+    ALRUBROS.close()
+    ALRUBROSXPRODUCTO.close()
+    ALSILOS.close()
+
 # main() -> Programa principal
 # Variables:
 # opcion: Char (un caracter)
@@ -1123,7 +1138,9 @@ def main():
             print("esto es el listado de silos y rechazos")
 
         else: # Fin del programa
+            cerrarArchivos()
             print("Fin del programa.")
+
         
 # Ejecución del programa principal.
 main()
