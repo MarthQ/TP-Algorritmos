@@ -24,6 +24,7 @@ AMARILLO = '\033[93m'
 ROJO = '\033[91m'
 BLANCO = '\033[0m'
 
+# Registros
 class csoperacion:
     def __init__(self):
         self.patente = "" # 7 caracteres
@@ -58,6 +59,8 @@ class cssilo:
         self.codproducto = 0
         self.stock = 0
 
+
+# Apertura de archivos 
 AFOPERACIONES = os.getcwd() + "\\TP3\\OPERACIONES.DAT"
 if os.path.exists(AFOPERACIONES) == True:
     ALOPERACIONES = open(AFOPERACIONES, "r+b")
@@ -95,6 +98,7 @@ else:
     ALSILOS = open(AFSILOS, "w+b")
 RLSILOS = cssilo()
 
+# Formateos
 def formatearproducto(RL):
     RL.codproducto = str(RL.codproducto)
     RL.codproducto = RL.codproducto.ljust(10, ' ')
@@ -217,6 +221,13 @@ def menu_terciario():
             opcion_terciario = "V"
             administracion()
 
+# Verificación de códigos
+def verificacioncod(codigo):
+    while codigo == "" or codigo.isnumeric() == False: # isnumeric() devuelve TRUE si lo ingresado es un entero
+        codigo = input("Error. Ingrese nuevamente - ") 
+    else:
+        return True
+
 def cargarprod():
     global contp, decisionprod, producto, porlomenosuno
     decisionprod = "SI"
@@ -238,7 +249,10 @@ def cargarprod():
 
             RLPRODUCTOS = csproducto()
 
-            RLPRODUCTOS.codproducto = int(input("Ingrese codigo de producto -"))
+            RLPRODUCTOS.codproducto = input("Ingrese codigo de producto -")
+            verificacioncod(RLPRODUCTOS.codproducto)
+
+
             RLPRODUCTOS.nombreproducto = producto
             formatearproducto(RLPRODUCTOS)
             ALPRODUCTOS.seek(0,2)
@@ -293,7 +307,7 @@ def consultaP():
     getsai = os.path.getsize(AFPRODUCTOS)
     RLPRODUCTOS = csproducto()
     if getsai == 0:
-        print("No hay na' para mostra'")
+        print("No hay nada para mostrar")
     
     else:
         ALPRODUCTOS.seek(0,0)
@@ -340,7 +354,7 @@ def bajaprod():
         getsai = os.path.getsize(AFPRODUCTOS)
         RLPRODUCTOS = csproducto()
         if getsai == 0:
-            print("No hay na' para mostra'")
+            print("No hay nada para mostrar.")
             
         else:
             ALPRODUCTOS.seek(0,0)
@@ -378,7 +392,7 @@ def modificacionproducto():
         getsai = os.path.getsize(AFPRODUCTOS)
         RLPRODUCTOS = csproducto()
         if getsai == 0:
-            print("No hay na' para mostra'")
+            print("No hay nada para mostrar")
             
         else:
             ALPRODUCTOS.seek(0,0)
@@ -461,7 +475,10 @@ def cargarubro():
     cargamiento = "S"
     while cargamiento == "S":
         nombreR = input("Ingrese el nombre del rubro: ")
-        cod = int(input("Ingrese el código del rubro: "))
+
+        # Verificación de que se ingrese un número
+        cod = input("Ingrese el código del rubro: ")
+        verificacioncod(cod)
 
         RLRUBROS = csrubro()
 
@@ -506,17 +523,44 @@ def menu_rubrosxproducto():
             opcion_terciario = "V"
             administracion()
 
+
+
 def cargaRxP():
     cargamiento = "S"
     while cargamiento == "S":
-        codrub = int(input("Ingrese el código del rubro: "))
-        codprod = int(input("Ingrese el código del producto: "))
-        valormax = int(input("Ingrese el valor máximo admitido: "))
+
+#Verificación códigos 
+        codrub = input("Ingrese el código del rubro: ")
+        verificacioncod(codrub)
+
+        codprod = input("Ingrese el código del producto: ")
+        verificacioncod(codprod)
+
+# Valores verificación
+        valormax = input("Ingrese el valor máximo admitido: ")
+
+        if verificacioncod(valormax) == True:
+            valormax = int(valormax)
+
         while valormax > 100:
-            valormax = int(input("Error - el valor máximo no puede ser mayor a 100. Volver a ingresar: "))
-        valormin = int(input("Ingrese el valor mínimo admitido: "))
-        while valormin < 0:
-            valormin = int(input("Error - el valor mínimo no puede ser menor a 0. Volver a ingresar: "))
+            valormax = input("Error - el valor máximo no puede ser mayor a 100. Volver a ingresar: ")
+            verificacioncod(valormax)
+
+
+
+        valormin = input("Ingrese el valor mínimo admitido: ")
+
+        if verificacioncod(valormin) == True:
+            valormax = int(valormin)
+
+        while valormin < 0 or valormin > 99:
+            valormin = input("El valor mínimo no puede ser menor a 0.\nError - Volver a ingresar: ")
+            verificacioncod(valormin)
+
+        while valormin > valormax:
+            valormin = input("El valor mínimo no puede ser mayor al valor máximo.\nError - Volver a ingresar: ")
+            verificacioncod(valormin)
+            
 
         RLRUBROSXPRODUCTO = csrubroxproducto()
 
