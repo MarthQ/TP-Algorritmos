@@ -224,9 +224,8 @@ def menu_terciario():
 # Verificación de códigos
 def verificacioncod(codigo):
     while codigo == "" or codigo.isnumeric() == False: # isnumeric() devuelve TRUE si lo ingresado es un entero
-        codigo = input("Error. Ingrese nuevamente - ") 
-    else:
-        return True
+        codigo = input("Error. Ingrese nuevamente - ")
+    return codigo
 
 def cargarprod():
     global contp, decisionprod, producto, porlomenosuno
@@ -250,7 +249,7 @@ def cargarprod():
             RLPRODUCTOS = csproducto()
 
             RLPRODUCTOS.codproducto = input("Ingrese codigo de producto -")
-            verificacioncod(RLPRODUCTOS.codproducto)
+            RLPRODUCTOS.codproducto = int(verificacioncod(RLPRODUCTOS.codproducto))
 
 
             RLPRODUCTOS.nombreproducto = producto
@@ -478,7 +477,7 @@ def cargarubro():
 
         # Verificación de que se ingrese un número
         cod = input("Ingrese el código del rubro: ")
-        verificacioncod(cod)
+        cod = int(verificacioncod(cod))
 
         RLRUBROS = csrubro()
 
@@ -531,35 +530,29 @@ def cargaRxP():
 
 #Verificación códigos 
         codrub = input("Ingrese el código del rubro: ")
-        verificacioncod(codrub)
+        codprod = int(verificacioncod(codrub))
 
         codprod = input("Ingrese el código del producto: ")
-        verificacioncod(codprod)
+        codprod = int(verificacioncod(codprod))
 
 # Valores verificación
         valormax = input("Ingrese el valor máximo admitido: ")
-
-        if verificacioncod(valormax) == True:
-            valormax = int(valormax)
+        valormax = int(verificacioncod(valormax))
 
         while valormax > 100:
             valormax = input("Error - el valor máximo no puede ser mayor a 100. Volver a ingresar: ")
-            verificacioncod(valormax)
-
-
+            valormax = int(verificacioncod(valormax))
 
         valormin = input("Ingrese el valor mínimo admitido: ")
-
-        if verificacioncod(valormin) == True:
-            valormax = int(valormin)
+        valormin = int(verificacioncod(valormin))
 
         while valormin < 0 or valormin > 99:
             valormin = input("El valor mínimo no puede ser menor a 0.\nError - Volver a ingresar: ")
-            verificacioncod(valormin)
+            valormin = int(verificacioncod(valormin))
 
         while valormin > valormax:
             valormin = input("El valor mínimo no puede ser mayor al valor máximo.\nError - Volver a ingresar: ")
-            verificacioncod(valormin)
+            valormin = int(verificacioncod(valormin))
             
 
         RLRUBROSXPRODUCTO = csrubroxproducto()
