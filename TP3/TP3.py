@@ -13,6 +13,7 @@
 
 import pickle
 import os
+import datetime
 
 # Estética del programa
 # función CLEAR para limpiar pantalla
@@ -127,6 +128,22 @@ def formatearsilos(RL):
         RL.codproducto = RL.codproducto.ljust(10, ' ')
         RL.stock = str(RL.stock)
         RL.stock = RL.stock.ljust(10, ' ')
+
+
+#probando Date para la fecha:
+def date():
+    global fecha
+    flag=True
+    while flag:
+        try:
+            fecha=input("Ingrese fecha(DD,MM,AAAA):")
+            datetime.datetime.strptime(fecha, '%d/%m/%Y')
+            print("Fecha valida")
+            flag = False
+        except ValueError:
+            print("Fecha invalida.")
+#lo copio como en el video, dsp vemos si lo dejamos o lo sacamos al carajo. pone automaticamente las barras /
+dia,mes,anio= fecha.split('/')
 
 # procedimiento inicializadodatoscam()
 # VAR:
@@ -664,7 +681,7 @@ def buscapatente(npat):
 # array y valor pueden ser de cualquier tipo de dato a buscar en X type de array
 # Cumple la función de ser globalizadora, de búsqueda secuencial en un arreglo.
 # Por lo tanto no se puede definir un type específico para las variables usadas.
-def repeticionpat(array, valor):
+def repeticionpat(patente, valor):
     for i in range(0,8):
         if array[i] == valor:
             return True
@@ -695,7 +712,7 @@ def cupos():
             nuevapatente = input("Ingresar la patente del camión: ").upper()
             while len(nuevapatente) < 6 or len(nuevapatente) > 7: # Comprobamos la longitud de la patente
                 nuevapatente = input("Error con la longitud de la patente. Por favor ingresar de vuelta: ").upper()
-            if repeticionpat(arrpatentes, nuevapatente): # Buscamos si la patente existe en el array
+            if repeticionpat(RLOPERACIONES.patente, nuevapatente): # Buscamos si la patente existe en el array
                 print("La patente ya tiene un cupo asignado.")
             else:
                 arrpatentes[ncupos] = nuevapatente # Finalmente se asigna
