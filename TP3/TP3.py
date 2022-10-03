@@ -31,7 +31,7 @@ class csoperacion:
         self.patente = "" # 7 caracteres
         self.codproducto = 0
 # ver uso de datetime para esto (tal vez es una paja y usamos el string tradicional, es un datazo este comentario)
-        self.fechacupo = "dd/mm/yyyy" # es una FECHA AAAAAAAAAA
+        self.fechacupo = datetime.datetime(1,1,1) # es una FECHA AAAAAAAAAA
         self.estado = "" # char
         self.bruto = 0
         self.tara = 0
@@ -102,7 +102,7 @@ RLSILOS = cssilo()
 # Formateos
 def formatearproducto(RL):
     RL.codproducto = str(RL.codproducto)
-    RL.codproducto = RL.codproducto.ljust(10, ' ')
+    RL.codproducto = RL.codproducto.ljust(5, ' ')
     RL.nombreproducto = RL.nombreproducto.ljust(25, ' ')
 
 def formatearrubro(RL):
@@ -111,39 +111,71 @@ def formatearrubro(RL):
     RL.nombrerubro = RL.nombrerubro.ljust(25, ' ')
 
 def formatearRxP(RL):
-        RL.codigorubro = str(RL.codigorubro)
-        RL.codigorubro = RL.codigorubro.ljust(10, ' ')
-        RL.codigoproducto = str(RL.codigoproducto)
-        RL.codigoproducto = RL.codigoproducto.ljust(10, ' ')
-        RL.valormax = str(RL.valormax)
-        RL.valormax = RL.valormax.ljust(7, ' ')
-        RL.valormin = str(RL.valormin)
-        RL.valormin = RL.valormin.ljust(7, ' ')
+    RL.codigorubro = str(RL.codigorubro)
+    RL.codigorubro = RL.codigorubro.ljust(10, ' ')
+    RL.codigoproducto = str(RL.codigoproducto)
+    RL.codigoproducto = RL.codigoproducto.ljust(10, ' ')
+    RL.valormax = str(RL.valormax)
+    RL.valormax = RL.valormax.ljust(7, ' ')
+    RL.valormin = str(RL.valormin)
+    RL.valormin = RL.valormin.ljust(7, ' ')
 
 def formatearsilos(RL):
-        RL.codigosilo = str(RL.codigosilo)
-        RL.codigosilo = RL.codigosilo.ljust(10, ' ')
-        RL.nombresilo = RL.nombresilo.ljust(25, ' ')
-        RL.codproducto = str(RL.codproducto)
-        RL.codproducto = RL.codproducto.ljust(10, ' ')
-        RL.stock = str(RL.stock)
-        RL.stock = RL.stock.ljust(10, ' ')
+    RL.codigosilo = str(RL.codigosilo)
+    RL.codigosilo = RL.codigosilo.ljust(10, ' ')
+    RL.nombresilo = RL.nombresilo.ljust(25, ' ')
+    RL.codproducto = str(RL.codproducto)
+    RL.codproducto = RL.codproducto.ljust(10, ' ')
+    RL.stock = str(RL.stock)
+    RL.stock = RL.stock.ljust(10, ' ')
+
+def formatearoperaciones(RL):
+#       self.patente = "" # 7 caracteres
+#         self.codproducto = 0
+# # ver uso de datetime para esto (tal vez es una paja y usamos el string tradicional, es un datazo este comentario)
+#         self.fechacupo = datetime.datetime(1,1,1) # es una FECHA AAAAAAAAAA
+#         self.estado = "" # char
+#         self.bruto = 0
+#         self.tara = 0
+    RL.patente = str(RL.patente)
+    RL.patente = RL.patente.ljust(7, ' ')
+    RL.codproducto = str(RL.codproducto)
+    RL.codproducto = RL.codproducto.ljust(5, ' ')
+    RL.bruto = str(RL.bruto)
+    RL.bruto = RL.bruto.ljust(5, ' ')
+    RL.tara = str(RL.tara)
+    RL.tara = RL.tara.ljust(5, ' ')
 
 
-#probando Date para la fecha:
-def date():
-    global fecha
-    flag=True
-    while flag:
-        try:
-            fecha=input("Ingrese fecha(DD,MM,AAAA):")
-            datetime.datetime.strptime(fecha, '%d/%m/%Y')
-            print("Fecha valida")
-            flag = False
-        except ValueError:
-            print("Fecha invalida.")
-#lo copio como en el video, dsp vemos si lo dejamos o lo sacamos al carajo. pone automaticamente las barras /
-dia,mes,anio= fecha.split('/')
+# probando Date para la fecha:
+# def date():
+#     global fecha
+#     flag=True
+#     while flag:
+#         try:
+#             fecha=input("Ingrese fecha(DD,MM,AAAA):")
+#             datetime.datetime.strptime(fecha, '%d/%m/%Y')
+#             print("Fecha valida")
+#             flag = False
+#         except ValueError:
+#             print("Fecha invalida.")
+# lo copio como en el video, dsp vemos si lo dejamos o lo sacamos al carajo. pone automaticamente las barras /
+# dia,mes,anio= fecha.split('/')
+
+
+# eta e' la de jp casañas ft. sofi eeeeeeeeeeeeeeeeeeeeeee
+
+def validarFecha(mensaje):
+
+    os.system("cls")
+    fecha = input(mensaje)
+    o = fecha.split("/", 3)
+    while(len(o[0]) > 2 or len(o[1]) > 2 or len(o[2]) > 4 or len(o[2]) < 4) or not (o[0].isnumeric() and o[1].isnumeric() and o[2].isnumeric() or not (int(o[0]) in range(1, 32) and int(o[1]) in range(1, 13))):
+        print("El formato de la fecha es incorrecto")
+        fecha = input(mensaje)
+        o = fecha.split("/", 3)
+    return datetime.datetime.strptime(fecha, "%d/%m/%Y").date()
+
 
 # procedimiento inicializadodatoscam()
 # VAR:
@@ -296,6 +328,22 @@ def tebuscoalla(producto):
         while ALPRODUCTOS.tell() < getsai and RLPRODUCTOS.nombreproducto != producto:
             RLPRODUCTOS = pickle.load(ALPRODUCTOS)
         if RLPRODUCTOS.nombreproducto == producto:
+            return True
+        else:
+            return False
+    else:
+        return False
+
+def tebuscodigo(codigo):
+    codigo = str(codigo)
+    codigo = codigo.ljust(5, ' ')
+    getsai = os.path.getsize(AFPRODUCTOS)
+    ALPRODUCTOS.seek(0,0) 
+    RLPRODUCTOS = csproducto()
+    if getsai > 0:
+        while ALPRODUCTOS.tell() < getsai and RLPRODUCTOS.codproducto != codigo:
+            RLPRODUCTOS = pickle.load(ALPRODUCTOS)
+        if RLPRODUCTOS.codproducto == codigo:
             return True
         else:
             return False
@@ -702,10 +750,7 @@ def cargasilos():
             opciones_terciario("SILOS")
 
 
-#------------------------------------------------------------------------------------------------------------------------------
-# A PARTIR DE ACÁ ES todo CÓDIGO VIEJO Y NO TOQUÉ NADA
-# DE HECHO BORRÉ LA DECLARACIÓN DE ARRAYS ASÍ QUE TIRA MUCHOS ERRORES XD
-#------------------------------------------------------------------------------------------------------------------------------
+
 
 m = 0
 pospat = 0
@@ -721,18 +766,21 @@ def buscapatente(npat):
         pospat = ALOPERACIONES.tell()
         vrtemp = pickle.load(ALOPERACIONES)
         if vrtemp.patente == npat:
-            return 1
+            return pospat
     return -1
 
-# function repeticionpat(array, valor): Boolean
-# array y valor pueden ser de cualquier tipo de dato a buscar en X type de array
-# Cumple la función de ser globalizadora, de búsqueda secuencial en un arreglo.
-# Por lo tanto no se puede definir un type específico para las variables usadas.
-def repeticionpat(patente, valor):
-    for i in range(0,8):
-        if array[i] == valor:
+def ayudaayuda(patente, fecha):
+    if buscapatente(patente) != -1:
+        pospat = buscapatente(patente)
+        ALOPERACIONES.seek(0, pospat)
+        RL = pickle.load(ALOPERACIONES)
+        if RL.patente == patente and RL.fecharep == fecha:
             return True
-
+        else:
+            return False
+        
+    else:
+        return False
 # procedimiento cupos()
 # VAR
 # decisioncup, nuevapatente, cuposctm: String
@@ -754,30 +802,36 @@ def cupos():
         while decisioncup != "SI" and decisioncup != "NO":  # Validación de datos
             decisioncup = input("Ingrese una opción correcta: ").upper()
 
-        while decisioncup == "SI" and ncupos < 8:
+        while decisioncup == "SI":
             clear()
             nuevapatente = input("Ingresar la patente del camión: ").upper()
             while len(nuevapatente) < 6 or len(nuevapatente) > 7: # Comprobamos la longitud de la patente
                 nuevapatente = input("Error con la longitud de la patente. Por favor ingresar de vuelta: ").upper()
-            if repeticionpat(RLOPERACIONES.patente, nuevapatente): # Buscamos si la patente existe en el array
+            if buscapatente(nuevapatente) != -1: # Buscamos si la patente existe en el array
                 print("La patente ya tiene un cupo asignado.")
             else:
-                arrpatentes[ncupos] = nuevapatente # Finalmente se asigna
+                RLOPERACIONES = csoperacion()
+                fecharep = validarFecha("Ingrese la fecha de recepción: ")
+                if ayudaayuda(nuevapatente, fecharep) == True:
+                    print("Cupo ya otorgado en esa fecha.")
+                else:
+                    codigo = input("Ingrese el código del producto: ")
+                    codigo = int(verificacioncod(codigo))
+                    if tebuscodigo(codigo) == False:
+                        print("No se encontró el producto con el código dado. Fin de la operación.")
+                    else:
+                        RLOPERACIONES.patente = nuevapatente
+                        RLOPERACIONES.fechacupo = fecharep
+                        RLOPERACIONES.codproducto = codigo
+                        RLOPERACIONES.estado = "P"
 
-                print("Posibles estados: P - Pendiente, E - En proceso, C - Cumplido")
-                nuevoestado = input("Ingresar el estado de la patente: ").upper()
-                while nuevoestado != "P" and nuevoestado != "E" and nuevoestado != "C": # Lo mismo acá...
-                    nuevoestado = input("Estado erróneo. Ingresar un estado correcto: ").upper()
-                arrcupos[ncupos] = nuevoestado # Asignación del estado
-
-                ncupos += 1
-                print(f"Se ingresó Cupo Nº {ncupos} con patente {nuevapatente}")
-            decisioncup = input("¿Desea ingresar un nuevo cupo? Ingrese SI o NO: ").upper()
-            while decisioncup != "SI" and decisioncup != "NO":  # Validación de datos
-                decisioncup = input("Ingrese una opción correcta: ").upper()
-        
-        if ncupos >= 8:
-            print("Se ha alcanzado el límite de cupos.")
+                        formatearoperaciones(RLOPERACIONES)
+                        pickle.dump(RLOPERACIONES, ALOPERACIONES)
+                        ALOPERACIONES.flush()
+                        print(f"Se ingresó el Cupo, código {codigo} con patente {nuevapatente}")
+                decisioncup = input("¿Desea ingresar un nuevo cupo? Ingrese SI o NO: ").upper()
+                while decisioncup != "SI" and decisioncup != "NO":  # Validación de datos
+                    decisioncup = input("Ingrese una opción correcta: ").upper()
 
         cuposctm = input("Cupos ingresados correctamente - Presione cualquier tecla para continuar")
         clear()
