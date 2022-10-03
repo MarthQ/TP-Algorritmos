@@ -594,6 +594,53 @@ def cargaRxP():
             clear()
             opciones_terciario("RUBROS POR PRODUCTO")
 
+#funcion busqueda dicotomica de producto, entre parentesis va la variable del codigo que se ingrese, cambienla como sea que se llame :3
+def BuscaDico(cod):
+    ALPRODUCTOS.seek(0,0)
+    RLPRODUCTOS= pickle.load(ALPRODUCTOS)
+    tamReg= ALPRODUCTOS.tell()
+    tamArc= os.path.getsize(AFPRODUCTOS)
+    cantReg= tamArc//tamReg
+    inf= 0
+    sup= cantReg-1
+    med= (inf+sup)//2
+    ALPRODUCTOS.seek(med*cantReg, 0)
+    RLPRODUCTOS= pickle.load(ALPRODUCTOS)
+    while (inf<sup) and (RLPRODUCTOS.codproducto != cod):
+        if cod<RLPRODUCTOS.codproducto:
+            sup=med-1
+        else: 
+            inf= med+1
+        med=(sup+inf)//2
+        ALPRODUCTOS.seek(med*cantReg, 0)
+        RLPRODUCTOS= pickle.load(ALPRODUCTOS)
+    if RLPRODUCTOS.codproducto==cod:
+        return med*cantReg
+    else: 
+        return -1
+
+#Ordenamiento secuencial de producto, esta hecho por codigo del producto:
+def ordenProdu():
+    ALPRODUCTOS.seek(0,0)
+    aux= pickle.load(ALPRODUCTOS)
+    tamReg= ALPRODUCTOS.tell()
+    tamArc= os.path.getsize(AFOPERACIONES)
+    cantReg = tamArc//tamReg #tambien se puede hacer cantReg= int(tamArc/tamReg)
+    for i in range (0,cantReg-1):
+        for j in range (i+1, cantReg):
+            ALPRODUCTOS.seek(i*tamReg, 0)
+            auxi = pickle.load(ALPRODUCTOS)
+            ALPRODUCTOS.seex(j*tamReg, 0)
+            auxj = pickle.load(ALPRODUCTOS)
+            if (auxi.codproducto>auxj.codproducto):
+                ALPRODUCTOS.seek(i*tamReg, 0)
+                pickle.dump(auxj,ALPRODUCTOS)
+                ALPRODUCTOS.seek(j*tamReg, 0)
+                pickle.dump(auxi,ALPRODUCTOS)
+
+
+
+
 def menu_silos():
     clear()
     opciones_terciario("SILOS")
