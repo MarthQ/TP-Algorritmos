@@ -14,6 +14,7 @@
 import pickle
 import os
 import datetime
+from turtle import pos
 
 # Estética del programa
 # función CLEAR para limpiar pantalla
@@ -760,6 +761,7 @@ vrtemp = " "
 # Intento de funcion buscar- Nair
 
 def buscapatente(npat):
+    npat = npat.ljust(7, ' ')
     m = os.path.getsize(AFOPERACIONES)
     ALOPERACIONES.seek(0)
     while ALOPERACIONES.tell() < m:
@@ -770,6 +772,7 @@ def buscapatente(npat):
     return -1
 
 def ayudaayuda(patente, fecha):
+    patente = patente.ljust(7, ' ')
     if buscapatente(patente) != -1:
         pospat = buscapatente(patente)
         ALOPERACIONES.seek(0, pospat)
@@ -790,52 +793,45 @@ def ayudaayuda(patente, fecha):
 # nuevoestado: Char
 ncupos = 0
 def cupos():
-    global ncupos, porlomenosuno
-    if porlomenosuno != True:
-        bah = input("Se requiere dar de alta productos antes de ingresar cupos - Presione cualquier tecla para volver ")
-        clear()
 
-    else:
-        clear()
-        print(AMARILLO + "----- MENÚ DE CUPOS -----" + BLANCO)
-        decisioncup = input("¿Desea ingresar un cupo? Ingrese SI o NO: ").upper()
-        while decisioncup != "SI" and decisioncup != "NO":  # Validación de datos
-            decisioncup = input("Ingrese una opción correcta: ").upper()
+    clear()
+    print(AMARILLO + "----- MENÚ DE CUPOS -----" + BLANCO)
+    decisioncup = input("¿Desea ingresar un cupo? Ingrese SI o NO: ").upper()
+    while decisioncup != "SI" and decisioncup != "NO":  # Validación de datos
+        decisioncup = input("Ingrese una opción correcta: ").upper()
 
-        while decisioncup == "SI":
-            clear()
-            nuevapatente = input("Ingresar la patente del camión: ").upper()
-            while len(nuevapatente) < 6 or len(nuevapatente) > 7: # Comprobamos la longitud de la patente
-                nuevapatente = input("Error con la longitud de la patente. Por favor ingresar de vuelta: ").upper()
-            if buscapatente(nuevapatente) != -1: # Buscamos si la patente existe en el array
-                print("La patente ya tiene un cupo asignado.")
+    while decisioncup == "SI":
+        clear()
+        nuevapatente = input("Ingresar la patente del camión: ").upper()
+        while len(nuevapatente) < 6 or len(nuevapatente) > 7: # Comprobamos la longitud de la patente
+            nuevapatente = input("Error con la longitud de la patente. Por favor ingresar de vuelta: ").upper()
+        else:
+            RLOPERACIONES = csoperacion()
+            fecharep = validarFecha("Ingrese la fecha de recepción: ")
+            if ayudaayuda(nuevapatente, fecharep) == True:
+                print("Cupo ya otorgado en esa fecha.")
             else:
-                RLOPERACIONES = csoperacion()
-                fecharep = validarFecha("Ingrese la fecha de recepción: ")
-                if ayudaayuda(nuevapatente, fecharep) == True:
-                    print("Cupo ya otorgado en esa fecha.")
+                codigo = input("Ingrese el código del producto: ")
+                codigo = int(verificacioncod(codigo))
+                if tebuscodigo(codigo) == False:
+                    print("No se encontró el producto con el código dado. Fin de la operación.")
                 else:
-                    codigo = input("Ingrese el código del producto: ")
-                    codigo = int(verificacioncod(codigo))
-                    if tebuscodigo(codigo) == False:
-                        print("No se encontró el producto con el código dado. Fin de la operación.")
-                    else:
-                        RLOPERACIONES.patente = nuevapatente
-                        RLOPERACIONES.fechacupo = fecharep
-                        RLOPERACIONES.codproducto = codigo
-                        RLOPERACIONES.estado = "P"
+                    RLOPERACIONES.patente = nuevapatente
+                    RLOPERACIONES.fechacupo = fecharep
+                    RLOPERACIONES.codproducto = codigo
+                    RLOPERACIONES.estado = "P"
 
-                        formatearoperaciones(RLOPERACIONES)
-                        pickle.dump(RLOPERACIONES, ALOPERACIONES)
-                        ALOPERACIONES.flush()
-                        print(f"Se ingresó el Cupo, código {codigo} con patente {nuevapatente}")
-                decisioncup = input("¿Desea ingresar un nuevo cupo? Ingrese SI o NO: ").upper()
-                while decisioncup != "SI" and decisioncup != "NO":  # Validación de datos
-                    decisioncup = input("Ingrese una opción correcta: ").upper()
+                    formatearoperaciones(RLOPERACIONES)
+                    pickle.dump(RLOPERACIONES, ALOPERACIONES)
+                    ALOPERACIONES.flush()
+                    print(f"Se ingresó el Cupo, código {codigo} con patente {nuevapatente}")
+            decisioncup = input("¿Desea ingresar un nuevo cupo? Ingrese SI o NO: ").upper()
+            while decisioncup != "SI" and decisioncup != "NO":  # Validación de datos
+                decisioncup = input("Ingrese una opción correcta: ").upper()
 
-        cuposctm = input("Cupos ingresados correctamente - Presione cualquier tecla para continuar")
-        clear()
-
+    cuposctm = input("Cupos ingresados correctamente - Presione cualquier tecla para continuar")
+    clear()
+2
 # procedimiento administracion()
 # Variables:
 # opcion_admin: Char
@@ -1037,7 +1033,7 @@ def recepcion():
 
     if recepcionhecha == True:
         print("Ya se ha realizado una recepción de camiones.")
-        respuestarep = input("¿Desea ingresar una nueva recepción? Ingrese SI o NO: ").upper()
+        respuestarep = input("¿Desea limpiar los datos de la recepción? Ingrese SI o NO: ").upper()
     
         while respuestarep != "NO" and respuestarep != "SI": # Validación del sí
             respuestarep = input("Error. Ingresar una respuesta correcta: ").upper()
@@ -1060,48 +1056,57 @@ def recepcion():
         while len(PATENTE) < 6 or len(PATENTE) > 7:
             PATENTE = input("La patente no es válida, ingresar de vuelta: ").upper()
 
-        lugar = 0
-        while lugar < 8 and arrpatentes[lugar] != PATENTE:
-            lugar += 1
+        if buscapatente(PATENTE) != -1:
+            pospat = buscapatente(PATENTE)
+            ALOPERACIONES.seek(pospat, 0)
+            RLOPERACIONES = pickle.load(ALOPERACIONES)
 
-        if lugar == 8:
-            print("La patente no se encuentra registrada.")
+            if RLOPERACIONES.fechacupo == datetime.date.today() and RLOPERACIONES.estado == "P":
+                RLOPERACIONES.estado = "A"
+                ALOPERACIONES.seek(pospat, 0)
+                pickle.dump(RLOPERACIONES, ALOPERACIONES)
+                ALOPERACIONES.flush()
+                print(f"Se actualizó el estado del camión {PATENTE} con éxito.")
 
-        else:
-            if arrcupos[lugar] == "P":
-
-                print("Ingresar tipo de producto (Maíz, Soja, Trigo, Girasol, Cebada)")
-                PRODUCTO = input("- ").upper()
-                while tebuscoaca(P, PRODUCTO) != True and PRODUCTO != "S":
-                    PRODUCTO = input("No es un producto válido o no está dado de alta, ingresar de vuelta (S\salir): ").upper()
-
-                if PRODUCTO != "S":
-                    arrcupos[lugar] = "E"
-                    print(f'Se actualizó el cupo de la patente {PATENTE} a "En proceso"')
-
-                if PRODUCTO == "MAIZ":
-                    print(f"Cargado camión con patente {PATENTE} de {PRODUCTO}")
-                    total_camiones_maiz += 1
-                    productosxp[lugar] = PRODUCTO
-                elif PRODUCTO == "SOJA":
-                    print(f"Cargado camión con patente {PATENTE} de {PRODUCTO}")
-                    total_camiones_soja += 1
-                    productosxp[lugar] = PRODUCTO
-                elif PRODUCTO == "TRIGO":
-                    print(f"Cargado camión con patente {PATENTE} de {PRODUCTO}")
-                    total_camiones_trigo += 1
-                    productosxp[lugar] = PRODUCTO
-                elif PRODUCTO == "GIRASOL":
-                    print(f"Cargado camión con patente {PATENTE} de {PRODUCTO}")
-                    total_camiones_girasol += 1
-                    productosxp[lugar] = PRODUCTO
-                elif PRODUCTO == "CEBADA":
-                    print(f"Cargado camión con patente {PATENTE} de {PRODUCTO}")
-                    total_camiones_cebada += 1
-                    productosxp[lugar] = PRODUCTO
-                total_camiones += 1
             else:
-                print("Este camión ya fue procesado.")
+                print("El camión tiene una fecha o estado incorrecto.")
+
+        else: print("ta mal unu")
+        # else:
+        #     if arrcupos[lugar] == "P":
+
+        #         print("Ingresar tipo de producto (Maíz, Soja, Trigo, Girasol, Cebada)")
+        #         PRODUCTO = input("- ").upper()
+        #         while tebuscoaca(P, PRODUCTO) != True and PRODUCTO != "S":
+        #             PRODUCTO = input("No es un producto válido o no está dado de alta, ingresar de vuelta (S\salir): ").upper()
+
+        #         if PRODUCTO != "S":
+        #             arrcupos[lugar] = "E"
+        #             print(f'Se actualizó el cupo de la patente {PATENTE} a "En proceso"')
+
+        #         if PRODUCTO == "MAIZ":
+        #             print(f"Cargado camión con patente {PATENTE} de {PRODUCTO}")
+        #             total_camiones_maiz += 1
+        #             productosxp[lugar] = PRODUCTO
+        #         elif PRODUCTO == "SOJA":
+        #             print(f"Cargado camión con patente {PATENTE} de {PRODUCTO}")
+        #             total_camiones_soja += 1
+        #             productosxp[lugar] = PRODUCTO
+        #         elif PRODUCTO == "TRIGO":
+        #             print(f"Cargado camión con patente {PATENTE} de {PRODUCTO}")
+        #             total_camiones_trigo += 1
+        #             productosxp[lugar] = PRODUCTO
+        #         elif PRODUCTO == "GIRASOL":
+        #             print(f"Cargado camión con patente {PATENTE} de {PRODUCTO}")
+        #             total_camiones_girasol += 1
+        #             productosxp[lugar] = PRODUCTO
+        #         elif PRODUCTO == "CEBADA":
+        #             print(f"Cargado camión con patente {PATENTE} de {PRODUCTO}")
+        #             total_camiones_cebada += 1
+        #             productosxp[lugar] = PRODUCTO
+        #         total_camiones += 1
+        #     else:
+        #         print("Este camión ya fue procesado.")
 
         camiones = input("\n¿Desea ingresar otro camión? Ingrese SI o NO: ").upper()
         
@@ -1262,3 +1267,12 @@ def main():
         
 # Ejecución del programa principal.
 main()
+
+# -------- FUNCION PARA CHEQUEAR COSITAS DE OPERACIONESSSSSS -----------------
+
+# getsai = os.path.getsize(AFOPERACIONES)
+# ALOPERACIONES.seek(0,0)
+# while ALOPERACIONES.tell() < getsai:
+#     RLPRODUCTOS = pickle.load(ALOPERACIONES)
+#     print(RLPRODUCTOS.fechacupo, RLPRODUCTOS.patente, RLPRODUCTOS.codproducto, RLPRODUCTOS.estado)
+# os.system("pause")
