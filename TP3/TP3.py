@@ -108,14 +108,14 @@ def formatearproducto(RL):
 
 def formatearrubro(RL):
     RL.codigorubro = str(RL.codigorubro)
-    RL.codigorubro = RL.codigorubro.ljust(10, ' ') 
+    RL.codigorubro = RL.codigorubro.ljust(5, ' ') 
     RL.nombrerubro = RL.nombrerubro.ljust(25, ' ')
 
 def formatearRxP(RL):
     RL.codigorubro = str(RL.codigorubro)
-    RL.codigorubro = RL.codigorubro.ljust(10, ' ')
+    RL.codigorubro = RL.codigorubro.ljust(5, ' ')
     RL.codigoproducto = str(RL.codigoproducto)
-    RL.codigoproducto = RL.codigoproducto.ljust(10, ' ')
+    RL.codigoproducto = RL.codigoproducto.ljust(5, ' ')
     RL.valormax = str(RL.valormax)
     RL.valormax = RL.valormax.ljust(7, ' ')
     RL.valormin = str(RL.valormin)
@@ -123,10 +123,10 @@ def formatearRxP(RL):
 
 def formatearsilos(RL):
     RL.codigosilo = str(RL.codigosilo)
-    RL.codigosilo = RL.codigosilo.ljust(10, ' ')
+    RL.codigosilo = RL.codigosilo.ljust(5, ' ')
     RL.nombresilo = RL.nombresilo.ljust(25, ' ')
     RL.codproducto = str(RL.codproducto)
-    RL.codproducto = RL.codproducto.ljust(10, ' ')
+    RL.codproducto = RL.codproducto.ljust(5, ' ')
     RL.stock = str(RL.stock)
     RL.stock = RL.stock.ljust(10, ' ')
 
@@ -273,7 +273,9 @@ def menu_terciario():
 
 # Verificación de códigos
 def verificacioncod(codigo):
-    while codigo == "" or codigo.isnumeric() == False: # isnumeric() devuelve TRUE si lo ingresado es un entero
+    # isnumeric() devuelve TRUE si lo ingresado es un entero
+    # el código es universalmente de 5 dígitos
+    while codigo == "" or codigo.isnumeric() == False or codigo not in range(0,100000): 
         codigo = input("Error. Ingrese nuevamente - ")
     return codigo
 
@@ -285,21 +287,26 @@ def cargarprod():
 
             porlomenosuno = True
             # Verificación de que el producto no se encuentre repetido o ya haya otro producto allí
-            print(f"Ingresar el producto. (Maíz, Soja, Trigo, Girasol o Cebada).")
+            print("Ingresar el nombre del producto: ")
             producto = input("- ").upper()
             
-            while producto != "TRIGO" and producto != "SOJA" and producto != "MAIZ" and producto != "GIRASOL" and producto != "CEBADA":
+            while producto == "" or producto.isnumeric() == True or len(producto) > 25:
                 producto = input("No es un producto válido. Ingrese nuevamente: ").upper()
             
             while tebuscoalla(producto) == True:
                 producto = input("Producto ya ingresado. Ingrese nuevamente: ").upper() 
-                while producto != "TRIGO" and producto != "SOJA" and producto != "MAIZ" and producto != "GIRASOL" and producto != "CEBADA":
+                while producto == "" or producto.isnumeric() == True:
                     producto = input("No es un producto válido. Ingrese nuevamente: ").upper()
 
             RLPRODUCTOS = csproducto()
+        
+            # RLPRODUCTOS.codproducto devuelve un ENTERO el cual se verifica mediante la 
+            # función VERIFICACIONCOD que devuelve un String(por eso lo convierto a ENTERO)
+            # anido código para que no esté tan contaminado todo
+            RLPRODUCTOS.codproducto = int(verificacioncod(input("Ingrese codigo de producto (hasta 5 dígitos): ")))
 
-            RLPRODUCTOS.codproducto = input("Ingrese codigo de producto -")
-            RLPRODUCTOS.codproducto = int(verificacioncod(RLPRODUCTOS.codproducto))
+            while tebuscodigo(RLPRODUCTOS.codproducto) == True:
+                RLPRODUCTOS.codproducto = int(verificacioncod(input("Código no válido. Ingrese nuevamente: ")))
 
 
             RLPRODUCTOS.nombreproducto = producto
@@ -320,6 +327,7 @@ def cargarprod():
     else:
         print("Cupos ya otorgados.")
 
+# Búsqueda de productos
 def tebuscoalla(producto):
     producto = producto.ljust(25, ' ')
     getsai = os.path.getsize(AFPRODUCTOS)
@@ -335,6 +343,7 @@ def tebuscoalla(producto):
     else:
         return False
 
+# Búsqueda de código
 def tebuscodigo(codigo):
     codigo = str(codigo)
     codigo = codigo.ljust(5, ' ')
@@ -351,6 +360,8 @@ def tebuscodigo(codigo):
     else:
         return False
 
+# otra búsqueda igual pero que retorna 1 y -1???????????????
+###########################################################
 def tebuscopos(producto):
     producto = producto.ljust(25, ' ')
     getsai = os.path.getsize(AFPRODUCTOS)
@@ -441,10 +452,12 @@ def modificarP(producto, nuevoproducto, nuevocod):
         RLPRODUCTOS = pickle.load(ALPRODUCTOS)
         RLPRODUCTOS.nombreproducto = nuevoproducto
         RLPRODUCTOS.codproducto = nuevocod
+
         ALPRODUCTOS.seek(pos,0)
         formatearproducto(RLPRODUCTOS)
         pickle.dump(RLPRODUCTOS, ALPRODUCTOS)
-        print(f"El producto {producto} ahora es {nuevoproducto}.")
+
+        print(f"El producto {producto} ahora es {nuevoproducto} con código {nuevocod}.")
         os.system("pause")
         clear()
         opciones_terciario("PRODUCTOS")
@@ -469,20 +482,23 @@ def modificacionproducto():
             producto = input("Ingresar el nombre del producto a modificar: ").upper()
 
             # Verificación de que sea de los ingresados
-            while producto != "TRIGO" and producto != "SOJA" and producto != "MAIZ" and producto != "GIRASOL" and producto != "CEBADA":
-                producto = input(f"No es un producto válido. Ingrese nuevamente: ").upper()
+            while producto == "" or producto.isnumeric() == True or len(producto) > 25:
+                producto = input("No es un producto válido. Ingrese nuevamente: ").upper()
 
             nuevoproducto = input("Ingresar el nuevo producto: ").upper()
             # Verificación de que sea correcto y no se vaya a repetir
-            while nuevoproducto != "TRIGO" and nuevoproducto != "SOJA" and nuevoproducto != "MAIZ" and nuevoproducto != "GIRASOL" and nuevoproducto != "CEBADA":
-                nuevoproducto = input(f"No es un producto válido. Ingrese nuevamente: ").upper()
+            while nuevoproducto == "" or nuevoproducto.isnumeric() == True or len(nuevoproducto) > 25:
+                nuevoproducto = input("No es un producto válido. Ingrese nuevamente: ").upper()
+
             while tebuscoalla(nuevoproducto) == True:
                 nuevoproducto = input("Producto ya ingresado. Ingrese nuevamente: ").upper()
-                while nuevoproducto != "TRIGO" and nuevoproducto != "SOJA" and nuevoproducto != "MAIZ" and nuevoproducto != "GIRASOL" and nuevoproducto != "CEBADA":
+                while nuevoproducto == "" or nuevoproducto.isnumeric() == True or len(nuevoproducto) > 25:
                     nuevoproducto = input("No es un producto válido. Ingrese nuevamente: ").upper()
-            nuevocod = input("Ingrese el código del producto: ")
-            nuevocod = int(verificacioncod(nuevocod))
 
+            nuevocod = int(verificacioncod(input("Ingrese el código del producto: ")))
+            while tebuscodigo(nuevocod) == True:
+                nuevocod = int(verificacioncod(input("Código no válido. Ingrese nuevamente: ")))
+            
             modificarP(producto, nuevoproducto, nuevocod)
     else:
         print("Cupos ya otorgados. No se pueden modificar los productos.")
@@ -537,14 +553,50 @@ def menu_rubros():
             opcion_terciario = "V"
             administracion()
 
+def tebusrubro(nombreR):
+    nombreR = nombreR.ljust(25, ' ')
+    getsai = os.path.getsize(AFRUBROS)
+    ALRUBROS.seek(0,0) 
+    RLRUBROS = csrubro()
+    if getsai > 0:
+        while ALRUBROS.tell() < getsai and RLRUBROS.nombrerubro != nombreR:
+            RLRUBROS = pickle.load(ALRUBROS)
+        if RLRUBROS.nombrerubro == nombreR:
+            return True
+        else:
+            return False
+    else:
+        return False
+
+def tebuscodR(cod):
+    cod = str(cod)
+    cod = cod.ljust(5, ' ')
+    getsai = os.path.getsize(AFRUBROS)
+    ALRUBROS.seek(0,0) 
+    RLRUBROS = csrubro()
+    if getsai > 0:
+        while ALRUBROS.tell() < getsai and RLRUBROS.codigorubro != cod:
+            RLRUBROS = pickle.load(ALRUBROS)
+        if RLRUBROS.codigorubro == cod:
+            return True
+        else:
+            return False
+    else:
+        return False
+
 def cargarubro():
     cargamiento = "S"
     while cargamiento == "S":
         nombreR = input("Ingrese el nombre del rubro: ")
 
+        while nombreR == "" or nombreR.isnumeric == True or len(nombreR) > 25 or tebusrubro(nombreR) == True:
+            nombreR = input("Nombre del rubro incorrecto. Ingrese nuevamente: ")
+
         # Verificación de que se ingrese un número
-        cod = input("Ingrese el código del rubro: ")
-        cod = int(verificacioncod(cod))
+        cod = int(verificacioncod(input("Ingrese el código del rubro: ")))
+        while tebuscodR(cod) == True:
+            cod = int(verificacioncod(input("Código no válido. Ingrese nuevamente: ")))
+
 
         RLRUBROS = csrubro()
 
@@ -596,30 +648,28 @@ def cargaRxP():
     while cargamiento == "S":
 
 #Verificación códigos 
-        codrub = input("Ingrese el código del rubro: ")
-        codprod = int(verificacioncod(codrub))
+        codrub = int(verificacioncod(input("Ingrese el código del rubro: ")))
+        while tebuscodR(codrub) == False:
+            codrub = int(verificacioncod(input("Código de rubro no encontrado. Ingrese nuevamente: ")))
 
-        codprod = input("Ingrese el código del producto: ")
-        codprod = int(verificacioncod(codprod))
+        codprod = int(verificacioncod(input("Ingrese el código del producto: ")))
+        while tebuscodigo(codprod) == False:
+            codprod = int(verificacioncod(input("Código de producto no encontrado. Ingrese nuevamente: ")))        
 
 # Valores verificación
-        valormax = input("Ingrese el valor máximo admitido: ")
-        valormax = int(verificacioncod(valormax))
+        valormax = int(verificacioncod(input("Ingrese el valor máximo admitido: ")))
 
         while valormax > 100:
-            valormax = input("Error - el valor máximo no puede ser mayor a 100. Volver a ingresar: ")
-            valormax = int(verificacioncod(valormax))
+            valormax = float(verificacioncod(input("Error - el valor máximo no puede ser mayor a 100. Volver a ingresar: ")))
 
         valormin = input("Ingrese el valor mínimo admitido: ")
-        valormin = int(verificacioncod(valormin))
+        valormin = float(verificacioncod(valormin))
 
         while valormin < 0 or valormin > 99:
-            valormin = input("El valor mínimo no puede ser menor a 0.\nError - Volver a ingresar: ")
-            valormin = int(verificacioncod(valormin))
+            valormin = float(verificacioncod(input("El valor mínimo no puede ser menor a 0.\nError - Volver a ingresar: ")))
 
         while valormin > valormax:
-            valormin = input("El valor mínimo no puede ser mayor al valor máximo.\nError - Volver a ingresar: ")
-            valormin = int(verificacioncod(valormin))
+            valormin = float(verificacioncod(input("El valor mínimo no puede ser mayor al valor máximo.\nError - Volver a ingresar: ")))
             
 
         RLRUBROSXPRODUCTO = csrubroxproducto()
@@ -714,20 +764,40 @@ def menu_silos():
             opcion_terciario = "V"
             administracion()
 
+def tebusilo(codsil):
+    codsil = str(codsil)
+    codsil = codsil.ljust(5, ' ')
+    getsai = os.path.getsize(AFSILOS)
+    ALSILOS.seek(0,0) 
+    RLSILOS = cssilo()
+    if getsai > 0:
+        while ALSILOS.tell() < getsai and RLSILOS.codigosilo != codsil:
+            RLSILOS = pickle.load(ALSILOS)
+        if RLSILOS.codigosilo == codsil:
+            return True
+        else:
+            return False
+    else:
+        return False
+
 def cargasilos():
     cargamiento = "S"
     while cargamiento == "S":
-        codsil = input("Ingrese el código del silo: ")
-        codsil = int(verificacioncod(codsil))
+        codsil = int(verificacioncod(input("Ingrese el código del silo: ")))
+    
+        while tebusilo(codsil) == True:
+            codsil = int(verificacioncod(input("Código en uso. Ingrese nuevamente: ")))
 
-        codprod = input("Ingrese el código del producto: ")
-        codprod = int(verificacioncod(codprod))
+        codprod = int(verificacioncod(input("Ingrese el código del producto: ")))
+
+        while tebuscodigo(codprod) == False:
+            codprod = int(verificacioncod(input("Código no encontrado. Ingrese nuevamente: ")))
 
         nombreS = input("Ingrese el nombre del silo: ")
-        nombreS = int(verificacioncod(nombreS))
+        while nombreS.isnumeric() == True or len(nombreS) > 25:
+            nombreS = input("Nombre incorrecto. Ingrese nuevamente: ")
 
-        stockS = input("Ingrese el stock del silo: ")
-        stockS = int(verificacioncod(stockS))
+        stockS = int(verificacioncod(input("Ingrese el stock del silo: ")))
 
         RLSILOS = cssilo()
 
@@ -811,8 +881,7 @@ def cupos():
             if ayudaayuda(nuevapatente, fecharep) == True:
                 print("Cupo ya otorgado en esa fecha.")
             else:
-                codigo = input("Ingrese el código del producto: ")
-                codigo = int(verificacioncod(codigo))
+                codigo = int(verificacioncod(input("Ingrese el código del producto: ")))
                 if tebuscodigo(codigo) == False:
                     print("No se encontró el producto con el código dado. Fin de la operación.")
                 else:
@@ -831,7 +900,6 @@ def cupos():
 
     cuposctm = input("Cupos ingresados correctamente - Presione cualquier tecla para continuar")
     clear()
-2
 # procedimiento administracion()
 # Variables:
 # opcion_admin: Char
