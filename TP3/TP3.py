@@ -584,8 +584,8 @@ def tebuscodR(cod):
         return False
 
 def cargarubro():
-    cargamiento = "S"
-    while cargamiento == "S":
+    cargamiento = "SI"
+    while cargamiento == "SI":
         nombreR = input("Ingrese el nombre del rubro: ")
 
         while nombreR == "" or nombreR.isnumeric == True or len(nombreR) > 25 or tebusrubro(nombreR) == True:
@@ -643,8 +643,8 @@ def menu_rubrosxproducto():
 
 
 def cargaRxP():
-    cargamiento = "S"
-    while cargamiento == "S":
+    cargamiento = "SI"
+    while cargamiento == "SI":
 
 #Verificación códigos 
         codrub = int(verificacioncod(input("Ingrese el código del rubro: ")))
@@ -955,15 +955,35 @@ def regcalidad():
             ALOPERACIONES.seek(buscapatente(patentecal), 0)
             RLOPERACIONES = pickle.load(ALOPERACIONES)
             if RLOPERACIONES.estado == "A":
+                flaggeado = 0
                 ordenRubro()
                 elcod = RLOPERACIONES.codproducto
                 ALRUBROSXPRODUCTO.seek(0)
                 getsai = os.path.getsize(AFRUBROSXPRODUCTO)
-                print("CODIGO RUBRO  | NOMBRE DEL RUBRO")
+
                 while ALRUBROSXPRODUCTO.tell() < getsai:
                     RLRUBROSXPRODUCTO = pickle.load(ALRUBROSXPRODUCTO)
                     if RLRUBROSXPRODUCTO.codigoproducto == elcod:
-                        print(RLRUBROSXPRODUCTO.codigorubro, busconombre(RLRUBROSXPRODUCTO.codigorubro))
+                        print("CODIGO RUBRO  | NOMBRE DEL RUBRO")
+                        print(RLRUBROSXPRODUCTO.codigorubro, "         ", busconombre(RLRUBROSXPRODUCTO.codigorubro))
+                        dichovalor = input("Ingrese un valor para este rubro: ")
+                        if dichovalor > RLRUBROSXPRODUCTO.valormax or dichovalor < RLRUBROSXPRODUCTO.valormin:
+                            flaggeado += 1
+                
+                if flaggeado == 0:
+                    print("El camión ha sido aprobado.")
+                    RLOPERACIONES.estado = "C"
+                    ALOPERACIONES.seek(buscapatente(patentecal), 0)
+                    pickle.dump(RLOPERACIONES, ALOPERACIONES)
+                    ALOPERACIONES.flush()
+                else:
+                    print("El camión ha sido rechazado.")
+                    RLOPERACIONES.estado = "R"
+                    ALOPERACIONES.seek(buscapatente(patentecal), 0)
+                    pickle.dump(RLOPERACIONES, ALOPERACIONES)
+                    ALOPERACIONES.flush()
+
+                
             else:
                 print("El estado del cupo es incorrecto.")
         else:
