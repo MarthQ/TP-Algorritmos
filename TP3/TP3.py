@@ -297,9 +297,9 @@ def cargarprod():
                 while producto == "" or producto.isnumeric() == True:
                     producto = input("No es un producto válido. Ingrese nuevamente: ").upper()
 
-           # while tebuscopos(producto) == pos:
+           # while tebuscopos(producto) == -1:
            #     producto = input("Producto ya ingresado. Ingrese nuevamente: ").upper() 
-           #     while producto == "" or producto.isnumeric() == pos:
+           #     while producto == "" or producto.isnumeric() == -1:
             #        producto = input("No es un producto válido. Ingrese nuevamente: ").upper()
 
             RLPRODUCTOS = csproducto()
