@@ -274,7 +274,7 @@ def menu_terciario():
 def verificacioncod(codigo):
     # isnumeric() devuelve TRUE si lo ingresado es un entero
     # el código es universalmente de 5 dígitos
-    while codigo == "" or codigo.isnumeric() == False or codigo not in range(0,100000): 
+    while codigo == "" or codigo.isnumeric() == False or int(codigo) not in range(0,100000): 
         codigo = input("Error. Ingrese nuevamente - ")
     return codigo
 
