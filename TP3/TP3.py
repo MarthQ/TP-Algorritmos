@@ -291,15 +291,10 @@ def cargarprod():
             while producto == "" or producto.isnumeric() == True or len(producto) > 25:
                 producto = input("No es un producto válido. Ingrese nuevamente: ").upper()
             
-            while tebuscoalla(producto) == True:
+            while tebuscopos(producto) != -1:
                 producto = input("Producto ya ingresado. Ingrese nuevamente: ").upper() 
                 while producto == "" or producto.isnumeric() == True:
                     producto = input("No es un producto válido. Ingrese nuevamente: ").upper()
-
-           # while tebuscopos(producto) == -1:
-           #     producto = input("Producto ya ingresado. Ingrese nuevamente: ").upper() 
-           #     while producto == "" or producto.isnumeric() == -1:
-            #        producto = input("No es un producto válido. Ingrese nuevamente: ").upper()
 
             RLPRODUCTOS = csproducto()
         
@@ -330,22 +325,6 @@ def cargarprod():
     else:
         print("Cupos ya otorgados.")
 
-# Búsqueda de productos
-def tebuscoalla(producto):
-    producto = producto.ljust(25, ' ')
-    getsai = os.path.getsize(AFPRODUCTOS)
-    ALPRODUCTOS.seek(0,0) 
-    RLPRODUCTOS = csproducto()
-    if getsai > 0:
-        while ALPRODUCTOS.tell() < getsai and RLPRODUCTOS.nombreproducto != producto:
-            RLPRODUCTOS = pickle.load(ALPRODUCTOS)
-        if RLPRODUCTOS.nombreproducto == producto:
-            return True
-        else:
-            return False
-    else:
-        return False
-
 # Búsqueda de código
 def tebuscodigo(codigo):
     codigo = str(codigo)
@@ -363,12 +342,11 @@ def tebuscodigo(codigo):
     else:
         return False
 
-# otra búsqueda igual pero que retorna 1 y -1???????????????
-###########################################################
+# Búsqueda de productos
 def tebuscopos(producto):
     producto = producto.ljust(25, ' ')
     getsai = os.path.getsize(AFPRODUCTOS)
-    ALPRODUCTOS.seek(0,0) 
+    ALPRODUCTOS.seek(0,0)
     RLPRODUCTOS = csproducto()
     pos = -1
     if getsai > 0:
@@ -493,7 +471,7 @@ def modificacionproducto():
             while nuevoproducto == "" or nuevoproducto.isnumeric() == True or len(nuevoproducto) > 25:
                 nuevoproducto = input("No es un producto válido. Ingrese nuevamente: ").upper()
 
-            while tebuscoalla(nuevoproducto) == True:
+            while tebuscopos(nuevoproducto) != -1:
                 nuevoproducto = input("Producto ya ingresado. Ingrese nuevamente: ").upper()
                 while nuevoproducto == "" or nuevoproducto.isnumeric() == True or len(nuevoproducto) > 25:
                     nuevoproducto = input("No es un producto válido. Ingrese nuevamente: ").upper()
@@ -656,7 +634,11 @@ def cargaRxP():
             codrub = int(verificacioncod(input("Código de rubro no encontrado. Ingrese nuevamente: ")))
 
         codprod = int(verificacioncod(input("Ingrese el código del producto: ")))
-        while tebuscodigo(codprod) == False:
+        while tebuscodigo(codprod) == False: 
+            # UN PRODUCTO PUEDE TENER MUCHOS RUBROS
+            # EL RUBRO SE PUEDE REPETIR EN EL ARCHIVO PERO NO EN EL MISMO PRODUCTO
+            # RUBRO HUMEDAD 20 VECES PERO PORQUE HAY 20 PRODUCTOS QUE TIENEN HUMEDAD
+            # UN PRODUCTO NO PUEDE TENER 2 VECES UN RUBRO (NO PUEDE TENER HUMEDAD DOS VECES)
             codprod = int(verificacioncod(input("Código de producto no encontrado. Ingrese nuevamente: ")))        
 
 # Valores verificación
@@ -730,14 +712,14 @@ def ordenRubro():
     cantReg = tamArc//tamReg #tambien se puede hacer cantReg= int(tamArc/tamReg)
     for i in range (0,cantReg-1):
         for j in range (i+1, cantReg):
-            ALRUBROS.seek(i*tamReg, 0)
+            ALRUBROS.seek(int(i*tamReg), 0)
             auxi = pickle.load(ALRUBROS)
-            ALRUBROS.seek(j*tamReg, 0)
+            ALRUBROS.seek(int(j*tamReg), 0)
             auxj = pickle.load(ALRUBROS)
             if (auxi.codigorubro>auxj.codigorubro):
-                ALRUBROS.seek(i*tamReg, 0)
+                ALRUBROS.seek(int(i*tamReg), 0)
                 pickle.dump(auxj,ALRUBROS)
-                ALRUBROS.seek(j*tamReg, 0)
+                ALRUBROS.seek(int(j*tamReg), 0)
                 pickle.dump(auxi,ALRUBROS)
 
 

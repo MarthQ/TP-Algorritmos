@@ -1,8 +1,0 @@
-click derecho en una carpeta vacía -> git bash here
-escribir:
-
-git init
-
-(enter)
-
-git pull https://github.com/MQRLZ/TP2-algorritmos
