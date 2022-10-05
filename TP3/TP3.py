@@ -1,4 +1,3 @@
-##############################################################################
 # Trabajo Práctico N°3
 # Algoritmos y Estructura de Datos
 # Comisión 109 de Ingeniería en Sistemas de la Información
@@ -297,6 +296,11 @@ def cargarprod():
                 producto = input("Producto ya ingresado. Ingrese nuevamente: ").upper() 
                 while producto == "" or producto.isnumeric() == True:
                     producto = input("No es un producto válido. Ingrese nuevamente: ").upper()
+
+           # while tebuscopos(producto) == pos:
+           #     producto = input("Producto ya ingresado. Ingrese nuevamente: ").upper() 
+           #     while producto == "" or producto.isnumeric() == pos:
+            #        producto = input("No es un producto válido. Ingrese nuevamente: ").upper()
 
             RLPRODUCTOS = csproducto()
         
