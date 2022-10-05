@@ -13,7 +13,6 @@
 import pickle
 import os
 import datetime
-from turtle import pos
 
 # Estética del programa
 # función CLEAR para limpiar pantalla
@@ -274,7 +273,7 @@ def menu_terciario():
 def verificacioncod(codigo):
     # isnumeric() devuelve TRUE si lo ingresado es un entero
     # el código es universalmente de 5 dígitos
-    while codigo == "" or codigo.isnumeric() == False or codigo not in range(0,100000): 
+    while codigo == "" or codigo.isnumeric() == False or int(codigo) not in range(0,100000): 
         codigo = input("Error. Ingrese nuevamente - ")
     return codigo
 
@@ -589,8 +588,8 @@ def tebuscodR(cod):
         return False
 
 def cargarubro():
-    cargamiento = "S"
-    while cargamiento == "S":
+    cargamiento = "SI"
+    while cargamiento == "SI":
         nombreR = input("Ingrese el nombre del rubro: ")
 
         while nombreR == "" or nombreR.isnumeric == True or len(nombreR) > 25 or tebusrubro(nombreR) == True:
@@ -648,8 +647,8 @@ def menu_rubrosxproducto():
 
 
 def cargaRxP():
-    cargamiento = "S"
-    while cargamiento == "S":
+    cargamiento = "SI"
+    while cargamiento == "SI":
 
 #Verificación códigos 
         codrub = int(verificacioncod(input("Ingrese el código del rubro: ")))
@@ -697,50 +696,49 @@ def cargaRxP():
             clear()
             opciones_terciario("RUBROS POR PRODUCTO")
 
-#funcion busqueda dicotomica de producto, entre parentesis va la variable del codigo que se ingrese, cambienla como sea que se llame :3
+#funcion busqueda dicotomica de rubro, entre parentesis va la variable del codigo que se ingrese, cambienla como sea que se llame :3
 def BuscaDico(cod):
-    ALPRODUCTOS.seek(0,0)
-    RLPRODUCTOS= pickle.load(ALPRODUCTOS)
-    tamReg= ALPRODUCTOS.tell()
-    tamArc= os.path.getsize(AFPRODUCTOS)
+    ALRUBROS.seek(0,0)
+    RLRUBROS= pickle.load(ALRUBROS)
+    tamReg= ALRUBROS.tell()
+    tamArc= os.path.getsize(AFRUBROS)
     cantReg= tamArc//tamReg
     inf= 0
     sup= cantReg-1
     med= (inf+sup)//2
-    ALPRODUCTOS.seek(med*cantReg, 0)
-    RLPRODUCTOS= pickle.load(ALPRODUCTOS)
-    while (inf<sup) and (RLPRODUCTOS.codproducto != cod):
-        if cod<RLPRODUCTOS.codproducto:
+    ALRUBROS.seek(med*cantReg, 0)
+    RLRUBROS= pickle.load(ALRUBROS)
+    while (inf<sup) and (RLRUBROS.codigorubro != cod):
+        if cod<RLRUBROS.codigorubro:
             sup=med-1
         else: 
             inf= med+1
         med=(sup+inf)//2
-        ALPRODUCTOS.seek(med*cantReg, 0)
-        RLPRODUCTOS= pickle.load(ALPRODUCTOS)
-    if RLPRODUCTOS.codproducto==cod:
+        ALRUBROS.seek(med*cantReg, 0)
+        RLRUBROS= pickle.load(ALRUBROS)
+    if RLRUBROS.codigorubro==cod:
         return med*cantReg
     else: 
         return -1
 
-#Ordenamiento secuencial de producto, esta hecho por codigo del producto:
-def ordenProdu():
-    ALPRODUCTOS.seek(0,0)
-    aux= pickle.load(ALPRODUCTOS)
-    tamReg= ALPRODUCTOS.tell()
-    tamArc= os.path.getsize(AFOPERACIONES)
+#Ordenamiento secuencial de rubros, esta hecho por codigo del rubro:
+def ordenRubro():
+    ALRUBROS.seek(0,0)
+    aux = pickle.load(ALRUBROS)
+    tamReg= ALRUBROS.tell()
+    tamArc= os.path.getsize(AFRUBROS)
     cantReg = tamArc//tamReg #tambien se puede hacer cantReg= int(tamArc/tamReg)
     for i in range (0,cantReg-1):
         for j in range (i+1, cantReg):
-            ALPRODUCTOS.seek(i*tamReg, 0)
-            auxi = pickle.load(ALPRODUCTOS)
-            ALPRODUCTOS.seex(j*tamReg, 0)
-            auxj = pickle.load(ALPRODUCTOS)
-            if (auxi.codproducto>auxj.codproducto):
-                ALPRODUCTOS.seek(i*tamReg, 0)
-                pickle.dump(auxj,ALPRODUCTOS)
-                ALPRODUCTOS.seek(j*tamReg, 0)
-                pickle.dump(auxi,ALPRODUCTOS)
-
+            ALRUBROS.seek(i*tamReg, 0)
+            auxi = pickle.load(ALRUBROS)
+            ALRUBROS.seek(j*tamReg, 0)
+            auxj = pickle.load(ALRUBROS)
+            if (auxi.codigorubro>auxj.codigorubro):
+                ALRUBROS.seek(i*tamReg, 0)
+                pickle.dump(auxj,ALRUBROS)
+                ALRUBROS.seek(j*tamReg, 0)
+                pickle.dump(auxi,ALRUBROS)
 
 
 
@@ -823,9 +821,6 @@ def cargasilos():
             os.system("pause")
             clear()
             opciones_terciario("SILOS")
-
-
-
 
 m = 0
 pospat = 0
@@ -945,6 +940,59 @@ def administracion():
             opcion_admin = "V"
             clear()
 
+def busconombre(cod):
+    pos = BuscaDico(cod)
+    ALRUBROS.seek(pos, 0)
+    RL = pickle.load(ALRUBROS)
+    return RL.nombrerubro
+
+
+def regcalidad():
+    opcall = input("¿Desea registrar la calidad? Ingrese SI o NO: ").upper()
+    while opcall != "NO" and opcall != "SI":
+        opcall = input("Error. Ingresar una respuesta correcta: ")
+    while opcall == "SI":
+        patentecal = input("Ingrese la patente a registrar: ")
+        while len(patentecal) < 6 or len(patentecal) > 7:
+            patentecal = input("La patente no es válida, ingresar de vuelta: ").upper()
+        if buscapatente(patentecal) != -1:
+            ALOPERACIONES.seek(buscapatente(patentecal), 0)
+            RLOPERACIONES = pickle.load(ALOPERACIONES)
+            if RLOPERACIONES.estado == "A":
+                flaggeado = 0
+                ordenRubro()
+                elcod = RLOPERACIONES.codproducto
+                ALRUBROSXPRODUCTO.seek(0)
+                getsai = os.path.getsize(AFRUBROSXPRODUCTO)
+
+                while ALRUBROSXPRODUCTO.tell() < getsai:
+                    RLRUBROSXPRODUCTO = pickle.load(ALRUBROSXPRODUCTO)
+                    if RLRUBROSXPRODUCTO.codigoproducto == elcod:
+                        print("CODIGO RUBRO  | NOMBRE DEL RUBRO")
+                        print(RLRUBROSXPRODUCTO.codigorubro, "         ", busconombre(RLRUBROSXPRODUCTO.codigorubro))
+                        dichovalor = input("Ingrese un valor para este rubro: ")
+                        if dichovalor > RLRUBROSXPRODUCTO.valormax or dichovalor < RLRUBROSXPRODUCTO.valormin:
+                            flaggeado += 1
+                
+                if flaggeado == 0:
+                    print("El camión ha sido aprobado.")
+                    RLOPERACIONES.estado = "C"
+                    ALOPERACIONES.seek(buscapatente(patentecal), 0)
+                    pickle.dump(RLOPERACIONES, ALOPERACIONES)
+                    ALOPERACIONES.flush()
+                else:
+                    print("El camión ha sido rechazado.")
+                    RLOPERACIONES.estado = "R"
+                    ALOPERACIONES.seek(buscapatente(patentecal), 0)
+                    pickle.dump(RLOPERACIONES, ALOPERACIONES)
+                    ALOPERACIONES.flush()
+
+                
+            else:
+                print("El estado del cupo es incorrecto.")
+        else:
+            print("La patente no existe")
+        opcall = input("¿Desea registrar la calidad de otra patente? Ingrese SI o NO: ").upper()
 # procedimiento regpesobruto()
 # VAR
 # x, pesobruto, totalbrutomaiz, totalbrutosoja, totalbrutotrigo, totalbrutogirasol, totalbrutocebada: Integer
@@ -1311,7 +1359,7 @@ def main():
             recepcion() 
 
         elif opcion == "4": # Registrar calidad
-            en_construccion()
+            regcalidad()
 
         elif opcion == "5": # Registrar peso bruto
             regpesobruto() 
