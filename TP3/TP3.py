@@ -989,28 +989,14 @@ def regpesobruto():
     while decisionregp != "NO" and decisionregp != "SI": # Validación del sí
         decisionregp = input("Error. Ingresar una respuesta correcta: ").upper()
     while decisionregp == "SI":
-        patentereg = input("Ingresar patente a registrar: ").upper()
-        while len(patentereg) < 6 or len(patentereg) > 7:
-            patentereg = input("La patente no es válida, ingresar de vuelta: ").upper()
-        
-        x = 0
-        while x < 8 and arrpatentes[x] != patentereg:
-            x += 1
+        RLOPERACIONES.patente= input("Ingresar patente a registrar: ").upper()
+        while len(RLOPERACIONES.patente) < 6 or len(RLOPERACIONES.patentepatentereg) > 7:
+            RLOPERACIONES.patente = input("La patente no es válida, ingresar de vuelta: ").upper()
 
-        if x == 8:
-            print("La patente no se encuentra en el sistema.")
-
-        else:
-            if arrcupos[x] == "E":
-                if arrpesobru[x] == 0:
-                        pesobruto = int(input("Ingresar peso bruto: "))
-                        while pesobruto < 1:
-                            pesobruto = int(input("El peso no es válido, ingresar un valor mayor a 0."))
-                        arrpesobru[x] = pesobruto
-                        print(f"Asignado el peso bruto de {pesobruto} kg del camión {patentereg}, con producto {productosxp[x]}.")
-                else:
-                    print("Esta patente ya tiene asignado un peso bruto.")
-                    
+            if buscapatente(RLOPERACIONES.patente)==pospat: #and RLOPERACIONES.estado=="C"
+                RLOPERACIONES.bruto= int(input(" el peso no es valido, ingresar una mayor a 0"))
+                pickle.dump(RLOPERACIONES.bruto, ALOPERACIONES) 
+                ALOPERACIONES.flush()                   
             else:
                 print("El cupo de esta patente no es válido para ingresar el peso bruto.")
     
