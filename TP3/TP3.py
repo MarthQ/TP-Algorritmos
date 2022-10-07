@@ -415,6 +415,7 @@ def bajaprod():
                 RLPRODUCTOS = pickle.load(ALPRODUCTOS)
                 print(RLPRODUCTOS.nombreproducto, RLPRODUCTOS.codproducto)
             producto = input("Ingresar el nombre del producto a eliminar: ").upper()
+            eliminarP(producto)
     else:
         print("Cupos ya otorgados. No se pueden eliminar productos.")
 
