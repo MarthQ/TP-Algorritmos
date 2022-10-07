@@ -342,6 +342,24 @@ def tebuscodigo(codigo):
     else:
         return False
 
+def buscosilo(codigo):
+    codigo = str(codigo)
+    codigo = codigo.ljust(5, ' ')
+    getsai = os.path.getsize(AFSILOS)
+    ALSILOS.seek(0,0)
+    pos = 0 
+    RLSILOS = cssilo()
+    if getsai > 0:
+        while ALSILOS.tell() < getsai and RLSILOS.codproducto != codigo:
+            pos = ALSILOS.tell()
+            RLSILOS = pickle.load(ALSILOS)
+        if RLSILOS.codproducto == codigo:
+            return pos
+        else:
+            return -1
+    else:
+        return -1
+
 # Búsqueda de productos
 def tebuscopos(producto):
     producto = producto.ljust(25, ' ')
@@ -591,7 +609,6 @@ def cargarubro():
         ALRUBROS.flush()
         cont += 1
         t = os.path.getsize(AFRUBROS)
-        print("el getsai = ", t/cont)
         cargamiento = input("¿Desea ingresar otro rubro? Ingrese SI o NO: ").upper()
         while cargamiento != "NO" and cargamiento != "SI": # Validación de datos
                 cargamiento = input("Opción incorrecta. Ingrese nuevamente: ").upper()
@@ -688,19 +705,12 @@ def BuscaDico(cod):
     ALRUBROS.seek(0,0)
     RLRUBROS= pickle.load(ALRUBROS)
     tamReg= ALRUBROS.tell()
-    print(tamReg)
     tamArc= os.path.getsize(AFRUBROS)
-    print(tamArc)
     cantReg= tamArc//tamReg
-    print(cantReg)
     inf= 0
     sup= cantReg-1
-    print(sup)
     med= (inf+sup)//2
-    print(med)
-    print(med*cantReg)
-    os.system("pause")
-    ALRUBROS.seek(med*cantReg, 0)
+    ALRUBROS.seek(med*tamReg, 0)
     RLRUBROS= pickle.load(ALRUBROS)
     while (inf<sup) and (int(RLRUBROS.codigorubro) != cod):
         if cod<int(RLRUBROS.codigorubro):
@@ -708,10 +718,10 @@ def BuscaDico(cod):
         else: 
             inf= med+1
         med=(sup+inf)//2
-        ALRUBROS.seek(med*cantReg, 0)
+        ALRUBROS.seek(med*tamReg, 0)
         RLRUBROS= pickle.load(ALRUBROS)
     if int(RLRUBROS.codigorubro)==cod:
-        return med*cantReg
+        return med*tamReg
     else: 
         return -1
 
@@ -816,23 +826,25 @@ def cargasilos():
             clear()
             opciones_terciario("SILOS")
 
-m = 0
-pospat = 0
-vrtemp = " "
-
 # function bucapatente(patente): char
 # Intento de funcion buscar- Nair
 
 def buscapatente(npat):
     npat = npat.ljust(7, ' ')
-    m = os.path.getsize(AFOPERACIONES)
-    ALOPERACIONES.seek(0)
-    while ALOPERACIONES.tell() < m:
-        pospat = ALOPERACIONES.tell()
-        vrtemp = pickle.load(ALOPERACIONES)
-        if vrtemp.patente == npat:
-            return pospat
-    return -1
+    getsai = os.path.getsize(AFOPERACIONES)
+    ALOPERACIONES.seek(0,0) 
+    RLOPERACIONES = csoperacion()
+    pos = 0
+    if getsai > 0:
+        while ALOPERACIONES.tell() < getsai and RLOPERACIONES.patente != npat:
+            pos = ALOPERACIONES.tell()
+            RLOPERACIONES = pickle.load(ALOPERACIONES)
+        if RLOPERACIONES.patente == npat:
+            return pos
+        else:
+            return -1
+    else:
+        return -1
 
 def ayudaayuda(patente, fecha):
     patente = patente.ljust(7, ' ')
@@ -936,7 +948,6 @@ def administracion():
 
 def busconombre(cod):
     pos = BuscaDico(cod)
-    print("la pos es", pos)
     ALRUBROS.seek(pos, 0)
     RL = pickle.load(ALRUBROS)
     return RL.nombrerubro
@@ -964,12 +975,11 @@ def regcalidad():
                     RLRUBROSXPRODUCTO = pickle.load(ALRUBROSXPRODUCTO)
                     if RLRUBROSXPRODUCTO.codigoproducto == elcod:
                         print("CODIGO RUBRO  | NOMBRE DEL RUBRO")
-                        print(RLRUBROSXPRODUCTO.codigorubro)
                         tebuscod = RLRUBROSXPRODUCTO.codigorubro
                         tebuscod = tebuscod.ljust(5, ' ')
-                        print(busconombre(tebuscod))
-                        dichovalor = input("Ingrese un valor para este rubro: ")
-                        if dichovalor > RLRUBROSXPRODUCTO.valormax or dichovalor < RLRUBROSXPRODUCTO.valormin:
+                        print(RLRUBROSXPRODUCTO.codigorubro, "           ", busconombre(tebuscod))
+                        dichovalor = float(input("Ingrese un valor para este rubro: "))
+                        if dichovalor > float(RLRUBROSXPRODUCTO.valormax) or dichovalor < float(RLRUBROSXPRODUCTO.valormin):
                             flaggeado += 1
                 
                 if flaggeado == 0:
@@ -1011,20 +1021,27 @@ def regpesobruto():
         while len(pato) < 6 or len(pato) > 7:
             pato = input("La patente no es válida, ingresar de vuelta: ").upper()
 
-            if buscapatente(pato) != -1:
+        if buscapatente(pato) != -1:
+            ALOPERACIONES.seek(buscapatente(pato), 0)
+            RLOPERACIONES = pickle.load(ALOPERACIONES)
+            if RLOPERACIONES.estado == "C":
                 pesobru= int(input("Ingrese el peso bruto del camión: "))
                 while pesobru < 0:
                     pesobru= int(input("Error. Ingrese un peso correcto: "))
-                ALOPERACIONES.seek(buscapatente.pato(), 0)
+                ALOPERACIONES.seek(buscapatente(pato), 0)
                 RLOPERACIONES = pickle.load(ALOPERACIONES)
                 RLOPERACIONES.bruto = pesobru
+                RLOPERACIONES.estado = "B"
                 formatearoperaciones(RLOPERACIONES)
-                ALOPERACIONES.seek(buscapatente.pato(), 0)
-                pickle.dump(RLOPERACIONES.bruto, ALOPERACIONES) 
-                ALOPERACIONES.flush()                   
+                ALOPERACIONES.seek(buscapatente(pato), 0)
+                pickle.dump(RLOPERACIONES, ALOPERACIONES) 
+                ALOPERACIONES.flush()
+                print(f"Se registró el peso bruto de {pato} con {pesobru} kg con éxito.")
             else:
-                print("No se encontró la patente.")
-    
+                print("El estado de la patente es incorrecto.")
+        else:
+            print("No se encontró la patente.")
+
         decisionregp = input("¿Registrar un nuevo peso bruto? Ingrese SI o NO: ").upper()
         while decisionregp != "NO" and decisionregp != "SI": # Validación del sí
             decisionregp = input("Error. Ingresar una respuesta correcta: ").upper()
@@ -1046,73 +1063,35 @@ def regtara():
         patentereg = input("Ingresar patente a registrar: ").upper()
         while len(patentereg) < 6 or len(patentereg) > 7:
             patentereg = input("La patente no es válida, ingresar de vuelta: ").upper()
-        
-        x = 0
-        while x < 8 and arrpatentes[x] != patentereg:
-            x += 1
-
-        if x == 8:
-            print("La patente no se encuentra en el sistema.")
-
-        else:
-            if arrcupos[x] == "E":
-                if arrpesobru[x] != 0:
-                        if arrtara[x] != 0:
-                            print("Esta patente ya tiene una tara ingresada.")
-                        else:
-                            tara = int(input("Ingresar tara: "))
-                            while tara < 1 or tara > arrpesobru[x]:
-                                tara = int(input("La tara no es válida, volver a ingresar: "))
-                            arrtara[x] = tara
-                            pesoneto = arrpesobru[x] - tara
-                            pesosnetos[x] = pesoneto
-                            if productosxp[x] == "MAIZ":
-                                total_neto_maiz += pesoneto
-                                if pesoneto > mayores[0]:
-                                    mayores[0] = pesoneto
-                                    patentemay[0] = arrpatentes[x]
-                                if pesoneto < menores[0]:
-                                    menores[0] = pesoneto
-                                    patentemin[0] = arrpatentes[x]
-                            elif productosxp[x] == "SOJA":
-                                total_neto_soja += pesoneto
-                                if pesoneto > mayores[1]:
-                                    mayores[1] = pesoneto
-                                    patentemay[1] = arrpatentes[x]
-                                if pesoneto < menores[1]:
-                                    menores[1] = pesoneto
-                                    patentemin[1] = arrpatentes[x]
-                            elif productosxp[x] == "TRIGO":
-                                total_neto_trigo += pesoneto
-                                if pesoneto > mayores[2]:
-                                    mayores[2] = pesoneto
-                                    patentemay[2] = arrpatentes[x]
-                                if pesoneto < menores[2]:
-                                    menores[2] = pesoneto
-                                    patentemin[2] = arrpatentes[x]
-                            elif productosxp[x] == "GIRASOL":
-                                total_neto_girasol += pesoneto
-                                if pesoneto > mayores[3]:
-                                    mayores[3] = pesoneto
-                                    patentemay[3] = arrpatentes[x]
-                                if pesoneto < menores[3]:
-                                    menores[3] = pesoneto
-                                    patentemin[3] = arrpatentes[x]
-                            elif productosxp[x] == "CEBADA":
-                                total_neto_cebada += pesoneto
-                                if pesoneto > mayores[4]:
-                                    mayores[4] = pesoneto
-                                    patentemay[4] = arrpatentes[x]
-                                if pesoneto < menores[4]:
-                                    menores[4] = pesoneto
-                                    patentemin[4] = arrpatentes[x]
-                        print(f"Asignada la tara de {tara} kg del camión {patentereg}, con producto {productosxp[x]}.")
+        if buscapatente(patentereg) != -1:
+            ALOPERACIONES.seek(buscapatente(patentereg), 0)
+            RLOPERACIONES = pickle.load(ALOPERACIONES)
+            if RLOPERACIONES.estado == "B":
+                tara = int(input("Ingrese la tara de esta patente: "))
+                while int(RLOPERACIONES.bruto) < tara:
+                    tara = int(input("El valor de la tara es incorrecto, ingrese de vuelta: "))
+                pesoneto = int(RLOPERACIONES.bruto) - tara
+                posilo = buscosilo(RLOPERACIONES.codproducto)
+                if posilo != -1:
+                    ALSILOS.seek(posilo, 0)
+                    RLSILOS = pickle.load(ALSILOS)
+                    RLSILOS.stock = int(RLSILOS.stock) + pesoneto
+                    RLOPERACIONES.estado = "F"
+                    ALSILOS.seek(posilo, 0)
+                    ALOPERACIONES.seek(buscapatente(patentereg), 0)
+                    pickle.dump(RLSILOS, ALSILOS)
+                    pickle.dump(RLOPERACIONES, ALOPERACIONES)
+                    ALSILOS.flush()
+                    ALOPERACIONES.flush()
+                    print(f"Se ingresó el peso neto de {pesoneto} kg con éxito.")
                 else:
-                    print("Error - Para asignar la tara se requiere tener asignado un peso bruto.")
-                    
+                    print("No hay un silo correspondiente al producto de esta patente.")
             else:
-                print("El cupo de esta patente no es válido para ingresar la tara.")
-    
+                print("El estado de la patente es incorrecto.")
+        else:
+            print("No se encontró la patente.")
+
+
         decisionregt = input("¿Registrar una nueva tara? Ingrese SI o NO: ").upper()
         while decisionregt != "NO" and decisionregt != "SI": # Validación del sí
             decisionregt = input("Error. Ingresar una respuesta correcta: ").upper()
