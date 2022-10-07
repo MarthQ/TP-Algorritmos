@@ -688,18 +688,18 @@ def BuscaDico(cod):
     inf= 0
     sup= cantReg-1
     med= (inf+sup)//2
-    ALRUBROS.seek(med*cantReg, 0)
+    ALRUBROS.seek(int(med*cantReg), 0)
     RLRUBROS= pickle.load(ALRUBROS)
-    while (inf<sup) and (RLRUBROS.codigorubro != cod):
-        if cod<RLRUBROS.codigorubro:
+    while (inf<sup) and (int(RLRUBROS.codigorubro) != cod):
+        if cod<int(RLRUBROS.codigorubro):
             sup=med-1
         else: 
             inf= med+1
         med=(sup+inf)//2
-        ALRUBROS.seek(med*cantReg, 0)
+        ALRUBROS.seek(int(med*cantReg), 0)
         RLRUBROS= pickle.load(ALRUBROS)
-    if RLRUBROS.codigorubro==cod:
-        return med*cantReg
+    if int(RLRUBROS.codigorubro)==cod:
+        return int(med*cantReg)
     else: 
         return -1
 
@@ -951,7 +951,9 @@ def regcalidad():
                     RLRUBROSXPRODUCTO = pickle.load(ALRUBROSXPRODUCTO)
                     if RLRUBROSXPRODUCTO.codigoproducto == elcod:
                         print("CODIGO RUBRO  | NOMBRE DEL RUBRO")
-                        print(RLRUBROSXPRODUCTO.codigorubro, "         ", busconombre(RLRUBROSXPRODUCTO.codigorubro))
+                        print(RLRUBROSXPRODUCTO.codigorubro)
+                        codigobusca = int(RLRUBROSXPRODUCTO.codigorubro)
+                        print(busconombre(codigobusca))
                         dichovalor = input("Ingrese un valor para este rubro: ")
                         if dichovalor > RLRUBROSXPRODUCTO.valormax or dichovalor < RLRUBROSXPRODUCTO.valormin:
                             flaggeado += 1
@@ -975,6 +977,7 @@ def regcalidad():
         else:
             print("La patente no existe")
         opcall = input("¿Desea registrar la calidad de otra patente? Ingrese SI o NO: ").upper()
+
 # procedimiento regpesobruto()
 # VAR
 # x, pesobruto, totalbrutomaiz, totalbrutosoja, totalbrutotrigo, totalbrutogirasol, totalbrutocebada: Integer
@@ -982,6 +985,7 @@ def regcalidad():
 # arrpatentes: arrpatentes
 # arrcupos: arrcupos
 # arrpesobru: arrpesobru
+
 def regpesobruto():
     global totalbrutomaiz, totalbrutosoja, totalbrutotrigo, totalbrutogirasol, totalbrutocebada
     clear()
@@ -989,16 +993,23 @@ def regpesobruto():
     while decisionregp != "NO" and decisionregp != "SI": # Validación del sí
         decisionregp = input("Error. Ingresar una respuesta correcta: ").upper()
     while decisionregp == "SI":
-        RLOPERACIONES.patente= input("Ingresar patente a registrar: ").upper()
-        while len(RLOPERACIONES.patente) < 6 or len(RLOPERACIONES.patentepatentereg) > 7:
-            RLOPERACIONES.patente = input("La patente no es válida, ingresar de vuelta: ").upper()
+        pato = input("Ingresar patente a registrar: ").upper()
+        while len(pato) < 6 or len(pato) > 7:
+            pato = input("La patente no es válida, ingresar de vuelta: ").upper()
 
-            if buscapatente(RLOPERACIONES.patente)==pospat: #and RLOPERACIONES.estado=="C"
-                RLOPERACIONES.bruto= int(input(" el peso no es valido, ingresar una mayor a 0"))
+            if buscapatente(pato) != -1:
+                pesobru= int(input("Ingrese el peso bruto del camión: "))
+                while pesobru < 0:
+                    pesobru= int(input("Error. Ingrese un peso correcto: "))
+                ALOPERACIONES.seek(buscapatente.pato(), 0)
+                RLOPERACIONES = pickle.load(ALOPERACIONES)
+                RLOPERACIONES.bruto = pesobru
+                formatearoperaciones(RLOPERACIONES)
+                ALOPERACIONES.seek(buscapatente.pato(), 0)
                 pickle.dump(RLOPERACIONES.bruto, ALOPERACIONES) 
                 ALOPERACIONES.flush()                   
             else:
-                print("El cupo de esta patente no es válido para ingresar el peso bruto.")
+                print("No se encontró la patente.")
     
         decisionregp = input("¿Registrar un nuevo peso bruto? Ingrese SI o NO: ").upper()
         while decisionregp != "NO" and decisionregp != "SI": # Validación del sí
