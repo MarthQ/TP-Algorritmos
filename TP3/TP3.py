@@ -565,7 +565,9 @@ def tebuscodR(cod):
     else:
         return False
 
+
 def cargarubro():
+    cont = 0
     cargamiento = "SI"
     while cargamiento == "SI":
         nombreR = input("Ingrese el nombre del rubro: ")
@@ -587,7 +589,9 @@ def cargarubro():
         ALRUBROS.seek(0,2)
         pickle.dump(RLRUBROS, ALRUBROS)
         ALRUBROS.flush()
-
+        cont += 1
+        t = os.path.getsize(AFRUBROS)
+        print("el getsai = ", t/cont)
         cargamiento = input("¿Desea ingresar otro rubro? Ingrese SI o NO: ").upper()
         while cargamiento != "NO" and cargamiento != "SI": # Validación de datos
                 cargamiento = input("Opción incorrecta. Ingrese nuevamente: ").upper()
@@ -680,15 +684,23 @@ def cargaRxP():
 
 #funcion busqueda dicotomica de rubro, entre parentesis va la variable del codigo que se ingrese, cambienla como sea que se llame :3
 def BuscaDico(cod):
+    cod = int(cod)
     ALRUBROS.seek(0,0)
     RLRUBROS= pickle.load(ALRUBROS)
     tamReg= ALRUBROS.tell()
+    print(tamReg)
     tamArc= os.path.getsize(AFRUBROS)
+    print(tamArc)
     cantReg= tamArc//tamReg
+    print(cantReg)
     inf= 0
     sup= cantReg-1
+    print(sup)
     med= (inf+sup)//2
-    ALRUBROS.seek(int(med*cantReg), 0)
+    print(med)
+    print(med*cantReg)
+    os.system("pause")
+    ALRUBROS.seek(med*cantReg, 0)
     RLRUBROS= pickle.load(ALRUBROS)
     while (inf<sup) and (int(RLRUBROS.codigorubro) != cod):
         if cod<int(RLRUBROS.codigorubro):
@@ -696,10 +708,10 @@ def BuscaDico(cod):
         else: 
             inf= med+1
         med=(sup+inf)//2
-        ALRUBROS.seek(int(med*cantReg), 0)
+        ALRUBROS.seek(med*cantReg, 0)
         RLRUBROS= pickle.load(ALRUBROS)
     if int(RLRUBROS.codigorubro)==cod:
-        return int(med*cantReg)
+        return med*cantReg
     else: 
         return -1
 
@@ -712,14 +724,14 @@ def ordenRubro():
     cantReg = tamArc//tamReg #tambien se puede hacer cantReg= int(tamArc/tamReg)
     for i in range (0,cantReg-1):
         for j in range (i+1, cantReg):
-            ALRUBROS.seek(int(i*tamReg), 0)
+            ALRUBROS.seek(i*tamReg, 0)
             auxi = pickle.load(ALRUBROS)
-            ALRUBROS.seek(int(j*tamReg), 0)
+            ALRUBROS.seek(j*tamReg, 0)
             auxj = pickle.load(ALRUBROS)
             if (auxi.codigorubro>auxj.codigorubro):
-                ALRUBROS.seek(int(i*tamReg), 0)
+                ALRUBROS.seek(i*tamReg, 0)
                 pickle.dump(auxj,ALRUBROS)
-                ALRUBROS.seek(int(j*tamReg), 0)
+                ALRUBROS.seek(j*tamReg, 0)
                 pickle.dump(auxi,ALRUBROS)
 
 
@@ -924,6 +936,7 @@ def administracion():
 
 def busconombre(cod):
     pos = BuscaDico(cod)
+    print("la pos es", pos)
     ALRUBROS.seek(pos, 0)
     RL = pickle.load(ALRUBROS)
     return RL.nombrerubro
@@ -952,8 +965,9 @@ def regcalidad():
                     if RLRUBROSXPRODUCTO.codigoproducto == elcod:
                         print("CODIGO RUBRO  | NOMBRE DEL RUBRO")
                         print(RLRUBROSXPRODUCTO.codigorubro)
-                        codigobusca = int(RLRUBROSXPRODUCTO.codigorubro)
-                        print(busconombre(codigobusca))
+                        tebuscod = RLRUBROSXPRODUCTO.codigorubro
+                        tebuscod = tebuscod.ljust(5, ' ')
+                        print(busconombre(tebuscod))
                         dichovalor = input("Ingrese un valor para este rubro: ")
                         if dichovalor > RLRUBROSXPRODUCTO.valormax or dichovalor < RLRUBROSXPRODUCTO.valormin:
                             flaggeado += 1
