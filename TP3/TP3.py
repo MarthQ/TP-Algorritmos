@@ -29,8 +29,7 @@ class csoperacion:
     def __init__(self):
         self.patente = "" # 7 caracteres
         self.codproducto = 0
-# ver uso de datetime para esto (tal vez es una paja y usamos el string tradicional, es un datazo este comentario)
-        self.fechacupo = datetime.datetime(1,1,1) # es una FECHA AAAAAAAAAA
+        self.fechacupo = datetime.datetime(1,1,1) 
         self.estado = "" # char
         self.bruto = 0
         self.tara = 0
@@ -131,8 +130,7 @@ def formatearsilos(RL):
 def formatearoperaciones(RL):
 #       self.patente = "" # 7 caracteres
 #         self.codproducto = 0
-# # ver uso de datetime para esto (tal vez es una paja y usamos el string tradicional, es un datazo este comentario)
-#         self.fechacupo = datetime.datetime(1,1,1) # es una FECHA AAAAAAAAAA
+#         self.fechacupo = datetime.datetime(1,1,1) 
 #         self.estado = "" # char
 #         self.bruto = 0
 #         self.tara = 0
@@ -144,25 +142,6 @@ def formatearoperaciones(RL):
     RL.bruto = RL.bruto.ljust(5, ' ')
     RL.tara = str(RL.tara)
     RL.tara = RL.tara.ljust(5, ' ')
-
-
-# probando Date para la fecha:
-# def date():
-#     global fecha
-#     flag=True
-#     while flag:
-#         try:
-#             fecha=input("Ingrese fecha(DD,MM,AAAA):")
-#             datetime.datetime.strptime(fecha, '%d/%m/%Y')
-#             print("Fecha valida")
-#             flag = False
-#         except ValueError:
-#             print("Fecha invalida.")
-# lo copio como en el video, dsp vemos si lo dejamos o lo sacamos al carajo. pone automaticamente las barras /
-# dia,mes,anio= fecha.split('/')
-
-
-# eta e' la de jp casañas ft. sofi eeeeeeeeeeeeeeeeeeeeeee
 
 def validarFecha(mensaje):
 
@@ -209,7 +188,6 @@ def en_construccion():
     clear()
     print(ROJO + "Esta funcionalidad está en construcción." + BLANCO)
     
-
 def opciones_menu():
     print(VERDE + "----- MENU PRINCIPAL -----" + BLANCO)
     print("Elija una opción (números enteros del 0 al 8):")
@@ -386,7 +364,7 @@ def consultaP():
     
     else:
         ALPRODUCTOS.seek(0,0)
-        print("producto |       codigo producto")
+        print("PRODUCTO |     CODIGO DE PRODUCTO")
         print("---------------------------")
     while ALPRODUCTOS.tell() < getsai:
         RLPRODUCTOS = pickle.load(ALPRODUCTOS)
@@ -420,7 +398,6 @@ def eliminarP(producto):
         opciones_terciario("PRODUCTOS")
 
 # procedimiento bajaprod(var P: P)
-# VAR
 # producto: String
 # ncupos: Integer
 def bajaprod():
@@ -430,7 +407,6 @@ def bajaprod():
         RLPRODUCTOS = csproducto()
         if getsai == 0:
             print("No hay nada para mostrar.")
-            
         else:
             ALPRODUCTOS.seek(0,0)
             print("producto |       codigo producto")
@@ -438,8 +414,7 @@ def bajaprod():
             while ALPRODUCTOS.tell() < getsai:
                 RLPRODUCTOS = pickle.load(ALPRODUCTOS)
                 print(RLPRODUCTOS.nombreproducto, RLPRODUCTOS.codproducto)
-            producto = input("Ingresar el nombre del producto a eliminar: ").upper() # BUCLE INFINITO PA
-            eliminarP(producto)
+            producto = input("Ingresar el nombre del producto a eliminar: ").upper()
     else:
         print("Cupos ya otorgados. No se pueden eliminar productos.")
 
@@ -473,7 +448,7 @@ def modificacionproducto():
             
         else:
             ALPRODUCTOS.seek(0,0)
-            print("producto |       codigo producto")
+            print("PRODUCTO |       CODIGO PRODUCTO")
             print("---------------------------")
             while ALPRODUCTOS.tell() < getsai:
                 RLPRODUCTOS = pickle.load(ALPRODUCTOS)
@@ -503,7 +478,6 @@ def modificacionproducto():
         print("Cupos ya otorgados. No se pueden modificar los productos.")
 
 # procedimiento menu_productos():
-# VAR
 # P: productos
 # opcion_terciario: Char (un caracter)
 def menu_productos():
@@ -583,7 +557,6 @@ def tebuscodR(cod):
     else:
         return False
 
-
 def cargarubro():
     cont = 0
     cargamiento = "SI"
@@ -643,8 +616,6 @@ def menu_rubrosxproducto():
             opcion_terciario = "V"
             administracion()
 
-
-
 def cargaRxP():
     cargamiento = "SI"
     while cargamiento == "SI":
@@ -699,7 +670,7 @@ def cargaRxP():
             clear()
             opciones_terciario("RUBROS POR PRODUCTO")
 
-#funcion busqueda dicotomica de rubro, entre parentesis va la variable del codigo que se ingrese, cambienla como sea que se llame :3
+#funcion busqueda dicotomica de rubro
 def BuscaDico(cod):
     cod = int(cod)
     ALRUBROS.seek(0,0)
@@ -731,7 +702,7 @@ def ordenRubro():
     aux = pickle.load(ALRUBROS)
     tamReg= ALRUBROS.tell()
     tamArc= os.path.getsize(AFRUBROS)
-    cantReg = tamArc//tamReg #tambien se puede hacer cantReg= int(tamArc/tamReg)
+    cantReg = tamArc//tamReg 
     for i in range (0,cantReg-1):
         for j in range (i+1, cantReg):
             ALRUBROS.seek(i*tamReg, 0)
@@ -743,32 +714,6 @@ def ordenRubro():
                 pickle.dump(auxj,ALRUBROS)
                 ALRUBROS.seek(j*tamReg, 0)
                 pickle.dump(auxi,ALRUBROS)
-
-
-
-def menu_silos():
-    clear()
-    opciones_terciario("SILOS")
-    opcion_terciario = "A"
-    while opcion_terciario != "V":
-        opcion_terciario = input("Opción: ").upper() # Convertir toda cadena ingresada en mayúscula.
-        while opcion_terciario == "" or len(opcion_terciario) > 1: # Validación de datos
-            opcion_terciario = input("Opción incorrecta. Ingrese nuevamente: ")
-        
-        if opcion_terciario == "A": # Alta
-            cargasilos()
-        elif opcion_terciario == "B": # Baja
-            en_construccion()
-            opciones_terciario("SILOS")
-        elif opcion_terciario == "C": # Consulta
-            en_construccion()
-            opciones_terciario("SILOS")
-        elif opcion_terciario == "M": # Modificacion
-            en_construccion()
-            opciones_terciario("SILOS")
-        else: # Volver al menú principal
-            opcion_terciario = "V"
-            administracion()
 
 def tebusilo(codsil):
     codsil = str(codsil)
@@ -826,9 +771,31 @@ def cargasilos():
             clear()
             opciones_terciario("SILOS")
 
-# function bucapatente(patente): char
-# Intento de funcion buscar- Nair
+def menu_silos():
+    clear()
+    opciones_terciario("SILOS")
+    opcion_terciario = "A"
+    while opcion_terciario != "V":
+        opcion_terciario = input("Opción: ").upper() # Convertir toda cadena ingresada en mayúscula.
+        while opcion_terciario == "" or len(opcion_terciario) > 1: # Validación de datos
+            opcion_terciario = input("Opción incorrecta. Ingrese nuevamente: ")
+        
+        if opcion_terciario == "A": # Alta
+            cargasilos()
+        elif opcion_terciario == "B": # Baja
+            en_construccion()
+            opciones_terciario("SILOS")
+        elif opcion_terciario == "C": # Consulta
+            en_construccion()
+            opciones_terciario("SILOS")
+        elif opcion_terciario == "M": # Modificacion
+            en_construccion()
+            opciones_terciario("SILOS")
+        else: # Volver al menú principal
+            opcion_terciario = "V"
+            administracion()
 
+# function bucapatente(patente): char
 def buscapatente(npat):
     npat = npat.ljust(7, ' ')
     getsai = os.path.getsize(AFOPERACIONES)
@@ -860,15 +827,9 @@ def ayudaayuda(patente, fecha):
     else:
         return False
 # procedimiento cupos()
-# VAR
-# decisioncup, nuevapatente, cuposctm: String
-# arrpatentes: arrpatentes (Type Array declarado al inicio del programa)
-# arrcupos: arrcupos (Type Array declarado al inicio del programa)
-# ncupos: Integer
-# nuevoestado: Char
 ncupos = 0
 def cupos():
-
+    
     clear()
     print(AMARILLO + "----- MENÚ DE CUPOS -----" + BLANCO)
     decisioncup = input("¿Desea ingresar un cupo? Ingrese SI o NO: ").upper()
@@ -952,7 +913,6 @@ def busconombre(cod):
     RL = pickle.load(ALRUBROS)
     return RL.nombrerubro
 
-
 def regcalidad():
     opcall = input("¿Desea registrar la calidad? Ingrese SI o NO: ").upper()
     while opcall != "NO" and opcall != "SI":
@@ -1006,9 +966,6 @@ def regcalidad():
 # VAR
 # x, pesobruto, totalbrutomaiz, totalbrutosoja, totalbrutotrigo, totalbrutogirasol, totalbrutocebada: Integer
 # patentereg, decisionregp: String
-# arrpatentes: arrpatentes
-# arrcupos: arrcupos
-# arrpesobru: arrpesobru
 
 def regpesobruto():
     global totalbrutomaiz, totalbrutosoja, totalbrutotrigo, totalbrutogirasol, totalbrutocebada
@@ -1097,7 +1054,7 @@ def regtara():
             decisionregt = input("Error. Ingresar una respuesta correcta: ").upper()
         clear()
 
-# function tebuscoaca(P: arrproducto, producto): Boolean
+# function tebuscoaca(P: arrproducto, producto): Boolean ? se usa?
 # VAR
 # i: Integer
 def tebuscoaca(P, producto):
@@ -1106,14 +1063,11 @@ def tebuscoaca(P, producto):
             return True
 
 # procedimiento recepcion()
-# Variables:
+# Variables: 
 # total_camiones, total_camiones_soja, total_camiones_maiz,total_camiones_cebada, total_camiones_trigo, total_camiones_girasol, lugar: Enteros (Integer)
-# total_neto_soja, total_neto_maiz, promedio_neto_maiz, promedio_neto_soja, PESO_BRUTO, TARA, PESO_NETO: Real (Float)
+# total_neto_soja, total_neto_maiz, promedio_neto_maiz, promedio_neto_soja, PESO_BRUTO, TARA, pito, PESO_NETO: Real (Float)
 # PATENTEMAYOR, PATENTEMENOR, decision, camiones, PATENTE, respuestarep, PRODUCTO: String (Cadena de caracteres)
 # PRODUCTO: Char (un caracter)
-# arrcupos: arrcupos
-# arrpatentes: arrpatentes
-
 # Verificación de si se hizo la recepción de los datos de los N camiones. 
 # La variable recepcionhecha (Booleano) funciona como verificación. En caso de que esté en False, significa que 
 # los camiones no fueron ingresados, y por tanto hacer una planilla de reportes sería imposible.
@@ -1222,7 +1176,6 @@ def reportes():
     global total_camiones, total_camiones_maiz, total_camiones_soja, total_neto_maiz, total_neto_soja, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, PATENTEMAYOR, PATENTEMENOR
     print("\nCantidad de cupos otorgados: ",  ncupos)
     print("Cantidad total de camiones que llegaron: ",  total_camiones, "\n")
-   # print("") COMO VAS A HACER ESTO???? USA \N NO SEAS TROLO MAN
     print("Cantidad total de camiones de maíz: ",  total_camiones_maiz)				
     print("Cantidad total de camiones de soja: ",  total_camiones_soja)
     print("Cantidad total de camiones de trigo: ",  total_camiones_trigo)
