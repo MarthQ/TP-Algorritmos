@@ -786,7 +786,7 @@ def buscodigo(cod, AL, AF, RL, clase, campo):
     RL = clase()
     if getsai > 0:
         while AL.tell() < getsai and RL.campo != cod:
-            pos = A.tell()
+            pos = AL.tell()
             RL = pickle.load(AL)
         if RL.campo == cod:
             return pos
@@ -1257,6 +1257,52 @@ def reportes():
     reportesctm = input("\nPresione cualquier tecla para volver al menú principal: ")
     clear()
 
+def silomayor():
+    t = os.path.getsize(AFSILOS)
+    posmayor = 0
+    ALSILOS.seek(0)
+    mayor = 0
+    RLSILOS = cssilo()
+    while ALSILOS.tell() < t:
+        pos = ALSILOS.tell()
+        RLSILOS = pickle.load(ALSILOS)
+        if int(RLSILOS.stock) > mayor:
+            mayor = int(RLSILOS.stock)
+            posmayor = pos
+    return posmayor
+
+def listadoSilos():
+    pos = silomayor()
+    ALSILOS.seek(pos, 0)
+    RLSILOS = pickle.load(ALSILOS)
+    print("Este es el silo con mayor stock:")
+    print(" ")
+    print("CÓDIGO DEL SILO | CÓDIGO DEL PRODUCTO | NOMBRE DEL SILO |        STOCK      |")
+    print("-----------------------------------------------------------------------------")
+    print(RLSILOS.codigosilo, "           ", RLSILOS.codproducto, "               ", RLSILOS.nombresilo, RLSILOS.stock)
+    print(" ")
+    decision = input("¿Desea buscar camiones rechazados por fecha? Ingrese SI o NO: ").upper()
+    while decision != "SI" and decision != "NO":
+        decision = input("Opción incorrecta, ingrese de vuelta: ")
+    while decision == "SI":
+        flag = 0
+        fecha = validarFecha("Ingrese la fecha a buscar: ")
+        ALOPERACIONES.seek(0)
+        RLOPERACIONES = csoperacion()
+        t = os.path.getsize(AFOPERACIONES)
+        print("PATENTE   | ESTADO | FECHA DE RECHAZO")
+        print("-------------------------------------")
+        while ALOPERACIONES.tell() < t:
+            RLOPERACIONES = pickle.load(ALOPERACIONES)
+            if RLOPERACIONES.fechacupo == fecha and RLOPERACIONES.estado == "R":
+                print(RLOPERACIONES.patente, "    ", RLOPERACIONES.estado, "        ", RLOPERACIONES.fechacupo)
+                flag = flag + 1
+        if flag == 0:
+            print(" ")
+            print("No hay nada para mostrar.")
+        decision = input("¿Desea buscar otra fecha? Ingrese SI o NO: ").upper()
+
+
 def cerrarArchivos():
     ALOPERACIONES.close()
     ALPRODUCTOS.close()
@@ -1282,7 +1328,7 @@ def main():
     # Validación de datos
         while opcion == "" or len(opcion) > 1 or opcion.isnumeric() == False:
             opcion = input("Opción incorrecta. Ingresar nuevamente: ")
-        while int(opcion) < 0 or int(opcion) > 8:
+        while int(opcion) < 0 or int(opcion) > 9:
             opcion = input("Opción incorrecta. Ingresar nuevamente: ")
 
     # Menú de opciones
@@ -1315,7 +1361,7 @@ def main():
                 reportes() 
         
         elif opcion == "9":
-            print("esto es el listado de silos y rechazos")
+            listadoSilos()
 
         else: # Fin del programa
             cerrarArchivos()
