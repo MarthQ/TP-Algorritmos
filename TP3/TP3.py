@@ -10,6 +10,7 @@
 
 ##############################################################################
 
+from operator import truediv
 import pickle
 import os
 import datetime
@@ -128,12 +129,6 @@ def formatearsilos(RL):
     RL.stock = RL.stock.ljust(10, ' ')
 
 def formatearoperaciones(RL):
-#       self.patente = "" # 7 caracteres
-#         self.codproducto = 0
-#         self.fechacupo = datetime.datetime(1,1,1) 
-#         self.estado = "" # char
-#         self.bruto = 0
-#         self.tara = 0
     RL.patente = str(RL.patente)
     RL.patente = RL.patente.ljust(7, ' ')
     RL.codproducto = str(RL.codproducto)
@@ -144,7 +139,6 @@ def formatearoperaciones(RL):
     RL.tara = RL.tara.ljust(5, ' ')
 
 def validarFecha(mensaje):
-
     os.system("cls")
     fecha = input(mensaje)
     o = fecha.split("/", 3)
@@ -187,6 +181,7 @@ def inicializodatoscam():
 def en_construccion():
     clear()
     print(ROJO + "Esta funcionalidad está en construcción." + BLANCO)
+    os.system("pause")
     
 def opciones_menu():
     print(VERDE + "----- MENU PRINCIPAL -----" + BLANCO)
@@ -232,8 +227,9 @@ def menu_terciario():
     opcion_terciario = "A"
     while opcion_terciario != "V":
         opcion_terciario = input("Opción: ").upper() # Convertir toda cadena ingresada en mayúscula.
-        while opcion_terciario == "" or len(opcion_terciario) > 1: # Validación de datos
-            opcion_terciario = input("Opción incorrecta. Ingrese nuevamente: ")
+
+        while opcion_terciario == "" or len(opcion_terciario) > 1 or opcion_terciario.isnumeric() == True: # Validación de datos
+            opcion_terciario = input("Opción incorrecta. Ingrese nuevamente: ").upper()
         
         if opcion_terciario == "A": # Alta
             en_construccion()
@@ -243,7 +239,7 @@ def menu_terciario():
             en_construccion()
         elif opcion_terciario == "M": # Modificacion
             en_construccion()
-        else: # Volver al menú principal
+        elif opcion_terciario == "V": # Volver al menú principal
             opcion_terciario = "V"
             administracion()
 
@@ -303,58 +299,6 @@ def cargarprod():
     else:
         print("Cupos ya otorgados.")
 
-# Búsqueda de código
-def tebuscodigo(codigo):
-    codigo = str(codigo)
-    codigo = codigo.ljust(5, ' ')
-    getsai = os.path.getsize(AFPRODUCTOS)
-    ALPRODUCTOS.seek(0,0) 
-    RLPRODUCTOS = csproducto()
-    if getsai > 0:
-        while ALPRODUCTOS.tell() < getsai and RLPRODUCTOS.codproducto != codigo:
-            RLPRODUCTOS = pickle.load(ALPRODUCTOS)
-        if RLPRODUCTOS.codproducto == codigo:
-            return True
-        else:
-            return False
-    else:
-        return False
-
-def buscosilo(codigo):
-    codigo = str(codigo)
-    codigo = codigo.ljust(5, ' ')
-    getsai = os.path.getsize(AFSILOS)
-    ALSILOS.seek(0,0)
-    pos = 0 
-    RLSILOS = cssilo()
-    if getsai > 0:
-        while ALSILOS.tell() < getsai and RLSILOS.codproducto != codigo:
-            pos = ALSILOS.tell()
-            RLSILOS = pickle.load(ALSILOS)
-        if RLSILOS.codproducto == codigo:
-            return pos
-        else:
-            return -1
-    else:
-        return -1
-
-# Búsqueda de productos
-def tebuscopos(producto):
-    producto = producto.ljust(25, ' ')
-    getsai = os.path.getsize(AFPRODUCTOS)
-    ALPRODUCTOS.seek(0,0)
-    RLPRODUCTOS = csproducto()
-    pos = -1
-    if getsai > 0:
-        while ALPRODUCTOS.tell() < getsai and RLPRODUCTOS.nombreproducto != producto:
-            pos = ALPRODUCTOS.tell()
-            RLPRODUCTOS = pickle.load(ALPRODUCTOS)
-        if RLPRODUCTOS.nombreproducto == producto:
-            return pos
-        else:
-            return -1
-    else:
-        return -1
 
 def consultaP():
     getsai = os.path.getsize(AFPRODUCTOS)
@@ -527,36 +471,6 @@ def menu_rubros():
             opcion_terciario = "V"
             administracion()
 
-def tebusrubro(nombreR):
-    nombreR = nombreR.ljust(25, ' ')
-    getsai = os.path.getsize(AFRUBROS)
-    ALRUBROS.seek(0,0) 
-    RLRUBROS = csrubro()
-    if getsai > 0:
-        while ALRUBROS.tell() < getsai and RLRUBROS.nombrerubro != nombreR:
-            RLRUBROS = pickle.load(ALRUBROS)
-        if RLRUBROS.nombrerubro == nombreR:
-            return True
-        else:
-            return False
-    else:
-        return False
-
-def tebuscodR(cod):
-    cod = str(cod)
-    cod = cod.ljust(5, ' ')
-    getsai = os.path.getsize(AFRUBROS)
-    ALRUBROS.seek(0,0) 
-    RLRUBROS = csrubro()
-    if getsai > 0:
-        while ALRUBROS.tell() < getsai and RLRUBROS.codigorubro != cod:
-            RLRUBROS = pickle.load(ALRUBROS)
-        if RLRUBROS.codigorubro == cod:
-            return True
-        else:
-            return False
-    else:
-        return False
 
 def cargarubro():
     cont = 0
@@ -671,31 +585,7 @@ def cargaRxP():
             clear()
             opciones_terciario("RUBROS POR PRODUCTO")
 
-#funcion busqueda dicotomica de rubro
-def BuscaDico(cod):
-    cod = int(cod)
-    ALRUBROS.seek(0,0)
-    RLRUBROS= pickle.load(ALRUBROS)
-    tamReg= ALRUBROS.tell()
-    tamArc= os.path.getsize(AFRUBROS)
-    cantReg= tamArc//tamReg
-    inf= 0
-    sup= cantReg-1
-    med= (inf+sup)//2
-    ALRUBROS.seek(med*tamReg, 0)
-    RLRUBROS= pickle.load(ALRUBROS)
-    while (inf<sup) and (int(RLRUBROS.codigorubro) != cod):
-        if cod<int(RLRUBROS.codigorubro):
-            sup=med-1
-        else: 
-            inf= med+1
-        med=(sup+inf)//2
-        ALRUBROS.seek(med*tamReg, 0)
-        RLRUBROS= pickle.load(ALRUBROS)
-    if int(RLRUBROS.codigorubro)==cod:
-        return med*tamReg
-    else: 
-        return -1
+
 
 #Ordenamiento secuencial de rubros, esta hecho por codigo del rubro:
 def ordenRubro():
@@ -716,21 +606,6 @@ def ordenRubro():
                 ALRUBROS.seek(j*tamReg, 0)
                 pickle.dump(auxi,ALRUBROS)
 
-def tebusilo(codsil):
-    codsil = str(codsil)
-    codsil = codsil.ljust(5, ' ')
-    getsai = os.path.getsize(AFSILOS)
-    ALSILOS.seek(0,0) 
-    RLSILOS = cssilo()
-    if getsai > 0:
-        while ALSILOS.tell() < getsai and RLSILOS.codigosilo != codsil:
-            RLSILOS = pickle.load(ALSILOS)
-        if RLSILOS.codigosilo == codsil:
-            return True
-        else:
-            return False
-    else:
-        return False
 
 def cargasilos():
     cargamiento = "S"
@@ -796,7 +671,93 @@ def menu_silos():
             opcion_terciario = "V"
             administracion()
 
-# function bucapatente(patente): char
+
+#funcion busqueda dicotomica de rubro
+def BuscaDico(cod):
+    cod = int(cod)
+    ALRUBROS.seek(0,0)
+    RLRUBROS= pickle.load(ALRUBROS)
+    tamReg= ALRUBROS.tell()
+    tamArc= os.path.getsize(AFRUBROS)
+    cantReg= tamArc//tamReg
+    inf= 0
+    sup= cantReg-1
+    med= (inf+sup)//2
+    ALRUBROS.seek(med*tamReg, 0)
+    RLRUBROS= pickle.load(ALRUBROS)
+    while (inf<sup) and (int(RLRUBROS.codigorubro) != cod):
+        if cod<int(RLRUBROS.codigorubro):
+            sup=med-1
+        else: 
+            inf= med+1
+        med=(sup+inf)//2
+        ALRUBROS.seek(med*tamReg, 0)
+        RLRUBROS= pickle.load(ALRUBROS)
+    if int(RLRUBROS.codigorubro)==cod:
+        return med*tamReg
+    else: 
+        return -1
+# dicotomica de RUBROS
+def busconombre(cod):
+    pos = BuscaDico(cod)
+    ALRUBROS.seek(pos, 0)
+    RL = pickle.load(ALRUBROS)
+    return RL.nombrerubro
+
+
+################### busqueda de patente
+# Búsqueda de productos de AFPRODUCTO
+def busnombre(nom, AF, AL, RL, clase, campo):
+    nom = nom.ljust(25, ' ')
+    getsai = os.path.getsize(AF)
+    AL.seek(0,0)
+    RL = clase()
+    pos = -1
+    if getsai > 0:
+        while AL.tell() < getsai and RL.campo != nom:
+            pos = AL.tell()
+            RL = pickle.load(AL)
+        if RL.campo == nom:
+            return pos
+        else:
+            return -1
+    else:
+        return -1
+
+def tebuscopos(producto):
+    producto = producto.ljust(25, ' ')
+    getsai = os.path.getsize(AFPRODUCTOS)
+    ALPRODUCTOS.seek(0,0)
+    RLPRODUCTOS = csproducto()
+    pos = -1
+    if getsai > 0:
+        while ALPRODUCTOS.tell() < getsai and RLPRODUCTOS.nombreproducto != producto:
+            pos = ALPRODUCTOS.tell()
+            RLPRODUCTOS = pickle.load(ALPRODUCTOS)
+        if RLPRODUCTOS.nombreproducto == producto:
+            return pos
+        else:
+            return -1
+    else:
+        return -1
+
+# de AFRUBRO
+def tebusrubro(nombreR):
+    nombreR = nombreR.ljust(25, ' ')
+    getsai = os.path.getsize(AFRUBROS)
+    ALRUBROS.seek(0,0) 
+    RLRUBROS = csrubro()
+    if getsai > 0:
+        while ALRUBROS.tell() < getsai and RLRUBROS.nombrerubro != nombreR:
+            RLRUBROS = pickle.load(ALRUBROS)
+        if RLRUBROS.nombrerubro == nombreR:
+            return True
+        else:
+            return False
+    else:
+        return False
+
+# de AFOPERACIONES
 def buscapatente(npat):
     npat = npat.ljust(7, ' ')
     getsai = os.path.getsize(AFOPERACIONES)
@@ -814,6 +775,100 @@ def buscapatente(npat):
     else:
         return -1
 
+
+# busqueda de codigo
+def buscodigo(cod, AL, AF, RL, clase, campo):
+    cod = str(cod)
+    cod = cod.ljust(5, ' ')
+    getsai = os.path.getsize(AF)
+    AL.seek(0,0)
+    pos = 0
+    RL = clase()
+    if getsai > 0:
+        while AL.tell() < getsai and RL.campo != cod:
+            pos = A.tell()
+            RL = pickle.load(AL)
+        if RL.campo == cod:
+            return pos
+        else:
+            return -1
+    else:
+        return -1
+
+# Búsqueda de código de AFPRODUCTO
+def tebuscodigo(codigo):
+    codigo = str(codigo)
+    codigo = codigo.ljust(5, ' ')
+    getsai = os.path.getsize(AFPRODUCTOS)
+    ALPRODUCTOS.seek(0,0) 
+    RLPRODUCTOS = csproducto()
+    if getsai > 0:
+        while ALPRODUCTOS.tell() < getsai and RLPRODUCTOS.codproducto != codigo:
+            RLPRODUCTOS = pickle.load(ALPRODUCTOS)
+        if RLPRODUCTOS.codproducto == codigo:
+            return True
+        else:
+            return False
+    else:
+        return False
+
+# de AFSILOS
+def buscosilo(codigo):
+    codigo = str(codigo)
+    codigo = codigo.ljust(5, ' ')
+    getsai = os.path.getsize(AFSILOS)
+    ALSILOS.seek(0,0)
+    pos = 0 
+    RLSILOS = cssilo()
+    if getsai > 0:
+        while ALSILOS.tell() < getsai and RLSILOS.codproducto != codigo:
+            pos = ALSILOS.tell()
+            RLSILOS = pickle.load(ALSILOS)
+        if RLSILOS.codproducto == codigo:
+            return pos
+        else:
+            return -1
+    else:
+        return -1
+
+# de AFRUBRO
+def tebuscodR(cod):
+    cod = str(cod)
+    cod = cod.ljust(5, ' ')
+    getsai = os.path.getsize(AFRUBROS)
+    ALRUBROS.seek(0,0) 
+    RLRUBROS = csrubro()
+    if getsai > 0:
+        while ALRUBROS.tell() < getsai and RLRUBROS.codigorubro != cod:
+            RLRUBROS = pickle.load(ALRUBROS)
+        if RLRUBROS.codigorubro == cod:
+            return True
+        else:
+            return False
+    else:
+        return False
+
+# de AFSILOS
+def tebusilo(codsil):
+    codsil = str(codsil)
+    codsil = codsil.ljust(5, ' ')
+    getsai = os.path.getsize(AFSILOS)
+    ALSILOS.seek(0,0) 
+    RLSILOS = cssilo()
+    if getsai > 0:
+        while ALSILOS.tell() < getsai and RLSILOS.codigosilo != codsil:
+            RLSILOS = pickle.load(ALSILOS)
+        if RLSILOS.codigosilo == codsil:
+            return True
+        else:
+            return False
+    else:
+        return False
+
+
+
+# de AFOPERACIONES
+# lo dejo porque compara FECHA tmb
 def ayudaayuda(patente, fecha):
     patente = patente.ljust(7, ' ')
     if buscapatente(patente) != -1:
@@ -827,6 +882,10 @@ def ayudaayuda(patente, fecha):
         
     else:
         return False
+
+
+
+
 # procedimiento cupos()
 ncupos = 0
 def cupos():
@@ -880,7 +939,7 @@ def administracion():
         opcion_admin = input("Opción: ").upper() # Convertir toda cadena ingresada en mayúscula.
 
         # Validación de datos
-        while opcion_admin == "" or (opcion_admin > "G" and opcion_admin < "V") or opcion_admin > "V":
+        while opcion_admin == "" or (opcion_admin > "G" and opcion_admin < "V") or opcion_admin > "V" or opcion_admin.isnumeric() == True or len(opcion_admin) > 1:
             opcion_admin = input("Opción incorrecta. Ingrese nuevamente: ").upper()
  
         if opcion_admin == "A": # Titulares
@@ -908,11 +967,6 @@ def administracion():
             opcion_admin = "V"
             clear()
 
-def busconombre(cod):
-    pos = BuscaDico(cod)
-    ALRUBROS.seek(pos, 0)
-    RL = pickle.load(ALRUBROS)
-    return RL.nombrerubro
 
 def regcalidad():
     opcall = input("¿Desea registrar la calidad? Ingrese SI o NO: ").upper()
@@ -1008,9 +1062,7 @@ def regpesobruto():
 # procedimiento regtara
 # VAR
 # decisionregt, patentereg: String
-# x, j, tara, total_neto_maiz, total_neto_soja, total_neto_trigo, total_neto_girasol, total_neto_cebada: Integer
-# arrtara: arrtara, arrcupos: arrcupos, arrpesobru: arrpesobru
-# productosxp: productos xp, pesosneto: pesosneto, menores: menores, patentemin: patentemin, mayores:mayores, patentemay: patentemay
+# tara, peosneto, posilo: int
 def regtara():
     global total_neto_maiz, total_neto_soja, total_neto_trigo, total_neto_girasol, total_neto_cebada
     clear()
@@ -1055,13 +1107,6 @@ def regtara():
             decisionregt = input("Error. Ingresar una respuesta correcta: ").upper()
         clear()
 
-# function tebuscoaca(P: arrproducto, producto): Boolean ? se usa?
-# VAR
-# i: Integer
-def tebuscoaca(P, producto):
-    for i in range(0, 3):
-        if P[i] == producto:
-            return True
 
 # procedimiento recepcion()
 # Variables: 
@@ -1118,42 +1163,8 @@ def recepcion():
             else:
                 print("El camión tiene una fecha o estado incorrecto.")
 
-        else: print("ta mal unu")
-        # else:
-        #     if arrcupos[lugar] == "P":
-
-        #         print("Ingresar tipo de producto (Maíz, Soja, Trigo, Girasol, Cebada)")
-        #         PRODUCTO = input("- ").upper()
-        #         while tebuscoaca(P, PRODUCTO) != True and PRODUCTO != "S":
-        #             PRODUCTO = input("No es un producto válido o no está dado de alta, ingresar de vuelta (S\salir): ").upper()
-
-        #         if PRODUCTO != "S":
-        #             arrcupos[lugar] = "E"
-        #             print(f'Se actualizó el cupo de la patente {PATENTE} a "En proceso"')
-
-        #         if PRODUCTO == "MAIZ":
-        #             print(f"Cargado camión con patente {PATENTE} de {PRODUCTO}")
-        #             total_camiones_maiz += 1
-        #             productosxp[lugar] = PRODUCTO
-        #         elif PRODUCTO == "SOJA":
-        #             print(f"Cargado camión con patente {PATENTE} de {PRODUCTO}")
-        #             total_camiones_soja += 1
-        #             productosxp[lugar] = PRODUCTO
-        #         elif PRODUCTO == "TRIGO":
-        #             print(f"Cargado camión con patente {PATENTE} de {PRODUCTO}")
-        #             total_camiones_trigo += 1
-        #             productosxp[lugar] = PRODUCTO
-        #         elif PRODUCTO == "GIRASOL":
-        #             print(f"Cargado camión con patente {PATENTE} de {PRODUCTO}")
-        #             total_camiones_girasol += 1
-        #             productosxp[lugar] = PRODUCTO
-        #         elif PRODUCTO == "CEBADA":
-        #             print(f"Cargado camión con patente {PATENTE} de {PRODUCTO}")
-        #             total_camiones_cebada += 1
-        #             productosxp[lugar] = PRODUCTO
-        #         total_camiones += 1
-        #     else:
-        #         print("Este camión ya fue procesado.")
+        else: 
+            print("No se encontró el camión.")
 
         camiones = input("\n¿Desea ingresar otro camión? Ingrese SI o NO: ").upper()
         
@@ -1210,37 +1221,37 @@ def reportes():
     else:
         print("No hay un promedio de cebada para mostrar.")
     print("")
-    print("Patente del camión de maíz que mayor cantidad de maiz descargó: ", patentemay[0])
-    print("Patente del camión de maíz que menor cantidad de maíz descargó: ", patentemin[0], "\n")
-    #print("")
-    print("Patente del camión de soja que mayor cantidad de soja descargó: ", patentemay[1])
-    print("Patente del camión de soja que menor cantidad de soja descargó: ", patentemin[1], "\n")
-    #print("")
-    print("Patente del camión de trigo que mayor cantidad de trigo descargó: ", patentemay[2])
-    print("Patente del camión de trigo que menor cantidad de trigo descargó: ", patentemin[2], "\n")
-    #print("")
-    print("Patente del camión de girasol que mayor cantidad de girasol descargó: ", patentemay[3])
-    print("Patente del camión de girasol que menor cantidad de girasol descargó: ", patentemin[3], "\n")
-    #print("")
-    print("Patente del camión de cebada que mayor cantidad de cebada descargó: ", patentemay[4])
-    print("Patente del camión de cebada que menor cantidad de cebada descargó: ", patentemin[4], "\n")
+    # print("Patente del camión de maíz que mayor cantidad de maiz descargó: ", patentemay[0])
+    # print("Patente del camión de maíz que menor cantidad de maíz descargó: ", patentemin[0], "\n")
+    # #print("")
+    # print("Patente del camión de soja que mayor cantidad de soja descargó: ", patentemay[1])
+    # print("Patente del camión de soja que menor cantidad de soja descargó: ", patentemin[1], "\n")
+    # #print("")
+    # print("Patente del camión de trigo que mayor cantidad de trigo descargó: ", patentemay[2])
+    # print("Patente del camión de trigo que menor cantidad de trigo descargó: ", patentemin[2], "\n")
+    # #print("")
+    # print("Patente del camión de girasol que mayor cantidad de girasol descargó: ", patentemay[3])
+    # print("Patente del camión de girasol que menor cantidad de girasol descargó: ", patentemin[3], "\n")
+    # #print("")
+    # print("Patente del camión de cebada que mayor cantidad de cebada descargó: ", patentemay[4])
+    # print("Patente del camión de cebada que menor cantidad de cebada descargó: ", patentemin[4], "\n")
 
-    for t in range (0,8):
-                for v in range (t+1,8):
-                    if pesosnetos[t]<pesosnetos[v]:
-                        aux=pesosnetos[t]
-                        pesosnetos[t]=pesosnetos[v]
-                        pesosnetos[v]=aux
-                        aux2=arrpatentes[t]
-                        arrpatentes[t]=arrpatentes[v]
-                        arrpatentes[v]=aux2
-                        aux3=productosxp[t]
-                        productosxp[t]=productosxp[v]
-                        productosxp[v]=aux3
-    print("Listado de camiones ordenados por peso neto descendente:\n")
-    print("PATENTE\tPRODUCTO PESO NETO")
-    for j in range (0,8):
-        print(arrpatentes[j], "\t", productosxp[j], "\t", pesosnetos[j])
+    # for t in range (0,8):
+    #             for v in range (t+1,8):
+    #                 if pesosnetos[t]<pesosnetos[v]:
+    #                     aux=pesosnetos[t]
+    #                     pesosnetos[t]=pesosnetos[v]
+    #                     pesosnetos[v]=aux
+    #                     aux2=arrpatentes[t]
+    #                     arrpatentes[t]=arrpatentes[v]
+    #                     arrpatentes[v]=aux2
+    #                     aux3=productosxp[t]
+    #                     productosxp[t]=productosxp[v]
+    #                     productosxp[v]=aux3
+    # print("Listado de camiones ordenados por peso neto descendente:\n")
+    # print("PATENTE\tPRODUCTO PESO NETO")
+    # for j in range (0,8):
+    #     print(arrpatentes[j], "\t", productosxp[j], "\t", pesosnetos[j])
 
     # Opción de regreso al menú principal (main())
     reportesctm = input("\nPresione cualquier tecla para volver al menú principal: ")
@@ -1269,7 +1280,7 @@ def main():
         opcion = input("Opción: ")
 
     # Validación de datos
-        while opcion == "" or len(opcion) > 1:
+        while opcion == "" or len(opcion) > 1 or opcion.isnumeric() == False:
             opcion = input("Opción incorrecta. Ingresar nuevamente: ")
         while int(opcion) < 0 or int(opcion) > 8:
             opcion = input("Opción incorrecta. Ingresar nuevamente: ")
