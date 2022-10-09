@@ -957,10 +957,7 @@ def regcalidad():
                         tebuscod = RLRUBROSXPRODUCTO.codigorubro
                         tebuscod = tebuscod.ljust(5, ' ')
                         print(RLRUBROSXPRODUCTO.codigorubro, "           ", busconombre(tebuscod))
-                        dichovalor = input("Ingrese un valor para este rubro: ")
-                        while isinstance(dichovalor, float) == False or float(dichovalor) < 0 or dichovalor == "":
-                            dichovalor = input("Valor incorrecto para el rubro. Ingrese nuevamente: ")
-                        dichovalor = float(dichovalor) 
+                        dichovalor = float(input("Ingrese un valor para este rubro: "))
                         if dichovalor > float(RLRUBROSXPRODUCTO.valormax) or dichovalor < float(RLRUBROSXPRODUCTO.valormin):
                             flaggeado += 1
                 
@@ -1141,7 +1138,47 @@ def buscantcamiones():
     return cont
 
 def buscapatentemenor():
-    print("jiji aki")
+
+    ALREPORTES.seek(0,0)
+    aux_reportes = pickle.load(ALREPORTES)
+    tam_registro_reportes = ALREPORTES.tell()
+    tam_archivo_reportes = os.path.getsize(ALREPORTES)
+    cantReg_reportes = int(tam_archivo_reportes / tam_registro_reportes)
+
+    # ordenado por peso bruto
+    # ordeno operaciones jasds el primero de esa clase va a ser el menor en total, 
+    # ahora me queda el menor del producto
+    
+    ALOPERACIONES.seek (0, 0)
+    aux = pickle.load(ALOPERACIONES)
+    tamReg = ALOPERACIONES.tell() 
+    tamArch = os.path.getsize(ALOPERACIONES)
+    cantReg = int(tamArch / tamReg)  
+
+    for i in range(0, cantReg-1):
+        for j in range (i+1, cantReg):
+            ALOPERACIONES.seek (i*tamReg, 0)
+            auxi = pickle.load(ALOPERACIONES)
+            ALOPERACIONES.seek (j*tamReg, 0)
+            auxj = pickle.load(ALOPERACIONES)
+
+            if int(auxi.bruto) > int(auxj.bruto):
+                ALOPERACIONES.seek (i*tamReg, 0)
+                pickle.dump(auxj, ALOPERACIONES)
+                ALOPERACIONES.seek (j*tamReg, 0)
+                pickle.dump(auxi, ALOPERACIONES)
+                ALOPERACIONES.flush()
+
+            if (int(auxi.bruto) < RLREPORTES.patentemenor) and (auxi.patente != auxj.patente) and (auxi.codproducto == RLREPORTES.codproducto) and (auxi.codproducto != auxj.codproducto):
+                ALREPORTES.seek(i*tam_registro_reportes,0)
+                pickle.dump(auxi, ALREPORTES)
+                ALREPORTES.flush()
+
+    
+
+
+
+    
 
 def reportes():
 
