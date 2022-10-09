@@ -317,6 +317,7 @@ def consultaP():
     clear()
     opciones_terciario("PRODUCTOS")
 
+# BAJA LÓGICA
 # procedimiento eliminarP(var P: P; producto: String)
 # VAR
 # j, i: Integer
@@ -327,7 +328,7 @@ def eliminarP(producto):
         ALPRODUCTOS.seek(pos,0)
         RLPRODUCTOS = pickle.load(ALPRODUCTOS)
         RLPRODUCTOS.nombreproducto = ""
-        RLPRODUCTOS.codproducto = 0
+        RLPRODUCTOS.codproducto = ""
         ALPRODUCTOS.seek(pos,0)
         formatearproducto(RLPRODUCTOS)
         pickle.dump(RLPRODUCTOS, ALPRODUCTOS)
@@ -827,8 +828,6 @@ def tebusilo(codsil):
     else:
         return False
 
-
-
 # de AFOPERACIONES
 # lo dejo porque compara FECHA tmb
 def ayudaayuda(patente, fecha):
@@ -1047,7 +1046,7 @@ def regtara():
             if RLOPERACIONES.estado == "B":
                 tara = input("Ingrese la tara de esta patente: ")
 
-                while tara.isnumeric() == False or int(tara) < 0 or int(tara) = 0:
+                while tara.isnumeric() == False or int(tara) < 0 or int(tara) == 0:
                     tara = input("El valor de la tara es incorrecto, ingrese de vuelta: ")
                 
                 tara = int(tara)
@@ -1092,10 +1091,11 @@ def regtara():
 # La variable recepcionhecha (Booleano) funciona como verificación. En caso de que esté en False, significa que 
 # los camiones no fueron ingresados, y por tanto hacer una planilla de reportes sería imposible.
 recepcionhecha = False
-
+total_camiones_recibidos = 0
 def recepcion():
     clear()
     global total_camiones, total_camiones_maiz, total_camiones_soja, total_camiones_cebada, total_camiones_girasol, total_camiones_trigo, total_neto_maiz, total_neto_soja, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, PATENTEMAYOR, PATENTEMENOR, recepcionhecha, camion
+    global total_camiones_recibidos
 
     if recepcionhecha == True:
         print("Ya se ha realizado una recepción de camiones.")
@@ -1133,6 +1133,7 @@ def recepcion():
                 pickle.dump(RLOPERACIONES, ALOPERACIONES)
                 ALOPERACIONES.flush()
                 print(f"Se actualizó el estado del camión {PATENTE} con éxito.")
+                total_camiones_recibidos += 1
 
             else:
                 print("El camión tiene una fecha o estado incorrecto.")
@@ -1157,12 +1158,12 @@ def recepcion():
 # t, v, j: Integer
 # pesosnetos: pesosnetos, productosxp: productosxp, patentemay: patentemay, patentemin: patentemin
 def reportes():
-    global ncupos
+    global ncupos, total_camiones_recibidos
 
     clear()
     print(VERDE + "----- REPORTES -----" + BLANCO)
     print("- Cantidad de cupos otorgados: ", ncupos)
-    print("- Cantidad de camiones recibidos: ")
+    print("- Cantidad de camiones recibidos: ", total_camiones_recibidos)
 
     # por producto
     print("- Cantidad de camiones de cada producto: ")
