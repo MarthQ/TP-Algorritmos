@@ -417,7 +417,7 @@ def menu_productos():
     while opcion_terciario != "V":
         opcion_terciario = input("Opción: ").upper() # Convertir toda cadena ingresada en mayúscula.
         while opcion_terciario == "" or len(opcion_terciario) > 1: # Validación de datos
-            opcion_terciario = input("Opción incorrecta. Ingrese nuevamente: ")
+            opcion_terciario = input("Opción incorrecta. Ingrese nuevamente: ").upper()
         
         if opcion_terciario == "A": # Alta
             cargarprod()
@@ -439,7 +439,7 @@ def menu_rubros():
     while opcion_terciario != "V":
         opcion_terciario = input("Opción: ").upper() # Convertir toda cadena ingresada en mayúscula.
         while opcion_terciario == "" or len(opcion_terciario) > 1: # Validación de datos
-            opcion_terciario = input("Opción incorrecta. Ingrese nuevamente: ")
+            opcion_terciario = input("Opción incorrecta. Ingrese nuevamente: ").upper()
         
         if opcion_terciario == "A": # Alta
             cargarubro()
@@ -498,7 +498,7 @@ def menu_rubrosxproducto():
     while opcion_terciario != "V":
         opcion_terciario = input("Opción: ").upper() # Convertir toda cadena ingresada en mayúscula.
         while opcion_terciario == "" or len(opcion_terciario) > 1: # Validación de datos
-            opcion_terciario = input("Opción incorrecta. Ingrese nuevamente: ")
+            opcion_terciario = input("Opción incorrecta. Ingrese nuevamente: ").upper()
         
         if opcion_terciario == "A": # Alta
             cargaRxP()
@@ -638,7 +638,7 @@ def menu_silos():
     while opcion_terciario != "V":
         opcion_terciario = input("Opción: ").upper() # Convertir toda cadena ingresada en mayúscula.
         while opcion_terciario == "" or len(opcion_terciario) > 1: # Validación de datos
-            opcion_terciario = input("Opción incorrecta. Ingrese nuevamente: ")
+            opcion_terciario = input("Opción incorrecta. Ingrese nuevamente: ").upper()
         
         if opcion_terciario == "A": # Alta
             cargasilos()
@@ -1224,7 +1224,7 @@ def listadoSilos():
     print(RLSILOS.codigosilo, "           ", RLSILOS.codproducto, "               ", RLSILOS.nombresilo, RLSILOS.stock, "\n")
     decision = input("¿Desea buscar camiones rechazados por fecha? Ingrese SI o NO: ").upper()
     while decision != "SI" and decision != "NO":
-        decision = input("Opción incorrecta, ingrese de vuelta: ")
+        decision = input("Opción incorrecta, ingrese de vuelta: ").upper()
     while decision == "SI":
         flag = 0
         fecha = verificacionFecha("Ingrese la fecha a buscar: ")
