@@ -592,8 +592,8 @@ def ordenRubro():
 
 ##### ##### SILOS ##### ##### 
 def cargasilos():
-    cargamiento = "S"
-    while cargamiento == "S":
+    cargamiento = "SI"
+    while cargamiento == "SI":
         codsil = int(verificacioncod(input("Ingrese el código del silo: ")))
     
         while tebusilo(codsil) == True:
@@ -932,6 +932,7 @@ def administracion():
 
 ##### ##### REGISTRAR CALIDAD ##### ##### 
 def regcalidad():
+    clear()
     opcall = input("¿Desea registrar la calidad? Ingrese SI o NO: ").upper()
     while opcall != "NO" and opcall != "SI":
         opcall = input("Error. Ingresar una respuesta correcta: ").upper()
@@ -980,6 +981,7 @@ def regcalidad():
         else:
             print("La patente no existe")
         opcall = input("¿Desea registrar la calidad de otra patente? Ingrese SI o NO: ").upper()
+        clear()
 
 ##### ##### REGISTRAR PESO BRUTO ##### ##### 
 def regpesobruto():
