@@ -290,12 +290,12 @@ def cargarprod():
         pickle.dump(RLPRODUCTOS, ALPRODUCTOS)
         ALPRODUCTOS.flush()
 
-        decisionprod = input("¿Desea ingresar otro producto? Ingrese SI o NO: ").upper()
+        decisionprod = input("\n¿Desea ingresar un nuevo producto? Ingrese SI o NO: ").upper()
         while decisionprod != "NO" and decisionprod != "SI": # Validación de datos
-            decisionprod = input("Opción incorrecta. Ingrese nuevamente: ").upper()
+            decisionprod = input("\nOpción incorrecta. Ingrese nuevamente: ").upper()
             
         if decisionprod == "NO":
-            print("Productos ingresados correctamente")
+            print("\nProductos ingresados correctamente\n")
             os.system("pause")
             clear()
             opciones_terciario("PRODUCTOS")
@@ -304,7 +304,7 @@ def consultaP():
     getsai = os.path.getsize(AFPRODUCTOS)
     RLPRODUCTOS = csproducto()
     if getsai == 0:
-        print("No hay nada para mostrar")
+        print("No hay nada para mostrar\n")
     
     else:
         ALPRODUCTOS.seek(0,0)
@@ -328,12 +328,12 @@ def eliminarP(producto):
         ALPRODUCTOS.seek(pos,0)
         formatearproducto(RLPRODUCTOS)
         pickle.dump(RLPRODUCTOS, ALPRODUCTOS)
-        print(f"El producto {producto} se eliminó correctamente.")
+        print(f"\nEl producto {producto} se eliminó correctamente.\n")
         os.system("pause")
         clear()
         opciones_terciario("PRODUCTOS")
     else:
-        print("El Producto no se encontró.")
+        print("El Producto no se encontró.\n")
         os.system("pause")
         clear()
         opciones_terciario("PRODUCTOS")
@@ -342,7 +342,7 @@ def bajaprod():
     getsai = os.path.getsize(AFPRODUCTOS)
     RLPRODUCTOS = csproducto()
     if getsai == 0:
-        print("No hay nada para mostrar.")
+        print("No hay nada para mostrar.\n")
     else:
         ALPRODUCTOS.seek(0,0)
         print("producto |       codigo producto")
@@ -366,7 +366,7 @@ def modificarP(producto, nuevoproducto, nuevocod):
         formatearproducto(RLPRODUCTOS)
         pickle.dump(RLPRODUCTOS, ALPRODUCTOS)
 
-        print(f"El producto {producto} ahora es {nuevoproducto} con código {nuevocod}.")
+        print(f"El producto {producto} ahora es {nuevoproducto} con código {nuevocod}.\n")
         os.system("pause")
         clear()
         opciones_terciario("PRODUCTOS")
@@ -378,7 +378,7 @@ def modificacionproducto():
     getsai = os.path.getsize(AFPRODUCTOS)
     RLPRODUCTOS = csproducto()
     if getsai == 0:
-        print("No hay nada para mostrar")
+        print("No hay nada para mostrar\n")
         
     else:
         ALPRODUCTOS.seek(0,0)
@@ -393,17 +393,17 @@ def modificacionproducto():
         while producto == "" or producto.isnumeric() == True or len(producto) > 25:
             producto = input("No es un producto válido. Ingrese nuevamente: ").upper()
 
-        nuevoproducto = input("Ingresar el nuevo producto: ").upper()
+        nuevoproducto = input("\nIngresar el nuevo producto: ").upper()
         # Verificación de que sea correcto y no se vaya a repetir
         while nuevoproducto == "" or nuevoproducto.isnumeric() == True or len(nuevoproducto) > 25:
             nuevoproducto = input("No es un producto válido. Ingrese nuevamente: ").upper()
 
         while tebuscopos(nuevoproducto) != -1:
-            nuevoproducto = input("Producto ya ingresado. Ingrese nuevamente: ").upper()
+            nuevoproducto = input("\nProducto ya ingresado. Ingrese nuevamente: ").upper()
             while nuevoproducto == "" or nuevoproducto.isnumeric() == True or len(nuevoproducto) > 25:
                 nuevoproducto = input("No es un producto válido. Ingrese nuevamente: ").upper()
 
-        nuevocod = int(verificacioncod(input("Ingrese el código del producto: ")))
+        nuevocod = int(verificacioncod(input("\nIngrese el código del producto: ")))
         while tebuscodigo(nuevocod) == True:
             nuevocod = int(verificacioncod(input("Código no válido. Ingrese nuevamente: ")))
         
@@ -465,7 +465,7 @@ def cargarubro():
             nombreR = input("Nombre del rubro incorrecto. Ingrese nuevamente: ")
 
         # Verificación de que se ingrese un número
-        cod = int(verificacioncod(input("Ingrese el código del rubro: ")))
+        cod = int(verificacioncod(input("\nIngrese el código del rubro: ")))
         while tebuscodR(cod) == True:
             cod = int(verificacioncod(input("Código no válido. Ingrese nuevamente: ")))
 
@@ -479,12 +479,12 @@ def cargarubro():
         pickle.dump(RLRUBROS, ALRUBROS)
         ALRUBROS.flush()
         t = os.path.getsize(AFRUBROS)
-        cargamiento = input("¿Desea ingresar otro rubro? Ingrese SI o NO: ").upper()
+        cargamiento = input("\n¿Desea ingresar otro rubro? Ingrese SI o NO: ").upper()
         while cargamiento != "NO" and cargamiento != "SI": # Validación de datos
                 cargamiento = input("Opción incorrecta. Ingrese nuevamente: ").upper()
                 
         if cargamiento == "NO":
-            print("Rubros ingresados correctamente")
+            print("\nRubros ingresados correctamente\n")
             os.system("pause")
             clear()
             opciones_terciario("RUBROS")
@@ -559,12 +559,12 @@ def cargaRxP():
         pickle.dump(RLRUBROSXPRODUCTO, ALRUBROSXPRODUCTO)
         ALRUBROSXPRODUCTO.flush()
 
-        cargamiento = input("¿Desea ingresar otro rubro por producto? Ingrese SI o NO: ").upper()
+        cargamiento = input("\n¿Desea ingresar otro rubro por producto? Ingrese SI o NO: ").upper()
         while cargamiento != "NO" and cargamiento != "SI": # Validación de datos
                 cargamiento = input("Opción incorrecta. Ingrese nuevamente: ").upper()
                 
         if cargamiento == "NO":
-            print("Rubros por productos ingresados correctamente")
+            print("\nRubros por productos ingresados correctamente\n")
             os.system("pause")
             clear()
             opciones_terciario("RUBROS POR PRODUCTO")
@@ -594,12 +594,12 @@ def ordenRubro():
 def cargasilos():
     cargamiento = "SI"
     while cargamiento == "SI":
-        codsil = int(verificacioncod(input("Ingrese el código del silo: ")))
+        codsil = int(verificacioncod(input("\nIngrese el código del silo: ")))
     
         while tebusilo(codsil) == True:
             codsil = int(verificacioncod(input("Código en uso. Ingrese nuevamente: ")))
 
-        codprod = int(verificacioncod(input("Ingrese el código del producto: ")))
+        codprod = int(verificacioncod(input("\nIngrese el código del producto: ")))
 
         while tebuscodigo(codprod) == False:
             codprod = int(verificacioncod(input("Código no encontrado. Ingrese nuevamente: ")))
@@ -608,7 +608,7 @@ def cargasilos():
         while nombreS.isnumeric() == True or len(nombreS) > 25:
             nombreS = input("Nombre incorrecto. Ingrese nuevamente: ")
 
-        stockS = int(verificacioncod(input("Ingrese el stock del silo: ")))
+        stockS = int(verificacioncod(input("\nIngrese el stock del silo: ")))
 
         RLSILOS = cssilo()
 
@@ -621,12 +621,12 @@ def cargasilos():
         pickle.dump(RLSILOS, ALSILOS)
         ALSILOS.flush()
 
-        cargamiento = input("¿Desea ingresar otro silo? Ingrese SI o NO: ").upper()
+        cargamiento = input("\n¿Desea ingresar otro silo? Ingrese SI o NO: ").upper()
         while cargamiento != "NO" and cargamiento != "SI": # Validación de datos
                 cargamiento = input("Opción incorrecta. Ingrese nuevamente: ").upper()
                 
         if cargamiento == "NO":
-            print("Silos ingresados correctamente")
+            print("\nSilos ingresados correctamente\n")
             os.system("pause")
             clear()
             opciones_terciario("SILOS")
@@ -849,22 +849,22 @@ def ayudaayuda(patente, fecha):
 def cupos():
     clear()
     print(AMARILLO + "----- MENÚ DE CUPOS -----" + BLANCO)
-    decisioncup = input("¿Desea ingresar un cupo? Ingrese SI o NO: ").upper()
+    decisioncup = input("\n¿Desea ingresar un cupo? Ingrese SI o NO: ").upper()
     while decisioncup != "SI" and decisioncup != "NO":  # Validación de datos
         decisioncup = input("Ingrese una opción correcta: ").upper()
 
     while decisioncup == "SI":
         clear()
-        nuevapatente = input("Ingresar la patente del camión: ").upper()
+        nuevapatente = input("\nIngresar la patente del camión: ").upper()
         while len(nuevapatente) < 6 or len(nuevapatente) > 7: # Comprobamos la longitud de la patente
             nuevapatente = input("Error con la longitud de la patente. Por favor ingresar de vuelta: ").upper()
         else:
             RLOPERACIONES = csoperacion()
-            fecharep = verificacionFecha("Ingrese la fecha de recepción, formato <dd/mm/yyyy>: ")
+            fecharep = verificacionFecha("\nIngrese la fecha actual para recepción, formato <dd/mm/yyyy>: ")
             if ayudaayuda(nuevapatente, fecharep) == True:
                 print("Cupo ya otorgado en esa fecha.")
             else:
-                codigo = int(verificacioncod(input("Ingrese el código del producto: ")))
+                codigo = int(verificacioncod(input("\nIngrese el código del producto: ")))
                 if tebuscodigo(codigo) == False:
                     print("No se encontró el producto con el código dado. Fin de la operación.")
                 else:
@@ -882,12 +882,12 @@ def cupos():
                     formatearoperaciones(RLOPERACIONES)
                     pickle.dump(RLOPERACIONES, ALOPERACIONES)
                     ALOPERACIONES.flush()
-                    print(f"Se ingresó el Cupo, código {codigo} con patente {nuevapatente}")
-            decisioncup = input("¿Desea ingresar un nuevo cupo? Ingrese SI o NO: ").upper()
+                    print(f"Se ingresó el Cupo, código {codigo} con patente {nuevapatente}\n")
+            decisioncup = input("\n¿Desea ingresar un nuevo cupo? Ingrese SI o NO: ").upper()
             while decisioncup != "SI" and decisioncup != "NO":  # Validación de datos
                 decisioncup = input("Ingrese una opción correcta: ").upper()
 
-    cuposctm = input("Cupos ingresados correctamente - Presione cualquier tecla para continuar")
+    cuposctm = input("\nCupos ingresados correctamente - Presione cualquier tecla para continuar\n")
     clear()
 
 
@@ -933,11 +933,11 @@ def administracion():
 ##### ##### REGISTRAR CALIDAD ##### ##### 
 def regcalidad():
     clear()
-    opcall = input("¿Desea registrar la calidad? Ingrese SI o NO: ").upper()
+    opcall = input("\n¿Desea registrar la calidad? Ingrese SI o NO: ").upper()
     while opcall != "NO" and opcall != "SI":
         opcall = input("Error. Ingresar una respuesta correcta: ").upper()
     while opcall == "SI":
-        patentecal = input("Ingrese la patente a registrar: ").upper()
+        patentecal = input("\nIngrese la patente a registrar: ").upper()
         while len(patentecal) < 6 or len(patentecal) > 7:
             patentecal = input("La patente no es válida, ingresar de vuelta: ").upper()
         if buscapatente(patentecal) != -1:
@@ -962,7 +962,7 @@ def regcalidad():
                             flaggeado += 1
                 
                 if flaggeado == 0:
-                    print("El camión ha sido aprobado.")
+                    print("\nEl camión ha sido aprobado.")
                     RLOPERACIONES.estado = "C"
                     ALOPERACIONES.seek(buscapatente(patentecal), 0)
                     pickle.dump(RLOPERACIONES, ALOPERACIONES)
@@ -977,17 +977,17 @@ def regcalidad():
                 print("El estado del cupo es incorrecto.")
         else:
             print("La patente no existe")
-        opcall = input("¿Desea registrar la calidad de otra patente? Ingrese SI o NO: ").upper()
+        opcall = input("\n¿Desea registrar la calidad de otra patente? Ingrese SI o NO: ").upper()
         clear()
 
 ##### ##### REGISTRAR PESO BRUTO ##### ##### 
 def regpesobruto():
     clear()
-    decisionregp = input("¿Registrar un nuevo peso bruto? Ingrese SI o NO: ").upper()
+    decisionregp = input("\n¿Registrar un nuevo peso bruto? Ingrese SI o NO: ").upper()
     while decisionregp != "NO" and decisionregp != "SI": # Validación del sí
         decisionregp = input("Error. Ingresar una respuesta correcta: ").upper()
     while decisionregp == "SI":
-        pato = input("Ingresar patente a registrar: ").upper()
+        pato = input("\nIngresar patente a registrar: ").upper()
         while len(pato) < 6 or len(pato) > 7:
             pato = input("La patente no es válida, ingresar de vuelta: ").upper()
 
@@ -995,7 +995,7 @@ def regpesobruto():
             ALOPERACIONES.seek(buscapatente(pato), 0)
             RLOPERACIONES = pickle.load(ALOPERACIONES)
             if RLOPERACIONES.estado == "C":
-                pesobru= input("Ingrese el peso bruto del camión: ")
+                pesobru= input("\nIngrese el peso bruto del camión: ")
                 while pesobru.isnumeric() == False or pesobru == "" or int(pesobru) == 0 or int(pesobru) < 0:
                     pesobru = input("Error. Ingrese un peso correcto: ")
 
@@ -1009,13 +1009,13 @@ def regpesobruto():
                 ALOPERACIONES.seek(buscapatente(pato), 0)
                 pickle.dump(RLOPERACIONES, ALOPERACIONES) 
                 ALOPERACIONES.flush()
-                print(f"Se registró el peso bruto de {pato} con {pesobru} kg con éxito.")
+                print(f"\nSe registró el peso bruto de {pato} con {pesobru} kg con éxito.\n")
             else:
                 print("El estado de la patente es incorrecto.")
         else:
             print("No se encontró la patente.")
 
-        decisionregp = input("¿Registrar un nuevo peso bruto? Ingrese SI o NO: ").upper()
+        decisionregp = input("\n¿Registrar un nuevo peso bruto? Ingrese SI o NO: ").upper()
         while decisionregp != "NO" and decisionregp != "SI": # Validación del sí
             decisionregp = input("Error. Ingresar una respuesta correcta: ").upper()
         clear()
@@ -1027,14 +1027,14 @@ def regtara():
     while decisionregt != "NO" and decisionregt != "SI": # Validación del sí
         decisionregt = input("Error. Ingresar una respuesta correcta: ").upper()
     while decisionregt == "SI":
-        patentereg = input("Ingresar patente a registrar: ").upper()
+        patentereg = input("\nIngresar patente a registrar: ").upper()
         while len(patentereg) < 6 or len(patentereg) > 7:
             patentereg = input("La patente no es válida, ingresar de vuelta: ").upper()
         if buscapatente(patentereg) != -1:
             ALOPERACIONES.seek(buscapatente(patentereg), 0)
             RLOPERACIONES = pickle.load(ALOPERACIONES)
             if RLOPERACIONES.estado == "B":
-                tara = input("Ingrese la tara de esta patente: ")
+                tara = input("\nIngrese la tara de esta patente: ")
 
                 while tara.isnumeric() == False or int(tara) < 0 or int(tara) == 0:
                     tara = input("El valor de la tara es incorrecto, ingrese de vuelta: ")
@@ -1056,7 +1056,7 @@ def regtara():
                     pickle.dump(RLOPERACIONES, ALOPERACIONES)
                     ALSILOS.flush()
                     ALOPERACIONES.flush()
-                    print(f"Se ingresó el peso neto de {pesoneto} kg con éxito.")
+                    print(f"\nSe ingresó el peso neto de {pesoneto} kg con éxito.\n")
                 else:
                     print("No hay un silo correspondiente al producto de esta patente.")
             else:
@@ -1065,7 +1065,7 @@ def regtara():
             print("No se encontró la patente.")
 
 
-        decisionregt = input("¿Registrar una nueva tara? Ingrese SI o NO: ").upper()
+        decisionregt = input("\n¿Registrar una nueva tara? Ingrese SI o NO: ").upper()
         while decisionregt != "NO" and decisionregt != "SI": # Validación del sí
             decisionregt = input("Error. Ingresar una respuesta correcta: ").upper()
         clear()
@@ -1104,7 +1104,7 @@ def recepcion():
                 pickle.dump(RLREPORTES, ALREPORTES)
                 ALOPERACIONES.flush()
                 ALREPORTES.flush()
-                print(f"Se actualizó el estado del camión {PATENTE} con éxito.")
+                print(f"\nSe actualizó el estado del camión {PATENTE} con éxito.")
             else:
                 print("El camión tiene una fecha o estado incorrecto.")
         else: 
@@ -1240,7 +1240,7 @@ def listadoSilos():
                 flag = flag + 1
         if flag == 0:
             print("\nNo hay nada para mostrar.")
-        decision = input("¿Desea buscar otra fecha? Ingrese SI o NO: ").upper()
+        decision = input("\n¿Desea buscar otra fecha? Ingrese SI o NO: ").upper()
 
 ##### ##### MAIN ##### ##### 
 def cerrarArchivos():
