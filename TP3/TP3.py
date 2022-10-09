@@ -705,25 +705,7 @@ def busconombre(cod):
     return RL.nombrerubro
 
 
-################### busqueda de patente
-# Búsqueda de productos de AFPRODUCTO
-def busnombre(nom, AF, AL, RL, clase, campo):
-    nom = nom.ljust(25, ' ')
-    getsai = os.path.getsize(AF)
-    AL.seek(0,0)
-    RL = clase()
-    pos = -1
-    if getsai > 0:
-        while AL.tell() < getsai and RL.campo != nom:
-            pos = AL.tell()
-            RL = pickle.load(AL)
-        if RL.campo == nom:
-            return pos
-        else:
-            return -1
-    else:
-        return -1
-
+# búsquedas de patente
 def tebuscopos(producto):
     producto = producto.ljust(25, ' ')
     getsai = os.path.getsize(AFPRODUCTOS)
@@ -769,26 +751,6 @@ def buscapatente(npat):
             pos = ALOPERACIONES.tell()
             RLOPERACIONES = pickle.load(ALOPERACIONES)
         if RLOPERACIONES.patente == npat:
-            return pos
-        else:
-            return -1
-    else:
-        return -1
-
-
-# busqueda de codigo
-def buscodigo(cod, AL, AF, RL, clase, campo):
-    cod = str(cod)
-    cod = cod.ljust(5, ' ')
-    getsai = os.path.getsize(AF)
-    AL.seek(0,0)
-    pos = 0
-    RL = clase()
-    if getsai > 0:
-        while AL.tell() < getsai and RL.campo != cod:
-            pos = AL.tell()
-            RL = pickle.load(AL)
-        if RL.campo == cod:
             return pos
         else:
             return -1
@@ -889,7 +851,7 @@ def ayudaayuda(patente, fecha):
 # procedimiento cupos()
 ncupos = 0
 def cupos():
-    
+    global ncupos
     clear()
     print(AMARILLO + "----- MENÚ DE CUPOS -----" + BLANCO)
     decisioncup = input("¿Desea ingresar un cupo? Ingrese SI o NO: ").upper()
@@ -903,7 +865,7 @@ def cupos():
             nuevapatente = input("Error con la longitud de la patente. Por favor ingresar de vuelta: ").upper()
         else:
             RLOPERACIONES = csoperacion()
-            fecharep = validarFecha("Ingrese la fecha de recepción: ")
+            fecharep = validarFecha("Ingrese la fecha de recepción, formato <dd/mm/yyyy>: ")
             if ayudaayuda(nuevapatente, fecharep) == True:
                 print("Cupo ya otorgado en esa fecha.")
             else:
@@ -915,17 +877,19 @@ def cupos():
                     RLOPERACIONES.fechacupo = fecharep
                     RLOPERACIONES.codproducto = codigo
                     RLOPERACIONES.estado = "P"
-
+                    ncupos += 1
                     formatearoperaciones(RLOPERACIONES)
                     pickle.dump(RLOPERACIONES, ALOPERACIONES)
                     ALOPERACIONES.flush()
-                    print(f"Se ingresó el Cupo, código {codigo} con patente {nuevapatente}")
+                    print(f"Se ingresó el Cupo n° {ncupos}, código {codigo} con patente {nuevapatente}")
             decisioncup = input("¿Desea ingresar un nuevo cupo? Ingrese SI o NO: ").upper()
             while decisioncup != "SI" and decisioncup != "NO":  # Validación de datos
                 decisioncup = input("Ingrese una opción correcta: ").upper()
 
     cuposctm = input("Cupos ingresados correctamente - Presione cualquier tecla para continuar")
     clear()
+
+
 # procedimiento administracion()
 # Variables:
 # opcion_admin: Char
@@ -993,7 +957,10 @@ def regcalidad():
                         tebuscod = RLRUBROSXPRODUCTO.codigorubro
                         tebuscod = tebuscod.ljust(5, ' ')
                         print(RLRUBROSXPRODUCTO.codigorubro, "           ", busconombre(tebuscod))
-                        dichovalor = float(input("Ingrese un valor para este rubro: "))
+                        dichovalor = input("Ingrese un valor para este rubro: ")
+                        while isinstance(dichovalor, float) == False or float(dichovalor) < 0 or dichovalor == "":
+                            dichovalor = input("Valor incorrecto para el rubro. Ingrese nuevamente: ")
+                        dichovalor = float(dichovalor) 
                         if dichovalor > float(RLRUBROSXPRODUCTO.valormax) or dichovalor < float(RLRUBROSXPRODUCTO.valormin):
                             flaggeado += 1
                 
@@ -1009,8 +976,6 @@ def regcalidad():
                     ALOPERACIONES.seek(buscapatente(patentecal), 0)
                     pickle.dump(RLOPERACIONES, ALOPERACIONES)
                     ALOPERACIONES.flush()
-
-                
             else:
                 print("El estado del cupo es incorrecto.")
         else:
@@ -1037,9 +1002,12 @@ def regpesobruto():
             ALOPERACIONES.seek(buscapatente(pato), 0)
             RLOPERACIONES = pickle.load(ALOPERACIONES)
             if RLOPERACIONES.estado == "C":
-                pesobru= int(input("Ingrese el peso bruto del camión: "))
-                while pesobru < 0:
-                    pesobru= int(input("Error. Ingrese un peso correcto: "))
+                pesobru= input("Ingrese el peso bruto del camión: ")
+                while pesobru.isnumeric() == False or pesobru == "" or int(pesobru) == 0 or int(pesobru) < 0:
+                    pesobru = input("Error. Ingrese un peso correcto: ")
+
+                pesobru = int(pesobru)
+
                 ALOPERACIONES.seek(buscapatente(pato), 0)
                 RLOPERACIONES = pickle.load(ALOPERACIONES)
                 RLOPERACIONES.bruto = pesobru
@@ -1077,7 +1045,13 @@ def regtara():
             ALOPERACIONES.seek(buscapatente(patentereg), 0)
             RLOPERACIONES = pickle.load(ALOPERACIONES)
             if RLOPERACIONES.estado == "B":
-                tara = int(input("Ingrese la tara de esta patente: "))
+                tara = input("Ingrese la tara de esta patente: ")
+
+                while tara.isnumeric() == False or int(tara) < 0 or int(tara) = 0:
+                    tara = input("El valor de la tara es incorrecto, ingrese de vuelta: ")
+                
+                tara = int(tara)
+
                 while int(RLOPERACIONES.bruto) < tara:
                     tara = int(input("El valor de la tara es incorrecto, ingrese de vuelta: "))
                 pesoneto = int(RLOPERACIONES.bruto) - tara
@@ -1183,44 +1157,55 @@ def recepcion():
 # t, v, j: Integer
 # pesosnetos: pesosnetos, productosxp: productosxp, patentemay: patentemay, patentemin: patentemin
 def reportes():
+    global ncupos
 
     clear()
-    global total_camiones, total_camiones_maiz, total_camiones_soja, total_neto_maiz, total_neto_soja, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, PATENTEMAYOR, PATENTEMENOR
-    print("\nCantidad de cupos otorgados: ",  ncupos)
-    print("Cantidad total de camiones que llegaron: ",  total_camiones, "\n")
-    print("Cantidad total de camiones de maíz: ",  total_camiones_maiz)				
-    print("Cantidad total de camiones de soja: ",  total_camiones_soja)
-    print("Cantidad total de camiones de trigo: ",  total_camiones_trigo)
-    print("Cantidad total de camiones de girasol: ",  total_camiones_girasol)
-    print("Cantidad total de camiones de cebada: ",  total_camiones_cebada, "\n"), 	
-    #print("")				
-    print("Peso neto total de maíz: ",  total_neto_maiz)
-    print("Peso neto total de soja: ",  total_neto_soja)					
-    print("Peso neto total de trigo: ",  total_neto_trigo)
-    print("Peso neto total de girasol: ",  total_neto_girasol)
-    print("Peso neto total de cebada: ",  total_neto_cebada, "\n")
-    #print("")					
-    if total_camiones_maiz != 0:
-        print("Promedio del peso neto de maíz por camión: ",  total_neto_maiz / total_camiones_maiz)
-    else:
-        print("No hay un promedio de maíz para mostrar.")   		
-    if total_camiones_soja != 0:
-        print("Promedio del peso neto de soja por camión: ",  total_neto_soja / total_camiones_soja)
-    else:
-        print("No hay un promedio de soja para mostrar.")   
-    if total_camiones_trigo != 0:
-        print("Promedio del peso neto de trigo por camión: ",  total_neto_trigo / total_camiones_trigo)
-    else:
-        print("No hay un promedio de trigo para mostrar.")   
-    if total_camiones_girasol != 0:
-        print("Promedio del peso neto de girasol por camión: ",  total_neto_girasol / total_camiones_girasol)
-    else:
-        print("No hay un promedio de girasol para mostrar.")   
-    if total_camiones_cebada != 0:
-        print("Promedio del peso neto de cebada por camión: ",  total_neto_cebada / total_camiones_cebada)
-    else:
-        print("No hay un promedio de cebada para mostrar.")
-    print("")
+    print(VERDE + "----- REPORTES -----" + BLANCO)
+    print("- Cantidad de cupos otorgados: ", ncupos)
+    print("- Cantidad de camiones recibidos: ")
+
+    # por producto
+    print("- Cantidad de camiones de cada producto: ")
+    print("- Peso neto total de cada producto: ")
+    print("- Promedio del peso neto de producto por camión de ese producto: ")
+
+    # menor de cada producto 
+    print("- Patente del camión de cada producto que menor cantidad de dicho producto descargó: ")
+    # global total_camiones, total_camiones_maiz, total_camiones_soja, total_neto_maiz, total_neto_soja, menor_maiz, mayor_soja, promedio_neto_soja, promedio_neto_maiz, PATENTEMAYOR, PATENTEMENOR
+    # print("\nCantidad de cupos otorgados: ",  ncupos)
+    # print("Cantidad total de camiones que llegaron: ",  total_camiones, "\n")
+    # print("Cantidad total de camiones de maíz: ",  total_camiones_maiz)				
+    # print("Cantidad total de camiones de soja: ",  total_camiones_soja)
+    # print("Cantidad total de camiones de trigo: ",  total_camiones_trigo)
+    # print("Cantidad total de camiones de girasol: ",  total_camiones_girasol)
+    # print("Cantidad total de camiones de cebada: ",  total_camiones_cebada, "\n"), 	
+    # #print("")				
+    # print("Peso neto total de maíz: ",  total_neto_maiz)
+    # print("Peso neto total de soja: ",  total_neto_soja)					
+    # print("Peso neto total de trigo: ",  total_neto_trigo)
+    # print("Peso neto total de girasol: ",  total_neto_girasol)
+    # print("Peso neto total de cebada: ",  total_neto_cebada, "\n")
+    # #print("")					
+    # if total_camiones_maiz != 0:
+    #     print("Promedio del peso neto de maíz por camión: ",  total_neto_maiz / total_camiones_maiz)
+    # else:
+    #     print("No hay un promedio de maíz para mostrar.")   		
+    # if total_camiones_soja != 0:
+    #     print("Promedio del peso neto de soja por camión: ",  total_neto_soja / total_camiones_soja)
+    # else:
+    #     print("No hay un promedio de soja para mostrar.")   
+    # if total_camiones_trigo != 0:
+    #     print("Promedio del peso neto de trigo por camión: ",  total_neto_trigo / total_camiones_trigo)
+    # else:
+    #     print("No hay un promedio de trigo para mostrar.")   
+    # if total_camiones_girasol != 0:
+    #     print("Promedio del peso neto de girasol por camión: ",  total_neto_girasol / total_camiones_girasol)
+    # else:
+    #     print("No hay un promedio de girasol para mostrar.")   
+    # if total_camiones_cebada != 0:
+    #     print("Promedio del peso neto de cebada por camión: ",  total_neto_cebada / total_camiones_cebada)
+    # else:
+    #     print("No hay un promedio de cebada para mostrar.")
     # print("Patente del camión de maíz que mayor cantidad de maiz descargó: ", patentemay[0])
     # print("Patente del camión de maíz que menor cantidad de maíz descargó: ", patentemin[0], "\n")
     # #print("")
@@ -1254,7 +1239,8 @@ def reportes():
     #     print(arrpatentes[j], "\t", productosxp[j], "\t", pesosnetos[j])
 
     # Opción de regreso al menú principal (main())
-    reportesctm = input("\nPresione cualquier tecla para volver al menú principal: ")
+    #reportesctm = input("\nPresione cualquier tecla para volver al menú principal: ")
+    os.system("Pause")
     clear()
 
 def silomayor():
@@ -1275,12 +1261,10 @@ def listadoSilos():
     pos = silomayor()
     ALSILOS.seek(pos, 0)
     RLSILOS = pickle.load(ALSILOS)
-    print("Este es el silo con mayor stock:")
-    print(" ")
+    print("Este es el silo con mayor stock:\n")
     print("CÓDIGO DEL SILO | CÓDIGO DEL PRODUCTO | NOMBRE DEL SILO |        STOCK      |")
     print("-----------------------------------------------------------------------------")
-    print(RLSILOS.codigosilo, "           ", RLSILOS.codproducto, "               ", RLSILOS.nombresilo, RLSILOS.stock)
-    print(" ")
+    print(RLSILOS.codigosilo, "           ", RLSILOS.codproducto, "               ", RLSILOS.nombresilo, RLSILOS.stock, "\n")
     decision = input("¿Desea buscar camiones rechazados por fecha? Ingrese SI o NO: ").upper()
     while decision != "SI" and decision != "NO":
         decision = input("Opción incorrecta, ingrese de vuelta: ")
@@ -1298,8 +1282,7 @@ def listadoSilos():
                 print(RLOPERACIONES.patente, "    ", RLOPERACIONES.estado, "        ", RLOPERACIONES.fechacupo)
                 flag = flag + 1
         if flag == 0:
-            print(" ")
-            print("No hay nada para mostrar.")
+            print("\nNo hay nada para mostrar.")
         decision = input("¿Desea buscar otra fecha? Ingrese SI o NO: ").upper()
 
 
