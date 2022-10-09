@@ -163,15 +163,19 @@ def formateareportes(RL):
     RL.patentemenor = str(RL.patentemenor)
     RL.patentemenor = RL.patentemenor.ljust(7, ' ')
 
-def validarFecha(mensaje):
+def verificacionFecha(msj):
     os.system("cls")
-    fecha = input(mensaje)
-    o = fecha.split("/", 3)
-    while(len(o[0]) > 2 or len(o[1]) > 2 or len(o[2]) > 4 or len(o[2]) < 4) or not (o[0].isnumeric() and o[1].isnumeric() and o[2].isnumeric() or not (int(o[0]) in range(1, 32) and int(o[1]) in range(1, 13))):
+    f = input(msj)
+    listaf = f.split("/", 3)
+    while len(listaf) != 3:
         print("El formato de la fecha es incorrecto")
-        fecha = input(mensaje)
-        o = fecha.split("/", 3)
-    return datetime.datetime.strptime(fecha, "%d/%m/%Y").date()
+        f = input(msj)
+        listaf = listaf.split("/", 3)
+    while not (len(listaf[0]) == 2 and len(listaf[1]) == 2 and len(listaf[2]) == 4) or not (listaf[0].isnumeric() and listaf[1].isnumeric() and listaf[2].isnumeric() or not (int(listaf[0]) in range(1, 32) and int(listaf[1]) in range(1, 13))):
+        print("El formato de la fecha es incorrecto")
+        f = input(msj)
+        listaf = f.split("/", 3)
+    return datetime.datetime.strptime(f, "%d/%m/%Y").date()
 
 
 ##### ##### ##### ##### ##### 
@@ -856,7 +860,7 @@ def cupos():
             nuevapatente = input("Error con la longitud de la patente. Por favor ingresar de vuelta: ").upper()
         else:
             RLOPERACIONES = csoperacion()
-            fecharep = validarFecha("Ingrese la fecha de recepción, formato <dd/mm/yyyy>: ")
+            fecharep = verificacionFecha("Ingrese la fecha de recepción, formato <dd/mm/yyyy>: ")
             if ayudaayuda(nuevapatente, fecharep) == True:
                 print("Cupo ya otorgado en esa fecha.")
             else:
@@ -1186,7 +1190,7 @@ def listadoSilos():
         decision = input("Opción incorrecta, ingrese de vuelta: ")
     while decision == "SI":
         flag = 0
-        fecha = validarFecha("Ingrese la fecha a buscar: ")
+        fecha = verificacionFecha("Ingrese la fecha a buscar: ")
         ALOPERACIONES.seek(0)
         RLOPERACIONES = csoperacion()
         t = os.path.getsize(AFOPERACIONES)
