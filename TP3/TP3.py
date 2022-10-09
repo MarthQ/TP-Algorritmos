@@ -934,9 +934,9 @@ def administracion():
 def regcalidad():
     opcall = input("¿Desea registrar la calidad? Ingrese SI o NO: ").upper()
     while opcall != "NO" and opcall != "SI":
-        opcall = input("Error. Ingresar una respuesta correcta: ")
+        opcall = input("Error. Ingresar una respuesta correcta: ").upper()
     while opcall == "SI":
-        patentecal = input("Ingrese la patente a registrar: ")
+        patentecal = input("Ingrese la patente a registrar: ").upper()
         while len(patentecal) < 6 or len(patentecal) > 7:
             patentecal = input("La patente no es válida, ingresar de vuelta: ").upper()
         if buscapatente(patentecal) != -1:
