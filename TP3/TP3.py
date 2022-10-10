@@ -1,3 +1,5 @@
+##############################################################################
+
 # Trabajo Práctico N°3
 # Algoritmos y Estructura de Datos
 # Comisión 109 de Ingeniería en Sistemas de la Información
@@ -29,7 +31,7 @@ class csoperacion:
     def __init__(self):
         self.patente = "" # 7 caracteres
         self.codproducto = 0
-        self.fechacupo = datetime.datetime(1,1,1) 
+        self.fechacupo = datetime.datetime(1,1,1) #tipo DATETIME (fecha)
         self.estado = "" # char
         self.bruto = 0
         self.tara = 0
@@ -525,10 +527,6 @@ def cargaRxP():
 
         codprod = int(verificacioncod(input("Ingrese el código del producto: ")))
         while tebuscodigo(codprod) == False: 
-            # UN PRODUCTO PUEDE TENER MUCHOS RUBROS
-            # EL RUBRO SE PUEDE REPETIR EN EL ARCHIVO PERO NO EN EL MISMO PRODUCTO
-            # RUBRO HUMEDAD 20 VECES PERO PORQUE HAY 20 PRODUCTOS QUE TIENEN HUMEDAD
-            # UN PRODUCTO NO PUEDE TENER 2 VECES UN RUBRO (NO PUEDE TENER HUMEDAD DOS VECES)
             codprod = int(verificacioncod(input("Código de producto no encontrado. Ingrese nuevamente: ")))        
 
 # Valores verificación
@@ -1169,44 +1167,7 @@ def buscantcamiones():
         RLOPERACIONES = pickle.load(ALOPERACIONES)
         if RLOPERACIONES.estado != "P":
             cont += 1
-    return cont
-
-def buscapatentemenor():
-
-    ALREPORTES.seek(0,0)
-    aux_reportes = pickle.load(ALREPORTES)
-    tam_registro_reportes = ALREPORTES.tell()
-    tam_archivo_reportes = os.path.getsize(ALREPORTES)
-    cantReg_reportes = tam_archivo_reportes // tam_registro_reportes
-    
-    ALOPERACIONES.seek (0, 0)
-    aux = pickle.load(ALOPERACIONES)
-    tamReg = ALOPERACIONES.tell() 
-    tamArch = os.path.getsize(ALOPERACIONES)
-    cantReg = tamArch // tamReg
-
-
-# def mayempresa():
-#     global aemp
-#     global afemp
-#     fine = os.path.getsize(afemp)
-#     if fine == 0:
-# 		print(" no hay datos")
-#     else:
-#         aemp.seek(0,0)
-
-# 		mayemp=" "
-# 		maycant=0
-# 		re=pickle.load(aemp)
-# 		while aemp.tell() < fine:
-# 			#re=pickle.load(aemp)
-# 			if maycant < re.cantidad:
-# 				maycant=re.cantidad
-# 				mayemp=re.nome
-# 			re=pickle.load(aemp)
-# 		print("La empresa con mas productos vendidos es: ",mayemp," con: ",maycant)
-# 	os.system("pause")
-    
+    return cont    
 
 def reportes():
 
@@ -1332,12 +1293,3 @@ def main():
         
 # Ejecución del programa principal.
 main()
-
-# -------- FUNCION PARA CHEQUEAR COSITAS DE OPERACIONESSSSSS -----------------
-
-# getsai = os.path.getsize(AFOPERACIONES)
-# ALOPERACIONES.seek(0,0)
-# while ALOPERACIONES.tell() < getsai:
-#     RLPRODUCTOS = pickle.load(ALOPERACIONES)
-#     print(RLPRODUCTOS.fechacupo, RLPRODUCTOS.patente, RLPRODUCTOS.codproducto, RLPRODUCTOS.estado)
-# os.system("pause")
