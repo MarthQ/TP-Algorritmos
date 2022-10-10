@@ -63,7 +63,7 @@ class csreporte:
         self.codproducto = 0
         self.cantcamiones = 0
         self.pesonetototal = 0
-        self.menorpesoneto = 0
+        self.menorpesoneto = 9999999999
         self.patentemenor = ""
 
 ##### #####  Apertura de archivos ##### ##### 
@@ -688,6 +688,12 @@ def busconombre(cod):
     RL = pickle.load(ALRUBROS)
     return RL.nombrerubro
 
+def busconombreprod(cod):
+    pos = tebuscopos2(cod)
+    ALPRODUCTOS.seek(pos, 0)
+    RL = pickle.load(ALPRODUCTOS)
+    return RL.nombreproducto
+
 # búsquedas de patente
 def tebuscopos(producto):
     producto = producto.ljust(25, ' ')
@@ -700,6 +706,23 @@ def tebuscopos(producto):
             pos = ALPRODUCTOS.tell()
             RLPRODUCTOS = pickle.load(ALPRODUCTOS)
         if RLPRODUCTOS.nombreproducto == producto:
+            return pos
+        else:
+            return -1
+    else:
+        return -1
+
+def tebuscopos2(codigo):
+    codigo = codigo.ljust(5, ' ')
+    getsai = os.path.getsize(AFPRODUCTOS)
+    ALPRODUCTOS.seek(0,0)
+    RLPRODUCTOS = csproducto()
+    pos = -1
+    if getsai > 0:
+        while ALPRODUCTOS.tell() < getsai and RLPRODUCTOS.codproducto != codigo:
+            pos = ALPRODUCTOS.tell()
+            RLPRODUCTOS = pickle.load(ALPRODUCTOS)
+        if RLPRODUCTOS.codproducto == codigo:
             return pos
         else:
             return -1
@@ -1049,6 +1072,9 @@ def regtara():
                     ALREPORTES.seek(posrep, 0)
                     RLREPORTES = pickle.load(ALREPORTES)
                     RLREPORTES.pesonetototal = int(RLREPORTES.pesonetototal) + pesoneto
+                    if int(RLREPORTES.menorpesoneto) > pesoneto:
+                        RLREPORTES.menorpesoneto = pesoneto
+                        RLREPORTES.patentemenor = RLOPERACIONES.patente
                     ALREPORTES.seek(posrep, 0)
                     ALSILOS.seek(posilo, 0)
                     RLSILOS = pickle.load(ALSILOS)
@@ -1182,10 +1208,6 @@ def buscapatentemenor():
 # 	os.system("pause")
     
 
-
-
-    
-
 def reportes():
 
     clear()
@@ -1199,10 +1221,10 @@ def reportes():
     ALREPORTES.seek(0)
     while t > ALREPORTES.tell():
         RLREPORTES = pickle.load(ALREPORTES)
-        promediopeson = 0
+        promediopeson = 0.0
         if int(RLREPORTES.cantcamiones) != 0:
             promediopeson = float(RLREPORTES.pesonetototal) / float(RLREPORTES.cantcamiones)
-        print(busconombre(RLREPORTES.codproducto), RLREPORTES.cantcamiones, "              ", RLREPORTES.pesonetototal, "      ", promediopeson, RLREPORTES.patentemenor)
+        print(busconombreprod(RLREPORTES.codproducto), RLREPORTES.cantcamiones, "              ", RLREPORTES.pesonetototal, "      ", promediopeson, "      ", RLREPORTES.patentemenor)
     print(" ")
     os.system("pause")
     clear()
