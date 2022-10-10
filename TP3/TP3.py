@@ -381,8 +381,8 @@ def modificacionproducto():
         
     else:
         ALPRODUCTOS.seek(0,0)
-        print("PRODUCTO |       CODIGO PRODUCTO")
-        print("---------------------------")
+        print("  PRODUCTO    |     CÓDIGO PRODUCTO")
+        print("-----------------------------------")
         while ALPRODUCTOS.tell() < getsai:
             RLPRODUCTOS = pickle.load(ALPRODUCTOS)
             print(RLPRODUCTOS.nombreproducto, RLPRODUCTOS.codproducto)
@@ -879,7 +879,7 @@ def cupos():
         clear()
         nuevapatente = input("\nIngresar la patente del camión: ").upper()
         while len(nuevapatente) < 6 or len(nuevapatente) > 7: # Comprobamos la longitud de la patente
-            nuevapatente = input("Error con la longitud de la patente. Por favor ingresar de vuelta: ").upper()
+            nuevapatente = input("Error con la longitud de la patente. Por favor ingresar nuevamente: ").upper()
         else:
             RLOPERACIONES = csoperacion()
             fecharep = verificacionFecha("\nIngrese la fecha actual para recepción, formato <dd/mm/yyyy>: ")
@@ -961,7 +961,7 @@ def regcalidad():
     while opcall == "SI":
         patentecal = input("\nIngrese la patente a registrar: ").upper()
         while len(patentecal) < 6 or len(patentecal) > 7:
-            patentecal = input("La patente no es válida, ingresar de vuelta: ").upper()
+            patentecal = input("La patente no es válida, ingresar nuevamente: ").upper()
         if buscapatente(patentecal) != -1:
             ALOPERACIONES.seek(buscapatente(patentecal), 0)
             RLOPERACIONES = pickle.load(ALOPERACIONES)
@@ -1011,7 +1011,7 @@ def regpesobruto():
     while decisionregp == "SI":
         pato = input("\nIngresar patente a registrar: ").upper()
         while len(pato) < 6 or len(pato) > 7:
-            pato = input("La patente no es válida, ingresar de vuelta: ").upper()
+            pato = input("La patente no es válida, ingresar nuevamente: ").upper()
 
         if buscapatente(pato) != -1:
             ALOPERACIONES.seek(buscapatente(pato), 0)
@@ -1051,7 +1051,7 @@ def regtara():
     while decisionregt == "SI":
         patentereg = input("\nIngresar patente a registrar: ").upper()
         while len(patentereg) < 6 or len(patentereg) > 7:
-            patentereg = input("La patente no es válida, ingresar de vuelta: ").upper()
+            patentereg = input("La patente no es válida, ingresar nuevamente: ").upper()
         if buscapatente(patentereg) != -1:
             ALOPERACIONES.seek(buscapatente(patentereg), 0)
             RLOPERACIONES = pickle.load(ALOPERACIONES)
@@ -1059,12 +1059,12 @@ def regtara():
                 tara = input("\nIngrese la tara de esta patente: ")
 
                 while tara.isnumeric() == False or int(tara) < 0 or int(tara) == 0:
-                    tara = input("El valor de la tara es incorrecto, ingrese de vuelta: ")
+                    tara = input("El valor de la tara es incorrecto, ingrese nuevamente: ")
                 
                 tara = int(tara)
 
                 while int(RLOPERACIONES.bruto) < tara:
-                    tara = int(input("El valor de la tara es incorrecto, ingrese de vuelta: "))
+                    tara = int(input("El valor de la tara es incorrecto, ingrese nuevamente: "))
                 pesoneto = int(RLOPERACIONES.bruto) - tara
                 posilo = buscosilo(RLOPERACIONES.codproducto)
                 if posilo != -1:
@@ -1118,7 +1118,7 @@ def recepcion():
         PATENTE = input("Ingresar número de patente ").upper()
 
         while len(PATENTE) < 6 or len(PATENTE) > 7:
-            PATENTE = input("La patente no es válida, ingresar de vuelta: ").upper()
+            PATENTE = input("La patente no es válida, ingresar nuevamente: ").upper()
 
         if buscapatente(PATENTE) != -1:
             pospat = buscapatente(PATENTE)
@@ -1254,7 +1254,7 @@ def listadoSilos():
     print(RLSILOS.codigosilo, "           ", RLSILOS.codproducto, "               ", RLSILOS.nombresilo, RLSILOS.stock, "\n")
     decision = input("¿Desea buscar camiones rechazados por fecha? Ingrese SI o NO: ").upper()
     while decision != "SI" and decision != "NO":
-        decision = input("Opción incorrecta, ingrese de vuelta: ").upper()
+        decision = input("Opción incorrecta, ingrese nuevamente: ").upper()
     while decision == "SI":
         flag = 0
         fecha = verificacionFecha("Ingrese la fecha a buscar: ")
@@ -1327,6 +1327,7 @@ def main():
         else: # Fin del programa
             cerrarArchivos()
             print("Fin del programa.")
+    clear()
 
         
 # Ejecución del programa principal.
