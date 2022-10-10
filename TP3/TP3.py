@@ -63,7 +63,7 @@ class csreporte:
         self.codproducto = 0
         self.cantcamiones = 0
         self.pesonetototal = 0
-        self.promediopeson = 0.00
+        self.menorpesoneto = 0
         self.patentemenor = ""
 
 # Apertura de archivos 
@@ -158,8 +158,8 @@ def formateareportes(RL):
     RL.cantcamiones = RL.cantcamiones.ljust(3, ' ')
     RL.pesonetototal = str(RL.pesonetototal)
     RL.pesonetototal = RL.pesonetototal.ljust(10, ' ')
-    RL.promediopeson = str(RL.promediopeson)
-    RL.promediopeson = RL.promediopeson.ljust(5, ' ')
+    RL.menorpesoneto = str(RL.menorpesoneto)
+    RL.menorpesoneto = RL.menorpesoneto.ljust(10, ' ')
     RL.patentemenor = str(RL.patentemenor)
     RL.patentemenor = RL.patentemenor.ljust(7, ' ')
 
@@ -347,7 +347,7 @@ def bajaprod():
         print("No hay nada para mostrar.")
     else:
         ALPRODUCTOS.seek(0,0)
-        print("producto |       codigo producto")
+        print("PRODUCTO |       CODIGO PRODUCTO")
         print("---------------------------")
         while ALPRODUCTOS.tell() < getsai:
             RLPRODUCTOS = pickle.load(ALPRODUCTOS)
@@ -358,7 +358,6 @@ def bajaprod():
 def modificarP(producto, nuevoproducto, nuevocod):
     if tebuscopos(producto) != -1:
         pos = tebuscopos(producto)
-        print("este es el pos ", pos)
         ALPRODUCTOS.seek(pos,0)
         RLPRODUCTOS = pickle.load(ALPRODUCTOS)
         RLPRODUCTOS.nombreproducto = nuevoproducto
@@ -962,10 +961,7 @@ def regcalidad():
                         tebuscod = RLRUBROSXPRODUCTO.codigorubro
                         tebuscod = tebuscod.ljust(5, ' ')
                         print(RLRUBROSXPRODUCTO.codigorubro, "           ", busconombre(tebuscod))
-                        dichovalor = input("Ingrese un valor para este rubro: ")
-                        while isinstance(dichovalor, float) == False or float(dichovalor) < 0 or dichovalor == "":
-                            dichovalor = input("Valor incorrecto para el rubro. Ingrese nuevamente: ")
-                        dichovalor = float(dichovalor) 
+                        dichovalor = float(input("Ingrese un valor para este rubro: "))
                         if dichovalor > float(RLRUBROSXPRODUCTO.valormax) or dichovalor < float(RLRUBROSXPRODUCTO.valormin):
                             flaggeado += 1
                 
@@ -1062,14 +1058,23 @@ def regtara():
                 pesoneto = int(RLOPERACIONES.bruto) - tara
                 posilo = buscosilo(RLOPERACIONES.codproducto)
                 if posilo != -1:
+                    posrep = tereportodigo(RLOPERACIONES.codproducto)
+                    ALREPORTES.seek(posrep, 0)
+                    RLREPORTES = pickle.load(ALREPORTES)
+                    RLREPORTES.pesonetototal = int(RLREPORTES.pesonetototal) + pesoneto
+                    ALREPORTES.seek(posrep, 0)
                     ALSILOS.seek(posilo, 0)
                     RLSILOS = pickle.load(ALSILOS)
                     RLSILOS.stock = int(RLSILOS.stock) + pesoneto
                     RLOPERACIONES.estado = "F"
                     ALSILOS.seek(posilo, 0)
                     ALOPERACIONES.seek(buscapatente(patentereg), 0)
+                    formatearsilos(RLSILOS)
+                    formateareportes(RLREPORTES)
+                    pickle.dump(RLREPORTES, ALREPORTES)
                     pickle.dump(RLSILOS, ALSILOS)
                     pickle.dump(RLOPERACIONES, ALOPERACIONES)
+                    ALREPORTES.flush()
                     ALSILOS.flush()
                     ALOPERACIONES.flush()
                     print(f"Se ingresó el peso neto de {pesoneto} kg con éxito.")
@@ -1181,15 +1186,10 @@ def reportes():
     ALREPORTES.seek(0)
     while t > ALREPORTES.tell():
         RLREPORTES = pickle.load(ALREPORTES)
-        print(busconombre(RLREPORTES.codproducto), RLREPORTES.cantcamiones, "              ", RLREPORTES.pesonetototal, "      ", RLREPORTES.promediopeson, RLREPORTES.patentemenor)
-
-    # # por producto
-    # print("- Cantidad de camiones de cada producto: ")
-    # print("- Peso neto total de cada producto: ")
-    # print("- Promedio del peso neto de producto por camión de ese producto: ")
-
-    # # menor de cada producto 
-    # print("- Patente del camión de cada producto que menor cantidad de dicho producto descargó: ")
+        promediopeson = 0
+        if int(RLREPORTES.cantcamiones) != 0:
+            promediopeson = float(RLREPORTES.pesonetototal) / float(RLREPORTES.cantcamiones)
+        print(busconombre(RLREPORTES.codproducto), RLREPORTES.cantcamiones, "              ", RLREPORTES.pesonetototal, "      ", promediopeson, RLREPORTES.patentemenor)
     print(" ")
     os.system("pause")
     clear()
@@ -1243,6 +1243,7 @@ def cerrarArchivos():
     ALRUBROS.close()
     ALRUBROSXPRODUCTO.close()
     ALSILOS.close()
+    ALREPORTES.close()
 
 # main() -> Programa principal
 # Variables:
