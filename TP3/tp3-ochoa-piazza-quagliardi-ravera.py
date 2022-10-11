@@ -172,7 +172,7 @@ def verificacionFecha(msj):
     while len(listaf) != 3:
         print("El formato de la fecha es incorrecto")
         f = input(msj)
-        listaf = listaf.split("/", 3)
+        listaf = f.split("/", 3)
     while not (len(listaf[0]) == 2 and len(listaf[1]) == 2 and len(listaf[2]) == 4) or not (listaf[0].isnumeric() and listaf[1].isnumeric() and listaf[2].isnumeric() or not (int(listaf[0]) in range(1, 32) and int(listaf[1]) in range(1, 13))):
         print("El formato de la fecha es incorrecto")
         f = input(msj)
